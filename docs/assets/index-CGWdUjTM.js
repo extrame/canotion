@@ -1044,7 +1044,7 @@
           </div>
         `:``}
       </div>
-    `}};P([M({type:Array})],Qu.prototype,`records`,void 0),P([N()],Qu.prototype,`showInput`,void 0),P([N()],Qu.prototype,`showTable`,void 0),P([N()],Qu.prototype,`inputDate`,void 0),P([N()],Qu.prototype,`inputVolume`,void 0),P([N()],Qu.prototype,`inputColor`,void 0),P([N()],Qu.prototype,`inputNotes`,void 0),P([Re(`#drainage-canvas`)],Qu.prototype,`canvas`,void 0),Qu=P([Pe(`drainage-chart`)],Qu);var $u=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
+    `}};P([M({type:Array})],Qu.prototype,`records`,void 0),P([N()],Qu.prototype,`showInput`,void 0),P([N()],Qu.prototype,`showTable`,void 0),P([N()],Qu.prototype,`inputDate`,void 0),P([N()],Qu.prototype,`inputVolume`,void 0),P([N()],Qu.prototype,`inputColor`,void 0),P([N()],Qu.prototype,`inputNotes`,void 0),P([Re(`#drainage-canvas`)],Qu.prototype,`canvas`,void 0),Qu=P([Pe(`drainage-chart`)],Qu);var $u=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null,this.expandedGroups=new Set,this.showPortalVeinThrombusOption=!1}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1216,8 +1216,253 @@
       color: #ff4d4f;
       font-weight: 600;
     }
-  `}hasBloodTest(){return this.archive?(this.archive.completedExamIds||[]).includes(`blood-test`):!1}hasPTCD(){return this.archive?(this.archive.completedTreatmentIds||[]).includes(`biliary-drainage`):!1}getExamStatus(e){if(!this.archive)return`pending`;let t=this.archive.completedExamIds||[];if(t.includes(e))return`completed`;if(!this.disease)return`pending`;let n=this.disease.examItems.findIndex(t=>t.id===e);if(t.length===0)return n===0?`current`:`pending`;let r=Math.max(...t.map(e=>this.disease.examItems.findIndex(t=>t.id===e)));return n<=r?`completed`:n===r+1?`next`:`pending`}handleAddBilirubinRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainageRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}getCoreTasksForDisease(e){return{"hilar-cholangiocarcinoma":[{name:`总胆红素降至50以内`,desc:k`总胆红素需要降至<span class="bilirubin-target">50μmol/L以下</span>才能考虑化疗。
-            若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,icon:`💛`},{name:`保证营养状态`,desc:`化疗前需保证良好的营养状态，摄入充足蛋白质，为后续治疗提供身体支持。`,icon:`🍎`}]}[e]||[]}render(){if(!this.archive||!this.disease)return k``;let e=this.hasBloodTest(),t=this.hasPTCD();return k`
+    .task-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+    .task-badge.required {
+      background: #ff4d4f;
+      color: white;
+    }
+    .task-badge.optional {
+      background: #52c41a;
+      color: white;
+    }
+    .task-group {
+      background: white;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #e8e8e8;
+      overflow: hidden;
+    }
+    .task-group:last-child {
+      margin-bottom: 0;
+    }
+    .task-group-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      background: #fafafa;
+      transition: background 0.2s;
+    }
+    .task-group-header:hover {
+      background: #f0f0f0;
+    }
+    .task-group-icon {
+      font-size: 16px;
+    }
+    .task-group-content {
+      flex: 1;
+    }
+    .task-group-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+    .task-group-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .task-group-time {
+      font-size: 12px;
+      color: #ff4d4f;
+      font-weight: 500;
+    }
+    .task-group-detail {
+      font-size: 12px;
+      color: #1890ff;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .task-group-detail:hover {
+      text-decoration: underline;
+    }
+    .task-group-toggle {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .task-group-toggle.expanded {
+      transform: rotate(90deg);
+    }
+    .task-group-items {
+      padding: 8px 14px 12px 44px;
+    }
+    .task-sub-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .task-sub-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .task-sub-icon {
+      font-size: 14px;
+      margin-top: 2px;
+    }
+    .task-sub-content {
+      flex: 1;
+    }
+    .task-sub-name {
+      font-weight: 500;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    .task-sub-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .portal-vein-section {
+      margin-top: 12px;
+      padding: 14px;
+      background: #fff8e6;
+      border-radius: 10px;
+      border: 1px solid #ffe58f;
+    }
+    .portal-vein-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d48806;
+      margin-bottom: 10px;
+    }
+    .portal-vein-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #333;
+    }
+    .portal-vein-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .portal-vein-warning {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #fff1f0;
+      border-radius: 8px;
+      border: 1px solid #ffccc7;
+      font-size: 12px;
+      color: #ff4d4f;
+      line-height: 1.5;
+    }
+    .warning-icon {
+      margin-right: 4px;
+    }
+  `}hasBloodTest(){return this.archive?(this.archive.completedExamIds||[]).includes(`blood-test`):!1}hasPTCD(){return this.archive?(this.archive.completedTreatmentIds||[]).includes(`biliary-drainage`):!1}hasCTMRI(){return this.archive?(this.archive.completedExamIds||[]).includes(`ct-mri`):!1}handlePortalVeinThrombusChange(e){let t=e.target.checked;this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:{hasPortalVeinTumorThrombus:t}}))}calculateBilirubinEstimateTime(){if(!this.archive||!this.archive.bilirubinRecords||this.archive.bilirubinRecords.length===0)return;let e=[...this.archive.bilirubinRecords].sort((e,t)=>new Date(t.date).getTime()-new Date(e.date).getTime())[0];if(e.total<=50)return`已达标`;let t=e.total-50,n=Math.ceil(t/50);return n<=0?`已达标`:n===1?`约1周`:`约${n}周`}getExamStatus(e){if(!this.archive)return`pending`;let t=this.archive.completedExamIds||[];if(t.includes(e))return`completed`;if(!this.disease)return`pending`;let n=this.disease.examItems.findIndex(t=>t.id===e);if(t.length===0)return n===0?`current`:`pending`;let r=Math.max(...t.map(e=>this.disease.examItems.findIndex(t=>t.id===e)));return n<=r?`completed`:n===r+1?`next`:`pending`}handleAddBilirubinRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainageRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}toggleGroup(e){this.expandedGroups.has(e)?this.expandedGroups.delete(e):this.expandedGroups.add(e),this.expandedGroups=new Set(this.expandedGroups)}getCoreTasksForDisease(e){return{"hilar-cholangiocarcinoma":{standalone:[{name:`总胆红素降至50以内`,desc:k`总胆红素需要降至<span class="bilirubin-target">50μmol/L以下</span>才能考虑化疗。
+              若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,icon:`💛`,required:!0,estimateTime:this.calculateBilirubinEstimateTime()},{name:`保证营养状态`,desc:this.archive?.hasPortalVeinTumorThrombus?k`
+              <div style="color: #ff4d4f; font-weight: 600; margin-bottom: 6px;">⚠️ 存在门静脉癌栓，饮食需特别注意！</div>
+              <div>第一要务：避免消化道出血！</div>
+              <ul style="margin: 8px 0 0 0; padding-left: 18px; line-height: 1.8;">
+                <li>禁止进食<span style="color: #ff4d4f; font-weight: 600;">硬质食物</span>（如坚果、骨头、脆皮等）</li>
+                <li>禁止<span style="color: #ff4d4f; font-weight: 600;">过饱</span>，建议少食多餐</li>
+                <li>严禁<span style="color: #ff4d4f; font-weight: 600;">过烫食物</span>，温度适宜后再进食</li>
+                <li>选择软烂、易消化的食物</li>
+                <li>化疗前需保证良好营养状态，摄入充足蛋白质</li>
+              </ul>
+            `:`化疗前需保证良好的营养状态，摄入充足蛋白质，为后续治疗提供身体支持。`,icon:`🍎`,required:!0}],groups:[{id:`pathology`,name:`病理确认`,icon:`🔬`,estimateTime:`约2-3周`,detailRoute:`#/pathology-detail`,items:[{name:`基本病理检测`,desc:`通过组织样本明确肿瘤性质，是制定治疗方案的基础依据。`,icon:`🔬`,required:!0},{name:`免疫组化染色检测`,desc:`检测肿瘤标志物表达情况，指导靶向和免疫治疗药物选择。`,icon:`🧪`,required:!0},{name:`基因检测`,desc:`检测基因突变情况（如KRAS、TP53等），为靶向治疗提供依据。`,icon:`🧬`,required:!1}]}]}}[e]||{standalone:[],groups:[]}}render(){if(!this.archive||!this.disease)return k``;let e=this.hasBloodTest(),t=this.hasPTCD(),n=this.getCoreTasksForDisease(this.disease.id),r=n.standalone.length>0||n.groups.length>0;return k`
+      ${this.disease&&r?k`
+        <div class="core-task-section">
+          <div class="core-task-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            核心任务（化疗前提条件）
+          </div>
+
+          ${n.standalone.map(e=>k`
+            <div class="core-task-item">
+              <div class="core-task-icon warning">${e.icon}</div>
+              <div class="core-task-content">
+                <div class="core-task-name">
+                  ${e.name}
+                  <span class="task-badge ${e.required?`required`:`optional`}">${e.required?`必做`:`可选`}</span>
+                  ${e.estimateTime?k`<span class="task-badge" style="background: #faad14; margin-left: 4px;">${e.estimateTime}</span>`:``}
+                </div>
+                <div class="core-task-desc">${e.desc}</div>
+              </div>
+            </div>
+          `)}
+
+          ${n.groups.map(e=>k`
+            <div class="task-group">
+              <div class="task-group-header" @click="${()=>this.toggleGroup(e.id)}">
+                <div class="task-group-toggle ${this.expandedGroups.has(e.id)?`expanded`:``}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </div>
+                <div class="task-group-icon">${e.icon}</div>
+                <div class="task-group-content">
+                  <div class="task-group-name">${e.name}</div>
+                  <div class="task-group-meta">
+                    ${e.estimateTime?k`<span class="task-group-time">${e.estimateTime}</span>`:``}
+                    ${e.detailRoute?k`
+                      <span class="task-group-detail" @click="${t=>{t.stopPropagation(),window.location.hash=e.detailRoute}}">
+                        查看详情 →
+                      </span>
+                    `:``}
+                  </div>
+                </div>
+              </div>
+              ${this.expandedGroups.has(e.id)?k`
+                <div class="task-group-items">
+                  ${e.items.map(e=>k`
+                    <div class="task-sub-item">
+                      <div class="task-sub-icon">${e.icon}</div>
+                      <div class="task-sub-content">
+                        <div class="task-sub-name">
+                          ${e.name}
+                          <span class="task-badge ${e.required?`required`:`optional`}">${e.required?`必做`:`可选`}</span>
+                        </div>
+                        <div class="task-sub-desc">${e.desc}</div>
+                      </div>
+                    </div>
+                  `)}
+                </div>
+              `:``}
+            </div>
+          `)}
+        </div>
+      `:``}
+
+      ${t?k`
+        <div class="bilirubin-section">
+          <drainage-chart
+            .records="${this.archive.drainageRecords||[]}"
+            @add-record="${this.handleAddDrainageRecord}"
+          ></drainage-chart>
+        </div>
+      `:``}
+
+      ${e?k`
+        <div class="bilirubin-section">
+          <bilirubin-chart
+            .records="${this.archive.bilirubinRecords||[]}"
+            @add-record="${this.handleAddBilirubinRecord}"
+          ></bilirubin-chart>
+        </div>
+      `:``}
+
       <div class="guide-section">
         <div class="guide-title">
           <div class="guide-icon current">
@@ -1250,49 +1495,23 @@
                   <div class="item-desc">${e.desc}</div>
                 </div>
               </div>
+              ${e.id===`ct-mri`&&t===`completed`?k`
+                <div class="portal-vein-section">
+                  <div class="portal-vein-title">CT/MRI报告补充信息</div>
+                  <label class="portal-vein-option">
+                    <input
+                      type="checkbox"
+                      class="portal-vein-checkbox"
+                      .checked="${this.archive?.hasPortalVeinTumorThrombus===!0}"
+                      @change="${this.handlePortalVeinThrombusChange}"
+                    />
+                    存在门静脉癌栓
+                  </label>
+                </div>
+              `:``}
             `})}
         </div>
       </div>
-
-      ${t?k`
-        <div class="bilirubin-section">
-          <drainage-chart
-            .records="${this.archive.drainageRecords||[]}"
-            @add-record="${this.handleAddDrainageRecord}"
-          ></drainage-chart>
-        </div>
-      `:``}
-
-      ${e?k`
-        <div class="bilirubin-section">
-          <bilirubin-chart
-            .records="${this.archive.bilirubinRecords||[]}"
-            @add-record="${this.handleAddBilirubinRecord}"
-          ></bilirubin-chart>
-        </div>
-      `:``}
-
-      ${this.disease?k`
-        <div class="core-task-section">
-          <div class="core-task-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-            核心任务（化疗前提条件）
-          </div>
-          ${this.getCoreTasksForDisease(this.disease.id).map(e=>k`
-            <div class="core-task-item">
-              <div class="core-task-icon warning">${e.icon}</div>
-              <div class="core-task-content">
-                <div class="core-task-name">${e.name}</div>
-                <div class="core-task-desc">${e.desc}</div>
-              </div>
-            </div>
-          `)}
-        </div>
-      `:``}
 
       <div class="guide-section">
         <div class="guide-title">
@@ -1329,7 +1548,7 @@
           </div>
         </div>
       </div>
-    `}};P([M({type:Object})],$u.prototype,`archive`,void 0),P([M({type:Object})],$u.prototype,`disease`,void 0),$u=P([Pe(`examination-tab`)],$u);var ed=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
+    `}};P([M({type:Object})],$u.prototype,`archive`,void 0),P([M({type:Object})],$u.prototype,`disease`,void 0),P([N()],$u.prototype,`expandedGroups`,void 0),P([N()],$u.prototype,`showPortalVeinThrombusOption`,void 0),$u=P([Pe(`examination-tab`)],$u);var ed=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1622,7 +1841,7 @@
     .edit-btn:hover {
       background: #f0f9ff;
     }
-  `}handleTabClick(e){this.activeTab=e}handleEdit(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div class="empty-state">加载中...</div>`;let e=this.archive.currentStage!==`treatment`;return k`
+  `}handleTabClick(e){this.activeTab=e}handleEdit(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdatePortalVeinThrombus(e){this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div class="empty-state">加载中...</div>`;let e=this.archive.currentStage!==`treatment`;return k`
       <div class="guide-card">
         <div class="stage-header">
           <div class="stage-icon ${this.archive.currentStage}">
@@ -1656,6 +1875,7 @@
                 .disease="${this.disease}"
                 @add-bilirubin="${this.handleAddBilirubin}"
                 @add-drainage="${this.handleAddDrainage}"
+                @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
               ></examination-tab>
             `:k`
               <treatment-tab
@@ -1988,7 +2208,7 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
-  `}hasCompletedItems(){if(!this.archive)return!1;let e=this.archive.completedExamIds||[],t=this.archive.completedTreatmentIds||[];return e.length>0||t.length>0}getDiseaseIcon(e){return{"hilar-cholangiocarcinoma":`🫀`}[e]||`📋`}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}handleBack(){this.dispatchEvent(new CustomEvent(`back`,{bubbles:!0,composed:!0}))}handleDelete(){this.dispatchEvent(new CustomEvent(`delete-archive`,{bubbles:!0,composed:!0}))}handleEditStage(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div>加载中...</div>`;let e=this.hasCompletedItems();return k`
+  `}hasCompletedItems(){if(!this.archive)return!1;let e=this.archive.completedExamIds||[],t=this.archive.completedTreatmentIds||[];return e.length>0||t.length>0}getDiseaseIcon(e){return{"hilar-cholangiocarcinoma":`🫀`}[e]||`📋`}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}handleBack(){this.dispatchEvent(new CustomEvent(`back`,{bubbles:!0,composed:!0}))}handleDelete(){this.dispatchEvent(new CustomEvent(`delete-archive`,{bubbles:!0,composed:!0}))}handleEditStage(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdatePortalVeinThrombus(e){this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div>加载中...</div>`;let e=this.hasCompletedItems();return k`
       <div class="archive-header">
         <div class="header-top">
           <button class="back-btn" @click="${this.handleBack}">
@@ -2018,6 +2238,7 @@
             @edit-stage="${this.handleEditStage}"
             @add-bilirubin="${this.handleAddBilirubin}"
             @add-drainage="${this.handleAddDrainage}"
+            @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
           ></stage-guide>
         </div>
       `:k`
@@ -2037,7 +2258,488 @@
           </button>
         </div>
       `}
-    `}};P([M({type:Object})],id.prototype,`archive`,void 0),P([M({type:Object})],id.prototype,`disease`,void 0),id=P([Pe(`archive-detail-page`)],id);var ad=class extends j{constructor(...e){super(...e),this.archives=[],this.currentPage=`archive-list`,this.currentArchive=null,this.showDiseaseSelector=!1,this.showStageSelector=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:`🫀`,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}connectedCallback(){super.connectedCallback(),this.archives=this.loadArchives(),this.setupNavigation()}loadArchives(){let e=localStorage.getItem(`canotion-archives`);return e?JSON.parse(e):[]}saveArchives(){localStorage.setItem(`canotion-archives`,JSON.stringify(this.archives))}setupNavigation(){window.addEventListener(`popstate`,()=>{this.handleRoute(window.location.hash)}),this.handleRoute(window.location.hash||`#/`)}handleRoute(e){if(e===``||e===`#/`||e===`#`)this.showArchiveList();else if(e.startsWith(`#/archive/`)){let t=e.replace(`#/archive/`,``);this.viewArchive(t)}else this.showArchiveList()}navigateTo(e){window.location.hash=e}showArchiveList(){this.currentPage=`archive-list`,this.currentArchive=null}viewArchive(e){let t=this.archives.find(t=>t.id===e);t?(this.currentArchive=t,this.currentPage=`archive-detail`):this.showArchiveList()}createArchive(e){let t={id:Date.now().toString(),diseaseType:e.id,diseaseName:e.name,createdAt:new Date().toISOString(),completedExamIds:[],completedTreatmentIds:[],currentStage:`examination`,bilirubinRecords:[],drainageRecords:[]};this.archives=[t,...this.archives],this.saveArchives(),this.navigateTo(`#/archive/${t.id}`)}updateArchiveStage(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);t&&(t.completedExamIds=e.completedExamIds,t.completedTreatmentIds=e.completedTreatmentIds,t.currentStage=e.currentStage,this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives])}addBilirubinRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.bilirubinRecords||=[],t.bilirubinRecords.some(t=>t.id===e.id))return;t.bilirubinRecords=[e,...t.bilirubinRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}addDrainageRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.drainageRecords||=[],t.drainageRecords.some(t=>t.id===e.id))return;t.drainageRecords=[e,...t.drainageRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}deleteArchive(e){this.archives=this.archives.filter(t=>t.id!==e),this.saveArchives(),this.showArchiveList()}handleCreateArchive(){this.showDiseaseSelector=!0}handleDiseaseSelect(e){let t=e.detail;this.showDiseaseSelector=!1,t&&this.createArchive(t)}handleDiseaseSelectorClose(){this.showDiseaseSelector=!1}handleDeleteArchive(){this.currentArchive&&confirm(`确定要删除这个档案吗？此操作无法撤销。`)&&this.deleteArchive(this.currentArchive.id)}handleBack(){this.navigateTo(`#/`)}handleEditStage(){this.showStageSelector=!0}handleStageSelect(e){this.showStageSelector=!1,e.detail&&this.updateArchiveStage(e.detail)}handleStageSelectorClose(){this.showStageSelector=!1}handleAddBilirubin(e){this.addBilirubinRecord(e.detail)}handleAddDrainage(e){this.addDrainageRecord(e.detail)}getDiseaseForArchive(){return this.currentArchive&&this.diseases.find(e=>e.id===this.currentArchive.diseaseType)||null}render(){let e=this.getDiseaseForArchive();return k`
+    `}};P([M({type:Object})],id.prototype,`archive`,void 0),P([M({type:Object})],id.prototype,`disease`,void 0),id=P([Pe(`archive-detail-page`)],id);var ad=class extends j{static{this.styles=o`
+    :host {
+      display: block;
+    }
+    .page-container {
+      padding: 20px;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: #f5f5f5;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .back-btn:hover {
+      background: #e8e8e8;
+    }
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+    .timeline-container {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .timeline-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .timeline-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .timeline-title-group {
+      flex: 1;
+    }
+    .timeline-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .timeline-subtitle {
+      font-size: 13px;
+      color: #999;
+    }
+    .total-time {
+      background: #fff1f0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ff4d4f;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, #667eea, #52c41a);
+      border-radius: 2px;
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 24px;
+    }
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -32px;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      z-index: 1;
+    }
+    .timeline-dot.completed {
+      background: #52c41a;
+      color: white;
+    }
+    .timeline-dot.current {
+      background: #667eea;
+      color: white;
+      animation: pulse 2s infinite;
+    }
+    .timeline-dot.pending {
+      background: #d9d9d9;
+      color: white;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
+    }
+    .timeline-item.urgent {
+      position: relative;
+    }
+    .timeline-item.urgent::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      right: -8px;
+      top: -4px;
+      bottom: -4px;
+      background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%);
+      border-radius: 16px;
+      z-index: 0;
+      animation: urgentPulse 2s infinite;
+    }
+    @keyframes urgentPulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+    .timeline-item.urgent .timeline-content {
+      position: relative;
+      z-index: 1;
+      background: white;
+      border: 2px solid #ff4d4f;
+    }
+    .timeline-item.urgent .timeline-item-name {
+      color: #ff4d4f;
+    }
+    .urgent-banner {
+      background: #ff4d4f;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .urgent-banner svg {
+      flex-shrink: 0;
+    }
+    .timeline-content {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .timeline-item-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .timeline-item-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .timeline-item-time {
+      display: inline-block;
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+      padding: 4px 10px;
+      background: white;
+      border-radius: 12px;
+    }
+    .bifurcation-section {
+      margin-top: 24px;
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .bifurcation-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fa8c16;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bifurcation-icon {
+      width: 24px;
+      height: 24px;
+      background: #ffd591;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .bifurcation-paths {
+      display: flex;
+      gap: 12px;
+    }
+    .bifurcation-path {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      background: white;
+    }
+    .path-result {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .path-result.excluded {
+      color: #52c41a;
+    }
+    .path-result.cancer {
+      color: #ff4d4f;
+    }
+    .path-action {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .path-action strong {
+      color: #ff4d4f;
+    }
+    .note-section {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      border-radius: 12px;
+    }
+    .note-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #52c41a;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .note-content {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .gene-test-warning {
+      margin-top: 20px;
+      background: linear-gradient(135deg, #fff2e6 0%, #fff7e6 100%);
+      border: 1px solid #ffb977;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .gene-test-warning-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #d46b08;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gene-test-warning-icon {
+      font-size: 20px;
+    }
+    .gene-test-warning-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .warning-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: white;
+      border-radius: 8px;
+    }
+    .warning-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .warning-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .warning-text strong {
+      color: #d46b08;
+    }
+  `}handleBack(){window.history.back()}render(){return k`
+      <div class="page-container">
+        <div class="page-header">
+          <button class="back-btn" @click="${this.handleBack}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <span class="page-title">病理确认流程</span>
+        </div>
+
+        <div class="timeline-container">
+          <div class="timeline-header">
+            <div class="timeline-icon">🔬</div>
+            <div class="timeline-title-group">
+              <div class="timeline-title">病理确认</div>
+              <div class="timeline-subtitle">明确肿瘤性质，制定治疗方案的基础依据</div>
+            </div>
+            <div class="total-time">约2-3周</div>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot completed">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">门诊评估</div>
+                <div class="timeline-item-desc">医生评估病情，开具检查单，安排入院或穿刺时间</div>
+                <div class="timeline-item-time">约1-3天</div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot completed">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">入院检查</div>
+                <div class="timeline-item-desc">完成必要的血液检查、影像检查等，评估身体状况是否适合穿刺</div>
+                <div class="timeline-item-time">约3-7天</div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot current">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <circle cx="12" cy="12" r="4"></circle>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">穿刺活检</div>
+                <div class="timeline-item-desc">在影像引导下进行穿刺，获取组织样本进行病理分析</div>
+                <div class="timeline-item-time">约1-2天（住院）</div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot pending">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <circle cx="12" cy="12" r="1"></circle>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">病理分析</div>
+                <div class="timeline-item-desc">组织样本送检，显微镜下分析细胞形态，明确肿瘤性质</div>
+                <div class="timeline-item-time">约5-10天</div>
+              </div>
+            </div>
+
+            <div class="timeline-item urgent">
+              <div class="timeline-dot pending">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <circle cx="12" cy="12" r="1"></circle>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">出具报告 ⚡</div>
+                <div class="timeline-item-desc">病理报告出炉，明确诊断结果</div>
+                <div class="timeline-item-time">1-2天</div>
+                <div class="urgent-banner">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  报告出炉后立刻约门诊，同时送检基因检测！
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bifurcation-section">
+            <div class="bifurcation-title">
+              <div class="bifurcation-icon">⚡</div>
+              分叉点：病理报告结果
+            </div>
+            <div class="bifurcation-paths">
+              <div class="bifurcation-path">
+                <div class="path-result excluded">排除癌症</div>
+                <div class="path-action">病理报告显示为良性病变，可排除癌症可能，结束当前诊疗流程。</div>
+              </div>
+              <div class="bifurcation-path">
+                <div class="path-result cancer">确诊癌症</div>
+                <div class="path-action">明确为腺癌或鳞癌等。<br><br>
+                  <strong>请立即：</strong><br>
+                  1. 联系医生进行免疫组化染色检测<br>
+                  2. 同时送检基因检测（可与免疫组化并行）</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="note-section">
+            <div class="note-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              重要提示
+            </div>
+            <div class="note-content">
+              基本病理报告出具后，根据结果分为两条路径：<br><br>
+              1. 若排除癌症：恭喜，可结束当前诊疗流程<br><br>
+              2. 若确诊癌症：需立即进行免疫组化染色检测和基因检测。<br>
+              <strong>注意：免疫组化和基因检测可以同时送检，请务必在拿到病理报告后第一时间联系您的主治医生。</strong>
+            </div>
+          </div>
+
+          <div class="gene-test-warning">
+            <div class="gene-test-warning-title">
+              <div class="gene-test-warning-icon">🧬</div>
+              基因检测抽血注意事项
+            </div>
+            <div class="gene-test-warning-content">
+              <div class="warning-item">
+                <div class="warning-icon">💉</div>
+                <div class="warning-text">
+                  <strong>基因检测需要血液抽检</strong><br>
+                  为保证检测结果准确性，<strong>抽血前14天内应避免输血</strong>。
+                </div>
+              </div>
+              <div class="warning-item">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-text">
+                  <strong>门静脉癌栓风险提示</strong><br>
+                  若并发门静脉癌栓，出现消化道出血的风险较高。<br>
+                  一旦发生输血，基因检测将<strong>推迟至少15天</strong>。
+                </div>
+              </div>
+              <div class="warning-item">
+                <div class="warning-icon">📋</div>
+                <div class="warning-text">
+                  <strong>建议措施</strong><br>
+                  请提前与医生沟通，在窗口期内优先安排基因检测抽血。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `}};ad=P([Pe(`pathology-detail-page`)],ad);var od=class extends j{constructor(...e){super(...e),this.archives=[],this.currentPage=`archive-list`,this.currentArchive=null,this.showDiseaseSelector=!1,this.showStageSelector=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:`🫀`,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}connectedCallback(){super.connectedCallback(),this.archives=this.loadArchives(),this.setupNavigation()}loadArchives(){let e=localStorage.getItem(`canotion-archives`);return e?JSON.parse(e):[]}saveArchives(){localStorage.setItem(`canotion-archives`,JSON.stringify(this.archives))}setupNavigation(){window.addEventListener(`popstate`,()=>{this.handleRoute(window.location.hash)}),this.handleRoute(window.location.hash||`#/`)}handleRoute(e){if(e===``||e===`#/`||e===`#`)this.showArchiveList();else if(e.startsWith(`#/archive/`)){let t=e.replace(`#/archive/`,``);this.viewArchive(t)}else e===`#/pathology-detail`?this.currentPage=`pathology-detail`:this.showArchiveList()}navigateTo(e){window.location.hash=e}showArchiveList(){this.currentPage=`archive-list`,this.currentArchive=null}viewArchive(e){let t=this.archives.find(t=>t.id===e);t?(this.currentArchive=t,this.currentPage=`archive-detail`):this.showArchiveList()}createArchive(e){let t={id:Date.now().toString(),diseaseType:e.id,diseaseName:e.name,createdAt:new Date().toISOString(),completedExamIds:[],completedTreatmentIds:[],currentStage:`examination`,bilirubinRecords:[],drainageRecords:[]};this.archives=[t,...this.archives],this.saveArchives(),this.navigateTo(`#/archive/${t.id}`)}updateArchiveStage(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);t&&(t.completedExamIds=e.completedExamIds,t.completedTreatmentIds=e.completedTreatmentIds,t.currentStage=e.currentStage,this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives])}addBilirubinRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.bilirubinRecords||=[],t.bilirubinRecords.some(t=>t.id===e.id))return;t.bilirubinRecords=[e,...t.bilirubinRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}addDrainageRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.drainageRecords||=[],t.drainageRecords.some(t=>t.id===e.id))return;t.drainageRecords=[e,...t.drainageRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}updatePortalVeinThrombus(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);t&&(t.hasPortalVeinTumorThrombus=e,this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives])}deleteArchive(e){this.archives=this.archives.filter(t=>t.id!==e),this.saveArchives(),this.showArchiveList()}handleCreateArchive(){this.showDiseaseSelector=!0}handleDiseaseSelect(e){let t=e.detail;this.showDiseaseSelector=!1,t&&this.createArchive(t)}handleDiseaseSelectorClose(){this.showDiseaseSelector=!1}handleDeleteArchive(){this.currentArchive&&confirm(`确定要删除这个档案吗？此操作无法撤销。`)&&this.deleteArchive(this.currentArchive.id)}handleBack(){this.navigateTo(`#/`)}handleEditStage(){this.showStageSelector=!0}handleStageSelect(e){this.showStageSelector=!1,e.detail&&this.updateArchiveStage(e.detail)}handleStageSelectorClose(){this.showStageSelector=!1}handleAddBilirubin(e){this.addBilirubinRecord(e.detail)}handleAddDrainage(e){this.addDrainageRecord(e.detail)}handleUpdatePortalVeinThrombus(e){this.updatePortalVeinThrombus(e.detail.hasPortalVeinTumorThrombus)}getDiseaseForArchive(){return this.currentArchive&&this.diseases.find(e=>e.id===this.currentArchive.diseaseType)||null}render(){let e=this.getDiseaseForArchive();return k`
       ${this.currentPage===`archive-list`?k`
         <archive-list-page
           .archives="${this.archives}"
@@ -2053,7 +2755,11 @@
           @edit-stage="${this.handleEditStage}"
           @add-bilirubin="${this.handleAddBilirubin}"
           @add-drainage="${this.handleAddDrainage}"
+          @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
         ></archive-detail-page>
+      `:``}
+      ${this.currentPage===`pathology-detail`?k`
+        <pathology-detail-page></pathology-detail-page>
       `:``}
 
       ${this.showDiseaseSelector?k`
@@ -2072,4 +2778,4 @@
           @close="${this.handleStageSelectorClose}"
         ></stage-selector>
       `:``}
-    `}};P([N()],ad.prototype,`archives`,void 0),P([N()],ad.prototype,`currentPage`,void 0),P([N()],ad.prototype,`currentArchive`,void 0),P([N()],ad.prototype,`showDiseaseSelector`,void 0),P([N()],ad.prototype,`showStageSelector`,void 0),ad=P([Pe(`app-root`)],ad);
+    `}};P([N()],od.prototype,`archives`,void 0),P([N()],od.prototype,`currentPage`,void 0),P([N()],od.prototype,`currentArchive`,void 0),P([N()],od.prototype,`showDiseaseSelector`,void 0),P([N()],od.prototype,`showStageSelector`,void 0),od=P([Pe(`app-root`)],od);

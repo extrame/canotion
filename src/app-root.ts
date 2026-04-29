@@ -7,6 +7,7 @@ import './components/stage-guide';
 import './components/archive-card';
 import './pages/archive-list-page';
 import './pages/archive-detail-page';
+import './pages/pathology-detail-page';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
@@ -14,7 +15,7 @@ export class AppRoot extends LitElement {
   private archives: Archive[] = [];
 
   @state()
-  private currentPage: 'archive-list' | 'archive-detail' = 'archive-list';
+  private currentPage: 'archive-list' | 'archive-detail' | 'pathology-detail' = 'archive-list';
 
   @state()
   private currentArchive: Archive | null = null;
@@ -133,6 +134,8 @@ export class AppRoot extends LitElement {
     } else if (hash.startsWith('#/archive/')) {
       const archiveId = hash.replace('#/archive/', '');
       this.viewArchive(archiveId);
+    } else if (hash === '#/pathology-detail') {
+      this.currentPage = 'pathology-detail';
     } else {
       this.showArchiveList();
     }
@@ -219,6 +222,17 @@ export class AppRoot extends LitElement {
     }
   }
 
+  private updatePortalVeinThrombus(hasPortalVeinTumorThrombus: boolean): void {
+    if (!this.currentArchive) return;
+    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
+    if (archive) {
+      archive.hasPortalVeinTumorThrombus = hasPortalVeinTumorThrombus;
+      this.saveArchives();
+      this.currentArchive = { ...archive };
+      this.archives = [...this.archives];
+    }
+  }
+
   private deleteArchive(archiveId: string): void {
     this.archives = this.archives.filter(a => a.id !== archiveId);
     this.saveArchives();
@@ -276,6 +290,10 @@ export class AppRoot extends LitElement {
     this.addDrainageRecord(e.detail);
   }
 
+  private handleUpdatePortalVeinThrombus(e: CustomEvent<{ hasPortalVeinTumorThrombus: boolean }>): void {
+    this.updatePortalVeinThrombus(e.detail.hasPortalVeinTumorThrombus);
+  }
+
   private getDiseaseForArchive(): Disease | null {
     if (!this.currentArchive) return null;
     return this.diseases.find(d => d.id === this.currentArchive!.diseaseType) || null;
@@ -300,7 +318,11 @@ export class AppRoot extends LitElement {
           @edit-stage="${this.handleEditStage}"
           @add-bilirubin="${this.handleAddBilirubin}"
           @add-drainage="${this.handleAddDrainage}"
+          @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
         ></archive-detail-page>
+      ` : ''}
+      ${this.currentPage === 'pathology-detail' ? html`
+        <pathology-detail-page></pathology-detail-page>
       ` : ''}
 
       ${this.showDiseaseSelector ? html`

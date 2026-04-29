@@ -144,6 +144,14 @@ export class StageGuide extends LitElement {
     }));
   }
 
+  private handleUpdatePortalVeinThrombus(e: CustomEvent<{ hasPortalVeinTumorThrombus: boolean }>): void {
+    this.dispatchEvent(new CustomEvent<{ hasPortalVeinTumorThrombus: boolean }>('update-portal-vein-thrombus', {
+      bubbles: true,
+      composed: true,
+      detail: e.detail
+    }));
+  }
+
   render() {
     if (!this.archive || !this.disease) {
       return html`<div class="empty-state">加载中...</div>`;
@@ -185,6 +193,7 @@ export class StageGuide extends LitElement {
                 .disease="${this.disease}"
                 @add-bilirubin="${this.handleAddBilirubin}"
                 @add-drainage="${this.handleAddDrainage}"
+                @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
               ></examination-tab>
             ` : html`
               <treatment-tab

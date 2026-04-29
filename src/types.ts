@@ -9,6 +9,7 @@ export interface Archive {
   currentStage: 'examination' | 'treatment';
   bilirubinRecords: BilirubinRecord[];
   drainageRecords: DrainageRecord[];
+  hasPortalVeinTumorThrombus?: boolean;
 }
 
 export interface BilirubinRecord {
