@@ -761,7 +761,290 @@
           </div>
         `:``}
       </div>
-    `}};P([M({type:Array})],Zu.prototype,`records`,void 0),P([N()],Zu.prototype,`showInput`,void 0),P([N()],Zu.prototype,`showTable`,void 0),P([N()],Zu.prototype,`inputDate`,void 0),P([N()],Zu.prototype,`inputTotal`,void 0),P([N()],Zu.prototype,`inputDirect`,void 0),P([N()],Zu.prototype,`inputIndirect`,void 0),P([Re(`#bilirubin-canvas`)],Zu.prototype,`canvas`,void 0),Zu=P([Pe(`bilirubin-chart`)],Zu);var Qu=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
+    `}};P([M({type:Array})],Zu.prototype,`records`,void 0),P([N()],Zu.prototype,`showInput`,void 0),P([N()],Zu.prototype,`showTable`,void 0),P([N()],Zu.prototype,`inputDate`,void 0),P([N()],Zu.prototype,`inputTotal`,void 0),P([N()],Zu.prototype,`inputDirect`,void 0),P([N()],Zu.prototype,`inputIndirect`,void 0),P([Re(`#bilirubin-canvas`)],Zu.prototype,`canvas`,void 0),Zu=P([Pe(`bilirubin-chart`)],Zu);var Qu=class extends j{constructor(...e){super(...e),this.records=[],this.showInput=!1,this.showTable=!1,this.inputDate=``,this.inputVolume=``,this.inputColor=``,this.inputNotes=``,this.chart=null}static{this.styles=o`
+    :host {
+      display: block;
+    }
+    .chart-container {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .chart-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+    .add-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #52c41a;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);
+    }
+    .chart-canvas-container {
+      position: relative;
+      height: 200px;
+      width: 100%;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 14px;
+    }
+    .input-form {
+      background: #f6ffed;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .input-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .input-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .input-group {
+      flex: 1;
+    }
+    .input-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-field:focus {
+      border-color: #52c41a;
+    }
+    .input-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .cancel-btn {
+      background: #f5f5f5;
+      color: #666;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .save-btn {
+      background: #52c41a;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .color-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      background: #f5f5f5;
+      color: #666;
+    }
+    .table-toggle-btn {
+      background: #f5f5f5;
+      color: #666;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .table-toggle-btn:hover {
+      background: #e8e8e8;
+    }
+    .table-toggle-btn.active {
+      background: #f6ffed;
+      color: #52c41a;
+    }
+    .data-table {
+      margin-top: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #b7eb8f;
+    }
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: #f6ffed;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 1px solid #b7eb8f;
+    }
+    .data-table td {
+      padding: 12px 16px;
+      color: #666;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table tr:hover td {
+      background: #fafafa;
+    }
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 14px;
+    }
+    .tips {
+      background: #fff1f0;
+      border: 1px solid #ffccc7;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+    .tips-title {
+      font-weight: 600;
+      color: #ff4d4f;
+      margin-bottom: 4px;
+    }
+  `}getSortedRecords(){return!this.records||this.records.length===0?[]:[...this.records].sort((e,t)=>new Date(e.date).getTime()-new Date(t.date).getTime())}initChart(){if(!this.canvas)return;let e=this.getSortedRecords();if(e.length===0)return;let t={labels:e.map(e=>{let t=new Date(e.date);return`${t.getMonth()+1}/${t.getDate()}`}),datasets:[{label:`引流量`,data:e.map(e=>e.volume),borderColor:`#52c41a`,backgroundColor:`rgba(82, 196, 26, 0.1)`,borderWidth:2,tension:.3,pointRadius:4,pointHoverRadius:6}]};this.chart&&this.chart.destroy(),this.chart=new Xu(this.canvas,{type:`line`,data:t,options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},tooltip:{mode:`index`,intersect:!1,callbacks:{afterLabel:t=>`颜色: ${e[t.dataIndex].color||`未记录`}`}}},scales:{y:{beginAtZero:!0,title:{display:!0,text:`ml`},grid:{color:`rgba(0, 0, 0, 0.05)`}},x:{grid:{display:!1}}},interaction:{mode:`nearest`,axis:`x`,intersect:!1}}})}updateChart(){if(!this.chart){this.initChart();return}let e=this.getSortedRecords();if(e.length===0){this.chart.destroy(),this.chart=null;return}let t=e.map(e=>{let t=new Date(e.date);return`${t.getMonth()+1}/${t.getDate()}`});this.chart.data.labels=t,this.chart.data.datasets[0].data=e.map(e=>e.volume),this.chart.update()}updated(e){e.has(`records`)&&this.updateChart()}handleAddClick(){this.inputDate=new Date().toISOString().split(`T`)[0],this.inputVolume=``,this.inputColor=``,this.inputNotes=``,this.showInput=!0}handleCancel(){this.showInput=!1}handleToggleTable(){this.showTable=!this.showTable}handleSave(){if(!this.inputDate||!this.inputVolume)return;let e=parseFloat(this.inputVolume)||0;this.dispatchEvent(new CustomEvent(`add-record`,{bubbles:!0,composed:!0,detail:{id:Date.now().toString(),date:this.inputDate,volume:e,color:this.inputColor||`金黄色`,notes:this.inputNotes}})),this.showInput=!1}connectedCallback(){super.connectedCallback(),setTimeout(()=>this.initChart(),0)}disconnectedCallback(){super.disconnectedCallback(),this.chart&&=(this.chart.destroy(),null)}render(){let e=this.records&&this.records.length>0,t=this.getSortedRecords();return k`
+      <div class="chart-container">
+        <div class="chart-header">
+          <span class="chart-title">💧 PTCD引流量记录</span>
+          <div style="display: flex; gap: 8px;">
+            ${e?k`
+              <button class="table-toggle-btn ${this.showTable?`active`:``}" @click="${this.handleToggleTable}">
+                ${this.showTable?`收起数据`:`查看数据`}
+              </button>
+            `:``}
+            <button class="add-btn" @click="${this.handleAddClick}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              录入
+            </button>
+          </div>
+        </div>
+
+        ${e?k`
+          <div class="chart-canvas-container">
+            <canvas id="drainage-canvas"></canvas>
+          </div>
+          ${this.showTable?k`
+            <div class="data-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>日期</th>
+                    <th>引流量</th>
+                    <th>颜色</th>
+                    <th>备注</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${t.map(e=>k`
+                    <tr>
+                      <td>${new Date(e.date).toLocaleDateString(`zh-CN`)}</td>
+                      <td>${e.volume} ml</td>
+                      <td><span class="color-tag">${e.color}</span></td>
+                      <td>${e.notes||`-`}</td>
+                    </tr>
+                  `)}
+                </tbody>
+              </table>
+            </div>
+          `:``}
+        `:k`
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 12px;">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+            </svg>
+            <p>暂无引流量记录</p>
+            <p style="font-size: 12px; margin-top: 4px;">点击上方按钮录入每日引流量</p>
+          </div>
+        `}
+
+        <div class="tips">
+          <div class="tips-title">💡 记录提示</div>
+          <div>• 建议每日固定时间记录引流量（如早上8点）</div>
+          <div>• 正常PTCD引流量约为200-400ml/天</div>
+          <div>• 引流量突然减少或增多时请及时联系医生</div>
+        </div>
+
+        ${this.showInput?k`
+          <div class="input-form">
+            <div class="input-title">录入引流量</div>
+            <div class="input-row">
+              <div class="input-group">
+                <div class="input-label">日期</div>
+                <input type="date" class="input-field" .value="${this.inputDate}" @input="${e=>this.inputDate=e.target.value}">
+              </div>
+              <div class="input-group">
+                <div class="input-label">引流量 (ml)</div>
+                <input type="number" class="input-field" placeholder="如：250" .value="${this.inputVolume}" @input="${e=>this.inputVolume=e.target.value}">
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="input-group">
+                <div class="input-label">颜色</div>
+                <input type="text" class="input-field" placeholder="如：金黄色、墨绿色" .value="${this.inputColor}" @input="${e=>this.inputColor=e.target.value}">
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="input-group">
+                <div class="input-label">备注（选填）</div>
+                <input type="text" class="input-field" placeholder="如：晚上引流量较多" .value="${this.inputNotes}" @input="${e=>this.inputNotes=e.target.value}">
+              </div>
+            </div>
+            <div class="input-actions">
+              <button class="cancel-btn" @click="${this.handleCancel}">取消</button>
+              <button class="save-btn" @click="${this.handleSave}">保存</button>
+            </div>
+          </div>
+        `:``}
+      </div>
+    `}};P([M({type:Array})],Qu.prototype,`records`,void 0),P([N()],Qu.prototype,`showInput`,void 0),P([N()],Qu.prototype,`showTable`,void 0),P([N()],Qu.prototype,`inputDate`,void 0),P([N()],Qu.prototype,`inputVolume`,void 0),P([N()],Qu.prototype,`inputColor`,void 0),P([N()],Qu.prototype,`inputNotes`,void 0),P([Re(`#drainage-canvas`)],Qu.prototype,`canvas`,void 0),Qu=P([Pe(`drainage-chart`)],Qu);var $u=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
     :host {
       display: block;
     }
@@ -933,8 +1216,8 @@
       color: #ff4d4f;
       font-weight: 600;
     }
-  `}hasBloodTest(){return this.archive?(this.archive.completedExamIds||[]).includes(`blood-test`):!1}getExamStatus(e){if(!this.archive)return`pending`;let t=this.archive.completedExamIds||[];if(t.includes(e))return`completed`;if(!this.disease)return`pending`;let n=this.disease.examItems.findIndex(t=>t.id===e);if(t.length===0)return n===0?`current`:`pending`;let r=Math.max(...t.map(e=>this.disease.examItems.findIndex(t=>t.id===e)));return n<=r?`completed`:n===r+1?`next`:`pending`}handleAddBilirubinRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}getCoreTasksForDisease(e){return{"hilar-cholangiocarcinoma":[{name:`总胆红素降至50以内`,desc:k`总胆红素需要降至<span class="bilirubin-target">50μmol/L以下</span>才能考虑化疗。
-            若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,icon:`💛`},{name:`保证营养状态`,desc:`化疗前需保证良好的营养状态，摄入充足蛋白质，为后续治疗提供身体支持。`,icon:`🍎`}]}[e]||[]}render(){if(!this.archive||!this.disease)return k``;let e=this.hasBloodTest();return k`
+  `}hasBloodTest(){return this.archive?(this.archive.completedExamIds||[]).includes(`blood-test`):!1}hasPTCD(){return this.archive?(this.archive.completedTreatmentIds||[]).includes(`biliary-drainage`):!1}getExamStatus(e){if(!this.archive)return`pending`;let t=this.archive.completedExamIds||[];if(t.includes(e))return`completed`;if(!this.disease)return`pending`;let n=this.disease.examItems.findIndex(t=>t.id===e);if(t.length===0)return n===0?`current`:`pending`;let r=Math.max(...t.map(e=>this.disease.examItems.findIndex(t=>t.id===e)));return n<=r?`completed`:n===r+1?`next`:`pending`}handleAddBilirubinRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainageRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}getCoreTasksForDisease(e){return{"hilar-cholangiocarcinoma":[{name:`总胆红素降至50以内`,desc:k`总胆红素需要降至<span class="bilirubin-target">50μmol/L以下</span>才能考虑化疗。
+            若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,icon:`💛`},{name:`保证营养状态`,desc:`化疗前需保证良好的营养状态，摄入充足蛋白质，为后续治疗提供身体支持。`,icon:`🍎`}]}[e]||[]}render(){if(!this.archive||!this.disease)return k``;let e=this.hasBloodTest(),t=this.hasPTCD();return k`
       <div class="guide-section">
         <div class="guide-title">
           <div class="guide-icon current">
@@ -970,6 +1253,15 @@
             `})}
         </div>
       </div>
+
+      ${t?k`
+        <div class="bilirubin-section">
+          <drainage-chart
+            .records="${this.archive.drainageRecords||[]}"
+            @add-record="${this.handleAddDrainageRecord}"
+          ></drainage-chart>
+        </div>
+      `:``}
 
       ${e?k`
         <div class="bilirubin-section">
@@ -1037,7 +1329,7 @@
           </div>
         </div>
       </div>
-    `}};P([M({type:Object})],Qu.prototype,`archive`,void 0),P([M({type:Object})],Qu.prototype,`disease`,void 0),Qu=P([Pe(`examination-tab`)],Qu);var $u=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
+    `}};P([M({type:Object})],$u.prototype,`archive`,void 0),P([M({type:Object})],$u.prototype,`disease`,void 0),$u=P([Pe(`examination-tab`)],$u);var ed=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1227,7 +1519,7 @@
           </div>
         </div>
       </div>
-    `}};P([M({type:Object})],$u.prototype,`archive`,void 0),P([M({type:Object})],$u.prototype,`disease`,void 0),$u=P([Pe(`treatment-tab`)],$u);var ed=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null,this.activeTab=`examination`}static{this.styles=o`
+    `}};P([M({type:Object})],ed.prototype,`archive`,void 0),P([M({type:Object})],ed.prototype,`disease`,void 0),ed=P([Pe(`treatment-tab`)],ed);var td=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null,this.activeTab=`examination`}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1330,7 +1622,7 @@
     .edit-btn:hover {
       background: #f0f9ff;
     }
-  `}handleTabClick(e){this.activeTab=e}handleEdit(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div class="empty-state">加载中...</div>`;let e=this.archive.currentStage!==`treatment`;return k`
+  `}handleTabClick(e){this.activeTab=e}handleEdit(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div class="empty-state">加载中...</div>`;let e=this.archive.currentStage!==`treatment`;return k`
       <div class="guide-card">
         <div class="stage-header">
           <div class="stage-icon ${this.archive.currentStage}">
@@ -1363,6 +1655,7 @@
                 .archive="${this.archive}"
                 .disease="${this.disease}"
                 @add-bilirubin="${this.handleAddBilirubin}"
+                @add-drainage="${this.handleAddDrainage}"
               ></examination-tab>
             `:k`
               <treatment-tab
@@ -1378,7 +1671,7 @@
           更新检查/治疗进度
         </button>
       </div>
-    `}};P([M({type:Object})],ed.prototype,`archive`,void 0),P([M({type:Object})],ed.prototype,`disease`,void 0),P([N()],ed.prototype,`activeTab`,void 0),ed=P([Pe(`stage-guide`)],ed);var td=class extends j{constructor(...e){super(...e),this.archive=null}static{this.styles=o`
+    `}};P([M({type:Object})],td.prototype,`archive`,void 0),P([M({type:Object})],td.prototype,`disease`,void 0),P([N()],td.prototype,`activeTab`,void 0),td=P([Pe(`stage-guide`)],td);var nd=class extends j{constructor(...e){super(...e),this.archive=null}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1459,7 +1752,7 @@
           </div>
         </div>
       </div>
-    `}};P([M({type:Object})],td.prototype,`archive`,void 0),td=P([Pe(`archive-card`)],td);var nd=class extends j{constructor(...e){super(...e),this.archives=[],this.showSelector=!1}static{this.styles=o`
+    `}};P([M({type:Object})],nd.prototype,`archive`,void 0),nd=P([Pe(`archive-card`)],nd);var rd=class extends j{constructor(...e){super(...e),this.archives=[],this.showSelector=!1}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1574,7 +1867,7 @@
           @close="${this.handleSelectorClose}"
         ></disease-selector>
       `:``}
-    `}};P([M({type:Array})],nd.prototype,`archives`,void 0),P([N()],nd.prototype,`showSelector`,void 0),nd=P([Pe(`archive-list-page`)],nd);var rd=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
+    `}};P([M({type:Array})],rd.prototype,`archives`,void 0),P([N()],rd.prototype,`showSelector`,void 0),rd=P([Pe(`archive-list-page`)],rd);var id=class extends j{constructor(...e){super(...e),this.archive=null,this.disease=null}static{this.styles=o`
     :host {
       display: block;
     }
@@ -1695,7 +1988,7 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
-  `}hasCompletedItems(){if(!this.archive)return!1;let e=this.archive.completedExamIds||[],t=this.archive.completedTreatmentIds||[];return e.length>0||t.length>0}getDiseaseIcon(e){return{"hilar-cholangiocarcinoma":`🫀`}[e]||`📋`}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}handleBack(){this.dispatchEvent(new CustomEvent(`back`,{bubbles:!0,composed:!0}))}handleDelete(){this.dispatchEvent(new CustomEvent(`delete-archive`,{bubbles:!0,composed:!0}))}handleEditStage(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div>加载中...</div>`;let e=this.hasCompletedItems();return k`
+  `}hasCompletedItems(){if(!this.archive)return!1;let e=this.archive.completedExamIds||[],t=this.archive.completedTreatmentIds||[];return e.length>0||t.length>0}getDiseaseIcon(e){return{"hilar-cholangiocarcinoma":`🫀`}[e]||`📋`}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}handleBack(){this.dispatchEvent(new CustomEvent(`back`,{bubbles:!0,composed:!0}))}handleDelete(){this.dispatchEvent(new CustomEvent(`delete-archive`,{bubbles:!0,composed:!0}))}handleEditStage(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return k`<div>加载中...</div>`;let e=this.hasCompletedItems();return k`
       <div class="archive-header">
         <div class="header-top">
           <button class="back-btn" @click="${this.handleBack}">
@@ -1724,6 +2017,7 @@
             .disease="${this.disease}"
             @edit-stage="${this.handleEditStage}"
             @add-bilirubin="${this.handleAddBilirubin}"
+            @add-drainage="${this.handleAddDrainage}"
           ></stage-guide>
         </div>
       `:k`
@@ -1743,7 +2037,7 @@
           </button>
         </div>
       `}
-    `}};P([M({type:Object})],rd.prototype,`archive`,void 0),P([M({type:Object})],rd.prototype,`disease`,void 0),rd=P([Pe(`archive-detail-page`)],rd);var id=class extends j{constructor(...e){super(...e),this.archives=[],this.currentPage=`archive-list`,this.currentArchive=null,this.showDiseaseSelector=!1,this.showStageSelector=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:`🫀`,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}connectedCallback(){super.connectedCallback(),this.archives=this.loadArchives(),this.setupNavigation()}loadArchives(){let e=localStorage.getItem(`canotion-archives`);return e?JSON.parse(e):[]}saveArchives(){localStorage.setItem(`canotion-archives`,JSON.stringify(this.archives))}setupNavigation(){window.addEventListener(`popstate`,()=>{this.handleRoute(window.location.hash)}),this.handleRoute(window.location.hash||`#/`)}handleRoute(e){if(e===``||e===`#/`||e===`#`)this.showArchiveList();else if(e.startsWith(`#/archive/`)){let t=e.replace(`#/archive/`,``);this.viewArchive(t)}else this.showArchiveList()}navigateTo(e){window.location.hash=e}showArchiveList(){this.currentPage=`archive-list`,this.currentArchive=null}viewArchive(e){let t=this.archives.find(t=>t.id===e);t?(this.currentArchive=t,this.currentPage=`archive-detail`):this.showArchiveList()}createArchive(e){let t={id:Date.now().toString(),diseaseType:e.id,diseaseName:e.name,createdAt:new Date().toISOString(),completedExamIds:[],completedTreatmentIds:[],currentStage:`examination`,bilirubinRecords:[]};this.archives=[t,...this.archives],this.saveArchives(),this.navigateTo(`#/archive/${t.id}`)}updateArchiveStage(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);t&&(t.completedExamIds=e.completedExamIds,t.completedTreatmentIds=e.completedTreatmentIds,t.currentStage=e.currentStage,this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives])}addBilirubinRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.bilirubinRecords||=[],t.bilirubinRecords.some(t=>t.id===e.id))return;t.bilirubinRecords=[e,...t.bilirubinRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}deleteArchive(e){this.archives=this.archives.filter(t=>t.id!==e),this.saveArchives(),this.showArchiveList()}handleCreateArchive(){this.showDiseaseSelector=!0}handleDiseaseSelect(e){let t=e.detail;this.showDiseaseSelector=!1,t&&this.createArchive(t)}handleDiseaseSelectorClose(){this.showDiseaseSelector=!1}handleDeleteArchive(){this.currentArchive&&confirm(`确定要删除这个档案吗？此操作无法撤销。`)&&this.deleteArchive(this.currentArchive.id)}handleBack(){this.navigateTo(`#/`)}handleEditStage(){this.showStageSelector=!0}handleStageSelect(e){this.showStageSelector=!1,e.detail&&this.updateArchiveStage(e.detail)}handleStageSelectorClose(){this.showStageSelector=!1}handleAddBilirubin(e){this.addBilirubinRecord(e.detail)}getDiseaseForArchive(){return this.currentArchive&&this.diseases.find(e=>e.id===this.currentArchive.diseaseType)||null}render(){let e=this.getDiseaseForArchive();return k`
+    `}};P([M({type:Object})],id.prototype,`archive`,void 0),P([M({type:Object})],id.prototype,`disease`,void 0),id=P([Pe(`archive-detail-page`)],id);var ad=class extends j{constructor(...e){super(...e),this.archives=[],this.currentPage=`archive-list`,this.currentArchive=null,this.showDiseaseSelector=!1,this.showStageSelector=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:`🫀`,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}connectedCallback(){super.connectedCallback(),this.archives=this.loadArchives(),this.setupNavigation()}loadArchives(){let e=localStorage.getItem(`canotion-archives`);return e?JSON.parse(e):[]}saveArchives(){localStorage.setItem(`canotion-archives`,JSON.stringify(this.archives))}setupNavigation(){window.addEventListener(`popstate`,()=>{this.handleRoute(window.location.hash)}),this.handleRoute(window.location.hash||`#/`)}handleRoute(e){if(e===``||e===`#/`||e===`#`)this.showArchiveList();else if(e.startsWith(`#/archive/`)){let t=e.replace(`#/archive/`,``);this.viewArchive(t)}else this.showArchiveList()}navigateTo(e){window.location.hash=e}showArchiveList(){this.currentPage=`archive-list`,this.currentArchive=null}viewArchive(e){let t=this.archives.find(t=>t.id===e);t?(this.currentArchive=t,this.currentPage=`archive-detail`):this.showArchiveList()}createArchive(e){let t={id:Date.now().toString(),diseaseType:e.id,diseaseName:e.name,createdAt:new Date().toISOString(),completedExamIds:[],completedTreatmentIds:[],currentStage:`examination`,bilirubinRecords:[],drainageRecords:[]};this.archives=[t,...this.archives],this.saveArchives(),this.navigateTo(`#/archive/${t.id}`)}updateArchiveStage(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);t&&(t.completedExamIds=e.completedExamIds,t.completedTreatmentIds=e.completedTreatmentIds,t.currentStage=e.currentStage,this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives])}addBilirubinRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.bilirubinRecords||=[],t.bilirubinRecords.some(t=>t.id===e.id))return;t.bilirubinRecords=[e,...t.bilirubinRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}addDrainageRecord(e){if(!this.currentArchive)return;let t=this.archives.find(e=>e.id===this.currentArchive.id);if(t){if(t.drainageRecords||=[],t.drainageRecords.some(t=>t.id===e.id))return;t.drainageRecords=[e,...t.drainageRecords],this.saveArchives(),this.currentArchive={...t},this.archives=[...this.archives]}}deleteArchive(e){this.archives=this.archives.filter(t=>t.id!==e),this.saveArchives(),this.showArchiveList()}handleCreateArchive(){this.showDiseaseSelector=!0}handleDiseaseSelect(e){let t=e.detail;this.showDiseaseSelector=!1,t&&this.createArchive(t)}handleDiseaseSelectorClose(){this.showDiseaseSelector=!1}handleDeleteArchive(){this.currentArchive&&confirm(`确定要删除这个档案吗？此操作无法撤销。`)&&this.deleteArchive(this.currentArchive.id)}handleBack(){this.navigateTo(`#/`)}handleEditStage(){this.showStageSelector=!0}handleStageSelect(e){this.showStageSelector=!1,e.detail&&this.updateArchiveStage(e.detail)}handleStageSelectorClose(){this.showStageSelector=!1}handleAddBilirubin(e){this.addBilirubinRecord(e.detail)}handleAddDrainage(e){this.addDrainageRecord(e.detail)}getDiseaseForArchive(){return this.currentArchive&&this.diseases.find(e=>e.id===this.currentArchive.diseaseType)||null}render(){let e=this.getDiseaseForArchive();return k`
       ${this.currentPage===`archive-list`?k`
         <archive-list-page
           .archives="${this.archives}"
@@ -1758,6 +2052,7 @@
           @back="${this.handleBack}"
           @edit-stage="${this.handleEditStage}"
           @add-bilirubin="${this.handleAddBilirubin}"
+          @add-drainage="${this.handleAddDrainage}"
         ></archive-detail-page>
       `:``}
 
@@ -1777,4 +2072,4 @@
           @close="${this.handleStageSelectorClose}"
         ></stage-selector>
       `:``}
-    `}};P([N()],id.prototype,`archives`,void 0),P([N()],id.prototype,`currentPage`,void 0),P([N()],id.prototype,`currentArchive`,void 0),P([N()],id.prototype,`showDiseaseSelector`,void 0),P([N()],id.prototype,`showStageSelector`,void 0),id=P([Pe(`app-root`)],id);
+    `}};P([N()],ad.prototype,`archives`,void 0),P([N()],ad.prototype,`currentPage`,void 0),P([N()],ad.prototype,`currentArchive`,void 0),P([N()],ad.prototype,`showDiseaseSelector`,void 0),P([N()],ad.prototype,`showStageSelector`,void 0),ad=P([Pe(`app-root`)],ad);
