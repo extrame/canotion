@@ -1,7 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import type { Archive, Disease, ExamItem, BilirubinRecord } from '../types';
+import type { Archive, Disease, ExamItem, BilirubinRecord, DrainageRecord } from '../types';
 import './bilirubin-chart';
+import './drainage-chart';
 
 @customElement('examination-tab')
 export class ExaminationTab extends LitElement {
@@ -191,6 +192,12 @@ export class ExaminationTab extends LitElement {
     return examIds.includes('blood-test');
   }
 
+  private hasPTCD(): boolean {
+    if (!this.archive) return false;
+    const treatmentIds = this.archive.completedTreatmentIds || [];
+    return treatmentIds.includes('biliary-drainage');
+  }
+
   private getExamStatus(examId: string): 'completed' | 'current' | 'next' | 'pending' {
     if (!this.archive) return 'pending';
     const examIds = this.archive.completedExamIds || [];
@@ -211,6 +218,15 @@ export class ExaminationTab extends LitElement {
   private handleAddBilirubinRecord(e: CustomEvent<BilirubinRecord>): void {
     if (!this.archive) return;
     this.dispatchEvent(new CustomEvent('add-bilirubin', {
+      bubbles: true,
+      composed: true,
+      detail: e.detail
+    }));
+  }
+
+  private handleAddDrainageRecord(e: CustomEvent<DrainageRecord>): void {
+    if (!this.archive) return;
+    this.dispatchEvent(new CustomEvent('add-drainage', {
       bubbles: true,
       composed: true,
       detail: e.detail
@@ -242,6 +258,7 @@ export class ExaminationTab extends LitElement {
     }
 
     const showBilirubin = this.hasBloodTest();
+    const showPTCD = this.hasPTCD();
 
     return html`
       <div class="guide-section">
@@ -282,6 +299,15 @@ export class ExaminationTab extends LitElement {
           })}
         </div>
       </div>
+
+      ${showPTCD ? html`
+        <div class="bilirubin-section">
+          <drainage-chart
+            .records="${this.archive.drainageRecords || []}"
+            @add-record="${this.handleAddDrainageRecord}"
+          ></drainage-chart>
+        </div>
+      ` : ''}
 
       ${showBilirubin ? html`
         <div class="bilirubin-section">

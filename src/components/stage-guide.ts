@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import type { Archive, Disease, BilirubinRecord } from '../types';
+import type { Archive, Disease, BilirubinRecord, DrainageRecord } from '../types';
 import './examination-tab';
 import './treatment-tab';
 
@@ -136,6 +136,14 @@ export class StageGuide extends LitElement {
     }));
   }
 
+  private handleAddDrainage(e: CustomEvent<DrainageRecord>): void {
+    this.dispatchEvent(new CustomEvent<DrainageRecord>('add-drainage', {
+      bubbles: true,
+      composed: true,
+      detail: e.detail
+    }));
+  }
+
   render() {
     if (!this.archive || !this.disease) {
       return html`<div class="empty-state">加载中...</div>`;
@@ -176,6 +184,7 @@ export class StageGuide extends LitElement {
                 .archive="${this.archive}"
                 .disease="${this.disease}"
                 @add-bilirubin="${this.handleAddBilirubin}"
+                @add-drainage="${this.handleAddDrainage}"
               ></examination-tab>
             ` : html`
               <treatment-tab

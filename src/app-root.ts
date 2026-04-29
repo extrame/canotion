@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import type { Archive, Disease, BilirubinRecord, StageSelectResult } from './types';
+import type { Archive, Disease, BilirubinRecord, DrainageRecord, StageSelectResult } from './types';
 import './components/disease-selector';
 import './components/stage-selector';
 import './components/stage-guide';
@@ -166,7 +166,8 @@ export class AppRoot extends LitElement {
       completedExamIds: [],
       completedTreatmentIds: [],
       currentStage: 'examination',
-      bilirubinRecords: []
+      bilirubinRecords: [],
+      drainageRecords: []
     };
     this.archives = [archive, ...this.archives];
     this.saveArchives();
@@ -196,6 +197,22 @@ export class AppRoot extends LitElement {
       const exists = archive.bilirubinRecords.some(r => r.id === record.id);
       if (exists) return;
       archive.bilirubinRecords = [record, ...archive.bilirubinRecords];
+      this.saveArchives();
+      this.currentArchive = { ...archive };
+      this.archives = [...this.archives];
+    }
+  }
+
+  private addDrainageRecord(record: DrainageRecord): void {
+    if (!this.currentArchive) return;
+    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
+    if (archive) {
+      if (!archive.drainageRecords) {
+        archive.drainageRecords = [];
+      }
+      const exists = archive.drainageRecords.some(r => r.id === record.id);
+      if (exists) return;
+      archive.drainageRecords = [record, ...archive.drainageRecords];
       this.saveArchives();
       this.currentArchive = { ...archive };
       this.archives = [...this.archives];
@@ -255,6 +272,10 @@ export class AppRoot extends LitElement {
     this.addBilirubinRecord(e.detail);
   }
 
+  private handleAddDrainage(e: CustomEvent<DrainageRecord>): void {
+    this.addDrainageRecord(e.detail);
+  }
+
   private getDiseaseForArchive(): Disease | null {
     if (!this.currentArchive) return null;
     return this.diseases.find(d => d.id === this.currentArchive!.diseaseType) || null;
@@ -278,6 +299,7 @@ export class AppRoot extends LitElement {
           @back="${this.handleBack}"
           @edit-stage="${this.handleEditStage}"
           @add-bilirubin="${this.handleAddBilirubin}"
+          @add-drainage="${this.handleAddDrainage}"
         ></archive-detail-page>
       ` : ''}
 
