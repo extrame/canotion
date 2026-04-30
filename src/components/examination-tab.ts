@@ -489,7 +489,7 @@ export class ExaminationTab extends LitElement {
         groups: [
           {
             id: 'pathology',
-            name: '病理确认',
+            name: '马上进行病理确认',
             icon: '🔬',
             estimateTime: '约2-3周',
             detailRoute: '#/pathology-detail',
@@ -508,7 +508,7 @@ export class ExaminationTab extends LitElement {
               },
               {
                 name: '基因检测',
-                desc: '检测基因突变情况（如KRAS、TP53等），为靶向治疗提供依据。',
+                desc: '检测基因突变情况（FGFR2、IDH1、MSI/TMB、HER2、NTRK等），为靶向治疗提供依据。胆道肿瘤常见靶点：FGFR2融合、IDH1突变等。',
                 icon: '🧬',
                 required: false
               }
@@ -587,7 +587,17 @@ export class ExaminationTab extends LitElement {
                           ${item.name}
                           <span class="task-badge ${item.required ? 'required' : 'optional'}">${item.required ? '必做' : '可选'}</span>
                         </div>
-                        <div class="task-sub-desc">${item.desc}</div>
+                        <div class="task-sub-desc">
+                          ${item.desc}
+                          ${item.name === '基因检测' && this.archive?.hasPortalVeinTumorThrombus ? html`
+                            <div style="margin-top: 8px; padding: 10px; background: #fff1f0; border-radius: 8px; border: 1px solid #ffccc7;">
+                              <div style="font-size: 12px; color: #ff4d4f; font-weight: 600;">⚠️ 门静脉癌栓患者注意</div>
+                              <div style="font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5;">
+                                若治疗过程中发生消化道出血需要输血，基因检测需推迟<span style="color: #ff4d4f; font-weight: 600;">至少15天</span>。请提前与医生沟通安排基因检测抽血时间。
+                              </div>
+                            </div>
+                          ` : ''}
+                        </div>
                       </div>
                     </div>
                   `)}

@@ -294,8 +294,8 @@ export class StageSelector extends LitElement {
       composed: true,
       detail: {
         disease: this.disease,
-        completedExamIds: Array.from(this.completedExamIds),
-        completedTreatmentIds: Array.from(this.completedTreatmentIds),
+        completedExamIds: Array.from(this.selectedExamIds),
+        completedTreatmentIds: Array.from(this.selectedTreatmentIds),
         currentStage: this.getCurrentStage()
       }
     }));
@@ -368,7 +368,7 @@ export class StageSelector extends LitElement {
           ` : html`
             <div class="stage-hint">
               <div class="stage-hint-text">
-                请选择您已完成的相关检查或治疗项目，系统将根据您的选择判断当前所处阶段并提供相应指引。
+                您是否已经完成专科医生初步诊断？请选择您已完成的相关检查或治疗项目，系统将根据您的选择判断当前所处阶段并提供相应指引。
               </div>
             </div>
           `}

@@ -102,7 +102,22 @@ export class AppRoot extends LitElement {
           desc: 'PTCD或支架置入缓解黄疸',
           category: 'drainage'
         }
-      ]
+      ],
+      suspectStageInfo: {
+        title: '疑似诊断阶段',
+        tips: [
+          '⚠️ 最重要：关注胆红素指标和黄疸情况',
+          '所有后续治疗（化疗、手术等）必须在胆红素降至50μmol/L以下才能进行',
+          '如出现皮肤、眼睛发黄、尿色加深等症状，请立即就医',
+          '必要时需进行PTCD外引流或支架置入内引流来降低胆红素',
+          '保存好所有检查报告（CT、MRI、超声等）',
+          '保存好血液检查结果（肿瘤标志物、肝功能等）',
+          '保存好影像学资料（CT片、MRI片等）',
+          '如有病理报告也需保存',
+          '尽快到肿瘤科或肝胆外科进行确诊'
+        ],
+        recommendDepartment: '肿瘤科 / 肝胆外科'
+      }
     }
   ];
 
@@ -168,7 +183,7 @@ export class AppRoot extends LitElement {
       createdAt: new Date().toISOString(),
       completedExamIds: [],
       completedTreatmentIds: [],
-      currentStage: 'examination',
+      currentStage: 'suspect',
       bilirubinRecords: [],
       drainageRecords: []
     };
@@ -294,6 +309,25 @@ export class AppRoot extends LitElement {
     this.updatePortalVeinThrombus(e.detail.hasPortalVeinTumorThrombus);
   }
 
+  private handleUpdateSuspectDocsSaved(e: CustomEvent<{ suspectDocsSaved: boolean }>): void {
+    this.updateSuspectDocsSaved(e.detail.suspectDocsSaved);
+  }
+
+  private handleConfirmSuspectStage(): void {
+    this.showStageSelector = true;
+  }
+
+  private updateSuspectDocsSaved(suspectDocsSaved: boolean): void {
+    if (!this.currentArchive) return;
+    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
+    if (archive) {
+      archive.suspectDocsSaved = suspectDocsSaved;
+      this.saveArchives();
+      this.currentArchive = { ...archive };
+      this.archives = [...this.archives];
+    }
+  }
+
   private getDiseaseForArchive(): Disease | null {
     if (!this.currentArchive) return null;
     return this.diseases.find(d => d.id === this.currentArchive!.diseaseType) || null;
@@ -319,6 +353,8 @@ export class AppRoot extends LitElement {
           @add-bilirubin="${this.handleAddBilirubin}"
           @add-drainage="${this.handleAddDrainage}"
           @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
+          @update-suspect-docs-saved="${this.handleUpdateSuspectDocsSaved}"
+          @confirm-suspect-stage="${this.handleConfirmSuspectStage}"
         ></archive-detail-page>
       ` : ''}
       ${this.currentPage === 'pathology-detail' ? html`

@@ -160,6 +160,82 @@ export class PathologyDetailPage extends LitElement {
     .timeline-item.urgent .timeline-item-name {
       color: #ff4d4f;
     }
+    .timeline-item.required {
+      position: relative;
+    }
+    .timeline-item.required::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      right: -8px;
+      top: -4px;
+      bottom: -4px;
+      background: linear-gradient(135deg, #fff2e6 0%, #ffd591 100%);
+      border-radius: 16px;
+      z-index: 0;
+    }
+    .timeline-item.required .timeline-content {
+      position: relative;
+      z-index: 1;
+      background: white;
+      border: 2px solid #fa8c16;
+    }
+    .timeline-item.required .timeline-item-name {
+      color: #d46b08;
+    }
+    .required-banner {
+      background: #fa8c16;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .required-banner svg {
+      flex-shrink: 0;
+    }
+    .timeline-item.gene-test {
+      position: relative;
+    }
+    .timeline-item.gene-test::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      right: -8px;
+      top: -4px;
+      bottom: -4px;
+      background: linear-gradient(135deg, #f6ffed 0%, #b7eb8f 100%);
+      border-radius: 16px;
+      z-index: 0;
+    }
+    .timeline-item.gene-test .timeline-content {
+      position: relative;
+      z-index: 1;
+      background: white;
+      border: 2px solid #52c41a;
+    }
+    .timeline-item.gene-test .timeline-item-name {
+      color: #52c41a;
+    }
+    .gene-banner {
+      background: #52c41a;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .gene-banner svg {
+      flex-shrink: 0;
+    }
     .urgent-banner {
       background: #ff4d4f;
       color: white;
@@ -420,6 +496,48 @@ export class PathologyDetailPage extends LitElement {
                 </div>
               </div>
             </div>
+
+            <div class="timeline-item required">
+              <div class="timeline-dot pending">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <circle cx="12" cy="12" r="1"></circle>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">免疫组化染色检测 🔬</div>
+                <div class="timeline-item-desc">检测肿瘤标志物表达情况，指导靶向和免疫治疗药物选择</div>
+                <div class="timeline-item-time">约5-7天</div>
+                <div class="required-banner">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                  必做！标准诊疗指南一线治疗是化疗+免疫，必须尽快完成
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-item gene-test">
+              <div class="timeline-dot pending">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                  <circle cx="12" cy="12" r="1"></circle>
+                </svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-item-name">基因检测 🧬</div>
+                <div class="timeline-item-desc">检测基因突变情况（FGFR2、IDH1、MSI/TMB、HER2、NTRK等），为靶向治疗提供依据</div>
+                <div class="timeline-item-time">约10-14天</div>
+                <div class="gene-banner">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  可与免疫组化同时进行，不耽误时间
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="bifurcation-section">
@@ -435,9 +553,9 @@ export class PathologyDetailPage extends LitElement {
               <div class="bifurcation-path">
                 <div class="path-result cancer">确诊癌症</div>
                 <div class="path-action">明确为腺癌或鳞癌等。<br><br>
-                  <strong>请立即：</strong><br>
-                  1. 联系医生进行免疫组化染色检测<br>
-                  2. 同时送检基因检测（可与免疫组化并行）</div>
+                  <strong>请立即同时进行：</strong><br>
+                  1. 联系医生进行<strong>免疫组化染色检测</strong>（必做）<br>
+                  2. 送检<strong>基因检测</strong>（可与免疫组化并行）</div>
               </div>
             </div>
           </div>
@@ -454,7 +572,9 @@ export class PathologyDetailPage extends LitElement {
             <div class="note-content">
               基本病理报告出具后，根据结果分为两条路径：<br><br>
               1. 若排除癌症：恭喜，可结束当前诊疗流程<br><br>
-              2. 若确诊癌症：需立即进行免疫组化染色检测和基因检测。<br>
+              2. 若确诊癌症：<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;• <strong>免疫组化染色检测（必做）</strong>：用于指导化疗+免疫治疗方案选择<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;• <strong>基因检测（建议做）</strong>：用于靶向治疗药物选择<br><br>
               <strong>注意：免疫组化和基因检测可以同时送检，请务必在拿到病理报告后第一时间联系您的主治医生。</strong>
             </div>
           </div>
