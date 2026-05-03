@@ -15,6 +15,9 @@ export class StageGuide extends LitElement {
   @state()
   private activeTab: 'examination' | 'treatment' = 'examination';
 
+  @state()
+  private expandedGroups: Set<string> = new Set();
+
   static styles = css`
     :host {
       display: block;
@@ -118,10 +121,213 @@ export class StageGuide extends LitElement {
     .edit-btn:hover {
       background: #f0f9ff;
     }
+    .cross-stage-section {
+      margin-bottom: 20px;
+    }
+    .cross-stage-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fa8c16;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cross-stage-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .cross-stage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .task-group {
+      background: white;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #e8e8e8;
+      overflow: hidden;
+    }
+    .task-group:last-child {
+      margin-bottom: 0;
+    }
+    .task-group-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      background: #fafafa;
+      transition: background 0.2s;
+    }
+    .task-group-header:hover {
+      background: #f0f0f0;
+    }
+    .task-group-icon {
+      font-size: 16px;
+    }
+    .task-group-content {
+      flex: 1;
+    }
+    .task-group-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+    .task-group-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .task-group-time {
+      font-size: 12px;
+      color: #fa8c16;
+      font-weight: 500;
+    }
+    .task-group-detail {
+      font-size: 12px;
+      color: #1890ff;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .task-group-detail:hover {
+      text-decoration: underline;
+    }
+    .task-group-toggle {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .task-group-toggle.expanded {
+      transform: rotate(90deg);
+    }
+    .task-group-items {
+      padding: 8px 14px 12px 44px;
+    }
+    .task-sub-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .task-sub-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .task-sub-icon {
+      font-size: 14px;
+      margin-top: 2px;
+    }
+    .task-sub-content {
+      flex: 1;
+    }
+    .task-sub-name {
+      font-weight: 500;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    .task-sub-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .task-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+    .task-badge.required {
+      background: #fa8c16;
+      color: white;
+    }
+    .task-badge.optional {
+      background: #52c41a;
+      color: white;
+    }
   `;
 
   private handleTabClick(tab: 'examination' | 'treatment'): void {
     this.activeTab = tab;
+  }
+
+  private toggleGroup(groupId: string): void {
+    if (this.expandedGroups.has(groupId)) {
+      this.expandedGroups.delete(groupId);
+    } else {
+      this.expandedGroups.add(groupId);
+    }
+    this.expandedGroups = new Set(this.expandedGroups);
+  }
+
+  private getCrossStageTasks(): Array<{
+    id: string;
+    name: string;
+    icon: string;
+    detailRoute?: string;
+    items: Array<{ name: string; desc: string; icon: string; required: boolean }>
+  }> {
+    return [
+      {
+        id: 'nutrition',
+        name: '保证营养状态',
+        icon: '🍎',
+        detailRoute: '#/nutrition-detail',
+        items: [
+          {
+            name: '白蛋白（ALB）',
+            desc: '白蛋白是反映营养状态的关键指标，正常值35-50 g/L，低于35g/L需加强营养支持。直接影响身体恢复能力和化疗耐受性。',
+            icon: '🥚',
+            required: true
+          },
+          {
+            name: '微量元素',
+            desc: '锌、硒、镁等微量元素参与多种生理过程。缺锌导致免疫力下降、伤口愈合慢；缺硒影响化疗效果和身体恢复。',
+            icon: '⚡',
+            required: true
+          }
+        ]
+      },
+      {
+        id: 'complications',
+        name: '小心并发症',
+        icon: '⚠️',
+        items: [
+          {
+            name: '门静脉癌栓',
+            desc: '门静脉癌栓是胆管癌常见并发症，会导致门静脉压力升高、脾功能亢进、消化道出血风险增加。',
+            icon: '🔴',
+            required: true
+          },
+          {
+            name: '梗阻性黄疸',
+            desc: '肿瘤阻塞胆管导致胆红素升高，需密切监测胆红素变化，必要时进行胆道引流。',
+            icon: '💛',
+            required: true
+          },
+          {
+            name: '胆道感染',
+            desc: '胆道梗阻易导致胆管炎，表现为发热、腹痛、黄疸加重。出现发热需及时就医。',
+            icon: '🤒',
+            required: true
+          }
+        ]
+      }
+    ];
   }
 
   private handleEdit(): void {
@@ -168,6 +374,53 @@ export class StageGuide extends LitElement {
           <div class="stage-info">
             <div class="stage-label">当前阶段</div>
             <div class="stage-name">${isExamination ? '检查/等待治疗阶段' : '治疗阶段'}</div>
+          </div>
+        </div>
+
+        <div class="cross-stage-section">
+          <div class="cross-stage-title">
+            <div class="cross-stage-icon" style="background: #fff2e6;">⚡</div>
+            跨阶段核心任务（贯穿全程）
+          </div>
+          <div class="cross-stage-list">
+            ${this.getCrossStageTasks().map(group => html`
+              <div class="task-group">
+                <div class="task-group-header" @click="${() => this.toggleGroup(group.id)}">
+                  <div class="task-group-toggle ${this.expandedGroups.has(group.id) ? 'expanded' : ''}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+                  <div class="task-group-icon">${group.icon}</div>
+                  <div class="task-group-content">
+                    <div class="task-group-name">${group.name}</div>
+                    <div class="task-group-meta">
+                      ${group.detailRoute ? html`
+                        <span class="task-group-detail" @click="${(e: Event) => { e.stopPropagation(); window.location.hash = group.detailRoute; }}">
+                          查看详情 →
+                        </span>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+                ${this.expandedGroups.has(group.id) ? html`
+                  <div class="task-group-items">
+                    ${group.items.map(item => html`
+                      <div class="task-sub-item">
+                        <div class="task-sub-icon">${item.icon}</div>
+                        <div class="task-sub-content">
+                          <div class="task-sub-name">
+                            ${item.name}
+                            <span class="task-badge ${item.required ? 'required' : 'optional'}">${item.required ? '必做' : '可选'}</span>
+                          </div>
+                          <div class="task-sub-desc">${item.desc}</div>
+                        </div>
+                      </div>
+                    `)}
+                  </div>
+                ` : ''}
+              </div>
+            `)}
           </div>
         </div>
 

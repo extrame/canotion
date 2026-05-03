@@ -1,12 +1,13 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import type { Archive, Disease, BilirubinRecord, DrainageRecord, StageSelectResult } from './types';
+import type { Archive, Disease, BilirubinRecord, StageSelectResult } from './types';
 import './components/disease-selector';
 import './components/stage-selector';
 import './components/stage-guide';
 import './components/archive-card';
 import './pages/archive-list-page';
 import './pages/archive-detail-page';
+import './pages/nutrition-detail-page';
 import './pages/pathology-detail-page';
 
 @customElement('app-root')
@@ -15,10 +16,13 @@ export class AppRoot extends LitElement {
   private archives: Archive[] = [];
 
   @state()
-  private currentPage: 'archive-list' | 'archive-detail' | 'pathology-detail' = 'archive-list';
+  private currentPage: 'archive-list' | 'archive-detail' | 'detail' = 'archive-list';
 
   @state()
   private currentArchive: Archive | null = null;
+
+  @state()
+  private currentDetailPage: 'nutrition' | 'pathology' | null = null;
 
   @state()
   private showDiseaseSelector = false;
@@ -73,6 +77,12 @@ export class AppRoot extends LitElement {
       ],
       treatmentItems: [
         {
+          id: 'picc',
+          name: 'PICC置管',
+          desc: '经外周静脉穿刺中心静脉置管，保护静脉方便化疗输注',
+          category: 'preparation'
+        },
+        {
           id: 'surgery',
           name: '手术治疗',
           desc: '肝门胆管癌根治术',
@@ -102,22 +112,7 @@ export class AppRoot extends LitElement {
           desc: 'PTCD或支架置入缓解黄疸',
           category: 'drainage'
         }
-      ],
-      suspectStageInfo: {
-        title: '疑似诊断阶段',
-        tips: [
-          '⚠️ 最重要：关注胆红素指标和黄疸情况',
-          '所有后续治疗（化疗、手术等）必须在胆红素降至50μmol/L以下才能进行',
-          '如出现皮肤、眼睛发黄、尿色加深等症状，请立即就医',
-          '必要时需进行PTCD外引流或支架置入内引流来降低胆红素',
-          '保存好所有检查报告（CT、MRI、超声等）',
-          '保存好血液检查结果（肿瘤标志物、肝功能等）',
-          '保存好影像学资料（CT片、MRI片等）',
-          '如有病理报告也需保存',
-          '尽快到肿瘤科或肝胆外科进行确诊'
-        ],
-        recommendDepartment: '肿瘤科 / 肝胆外科'
-      }
+      ]
     }
   ];
 
@@ -149,11 +144,25 @@ export class AppRoot extends LitElement {
     } else if (hash.startsWith('#/archive/')) {
       const archiveId = hash.replace('#/archive/', '');
       this.viewArchive(archiveId);
+    } else if (hash === '#/nutrition-detail') {
+      this.showNutritionDetail();
     } else if (hash === '#/pathology-detail') {
-      this.currentPage = 'pathology-detail';
+      this.showPathologyDetail();
     } else {
       this.showArchiveList();
     }
+  }
+
+  private showNutritionDetail(): void {
+    this.currentPage = 'detail';
+    this.currentDetailPage = 'nutrition';
+    this.currentArchive = null;
+  }
+
+  private showPathologyDetail(): void {
+    this.currentPage = 'detail';
+    this.currentDetailPage = 'pathology';
+    this.currentArchive = null;
   }
 
   private navigateTo(path: string): void {
@@ -183,9 +192,8 @@ export class AppRoot extends LitElement {
       createdAt: new Date().toISOString(),
       completedExamIds: [],
       completedTreatmentIds: [],
-      currentStage: 'suspect',
-      bilirubinRecords: [],
-      drainageRecords: []
+      currentStage: 'examination',
+      bilirubinRecords: []
     };
     this.archives = [archive, ...this.archives];
     this.saveArchives();
@@ -215,33 +223,6 @@ export class AppRoot extends LitElement {
       const exists = archive.bilirubinRecords.some(r => r.id === record.id);
       if (exists) return;
       archive.bilirubinRecords = [record, ...archive.bilirubinRecords];
-      this.saveArchives();
-      this.currentArchive = { ...archive };
-      this.archives = [...this.archives];
-    }
-  }
-
-  private addDrainageRecord(record: DrainageRecord): void {
-    if (!this.currentArchive) return;
-    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
-    if (archive) {
-      if (!archive.drainageRecords) {
-        archive.drainageRecords = [];
-      }
-      const exists = archive.drainageRecords.some(r => r.id === record.id);
-      if (exists) return;
-      archive.drainageRecords = [record, ...archive.drainageRecords];
-      this.saveArchives();
-      this.currentArchive = { ...archive };
-      this.archives = [...this.archives];
-    }
-  }
-
-  private updatePortalVeinThrombus(hasPortalVeinTumorThrombus: boolean): void {
-    if (!this.currentArchive) return;
-    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
-    if (archive) {
-      archive.hasPortalVeinTumorThrombus = hasPortalVeinTumorThrombus;
       this.saveArchives();
       this.currentArchive = { ...archive };
       this.archives = [...this.archives];
@@ -301,33 +282,6 @@ export class AppRoot extends LitElement {
     this.addBilirubinRecord(e.detail);
   }
 
-  private handleAddDrainage(e: CustomEvent<DrainageRecord>): void {
-    this.addDrainageRecord(e.detail);
-  }
-
-  private handleUpdatePortalVeinThrombus(e: CustomEvent<{ hasPortalVeinTumorThrombus: boolean }>): void {
-    this.updatePortalVeinThrombus(e.detail.hasPortalVeinTumorThrombus);
-  }
-
-  private handleUpdateSuspectDocsSaved(e: CustomEvent<{ suspectDocsSaved: boolean }>): void {
-    this.updateSuspectDocsSaved(e.detail.suspectDocsSaved);
-  }
-
-  private handleConfirmSuspectStage(): void {
-    this.showStageSelector = true;
-  }
-
-  private updateSuspectDocsSaved(suspectDocsSaved: boolean): void {
-    if (!this.currentArchive) return;
-    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
-    if (archive) {
-      archive.suspectDocsSaved = suspectDocsSaved;
-      this.saveArchives();
-      this.currentArchive = { ...archive };
-      this.archives = [...this.archives];
-    }
-  }
-
   private getDiseaseForArchive(): Disease | null {
     if (!this.currentArchive) return null;
     return this.diseases.find(d => d.id === this.currentArchive!.diseaseType) || null;
@@ -351,13 +305,12 @@ export class AppRoot extends LitElement {
           @back="${this.handleBack}"
           @edit-stage="${this.handleEditStage}"
           @add-bilirubin="${this.handleAddBilirubin}"
-          @add-drainage="${this.handleAddDrainage}"
-          @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
-          @update-suspect-docs-saved="${this.handleUpdateSuspectDocsSaved}"
-          @confirm-suspect-stage="${this.handleConfirmSuspectStage}"
         ></archive-detail-page>
       ` : ''}
-      ${this.currentPage === 'pathology-detail' ? html`
+      ${this.currentPage === 'detail' && this.currentDetailPage === 'nutrition' ? html`
+        <nutrition-detail-page></nutrition-detail-page>
+      ` : ''}
+      ${this.currentPage === 'detail' && this.currentDetailPage === 'pathology' ? html`
         <pathology-detail-page></pathology-detail-page>
       ` : ''}
 

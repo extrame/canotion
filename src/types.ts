@@ -6,11 +6,8 @@ export interface Archive {
   stage?: string;
   completedExamIds: string[];
   completedTreatmentIds: string[];
-  currentStage: 'suspect' | 'examination' | 'treatment';
+  currentStage: 'examination' | 'treatment';
   bilirubinRecords: BilirubinRecord[];
-  drainageRecords: DrainageRecord[];
-  hasPortalVeinTumorThrombus?: boolean;
-  suspectDocsSaved?: boolean;
 }
 
 export interface BilirubinRecord {
@@ -22,14 +19,6 @@ export interface BilirubinRecord {
   unit: string;
 }
 
-export interface DrainageRecord {
-  id: string;
-  date: string;
-  volume: number;
-  color: string;
-  notes: string;
-}
-
 export interface Disease {
   id: string;
   name: string;
@@ -38,13 +27,6 @@ export interface Disease {
   diagnosisKeyItem: string;
   examItems: ExamItem[];
   treatmentItems: TreatmentItem[];
-  suspectStageInfo?: SuspectStageInfo;
-}
-
-export interface SuspectStageInfo {
-  title: string;
-  tips: string[];
-  recommendDepartment: string;
 }
 
 export interface ExamItem {
@@ -64,8 +46,7 @@ export interface TreatmentItem {
 export interface StageSelectResult {
   completedExamIds: string[];
   completedTreatmentIds: string[];
-  currentStage: 'suspect' | 'examination' | 'treatment';
-  suspectDocsSaved?: boolean;
+  currentStage: 'examination' | 'treatment';
 }
 
 export interface PatientInfo {

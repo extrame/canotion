@@ -438,25 +438,25 @@ export class ExaminationTab extends LitElement {
   }
 
   private getCoreTasksForDisease(diseaseType: string): {
-    standalone: Array<{ name: string; desc: string; icon: string; required: boolean; estimateTime?: string }>;
+    standalone: Array<{ name: string; desc: string | ReturnType<typeof html>; icon: string; required: boolean; estimateTime?: string }>;
     groups: Array<{
       id: string;
       name: string;
       icon: string;
       estimateTime?: string;
       detailRoute?: string;
-      items: Array<{ name: string; desc: string; icon: string; required: boolean }>
+      items: Array<{ name: string; desc: string | ReturnType<typeof html>; icon: string; required: boolean }>
     }>;
   } {
     const configs: Record<string, {
-      standalone: Array<{ name: string; desc: string; icon: string; required: boolean; estimateTime?: string }>;
+      standalone: Array<{ name: string; desc: string | ReturnType<typeof html>; icon: string; required: boolean; estimateTime?: string }>;
       groups: Array<{
         id: string;
         name: string;
         icon: string;
         estimateTime?: string;
         detailRoute?: string;
-        items: Array<{ name: string; desc: string; icon: string; required: boolean }>
+        items: Array<{ name: string; desc: string | ReturnType<typeof html>; icon: string; required: boolean }>
       }>;
     }> = {
       'hilar-cholangiocarcinoma': {
@@ -468,22 +468,6 @@ export class ExaminationTab extends LitElement {
             icon: '💛',
             required: true,
             estimateTime: this.calculateBilirubinEstimateTime()
-          },
-          {
-            name: '保证营养状态',
-            desc: this.archive?.hasPortalVeinTumorThrombus ? html`
-              <div style="color: #ff4d4f; font-weight: 600; margin-bottom: 6px;">⚠️ 存在门静脉癌栓，饮食需特别注意！</div>
-              <div>第一要务：避免消化道出血！</div>
-              <ul style="margin: 8px 0 0 0; padding-left: 18px; line-height: 1.8;">
-                <li>禁止进食<span style="color: #ff4d4f; font-weight: 600;">硬质食物</span>（如坚果、骨头、脆皮等）</li>
-                <li>禁止<span style="color: #ff4d4f; font-weight: 600;">过饱</span>，建议少食多餐</li>
-                <li>严禁<span style="color: #ff4d4f; font-weight: 600;">过烫食物</span>，温度适宜后再进食</li>
-                <li>选择软烂、易消化的食物</li>
-                <li>化疗前需保证良好营养状态，摄入充足蛋白质</li>
-              </ul>
-            ` : '化疗前需保证良好的营养状态，摄入充足蛋白质，为后续治疗提供身体支持。',
-            icon: '🍎',
-            required: true
           }
         ],
         groups: [

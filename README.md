@@ -1,83 +1,72 @@
-# Canotion - 癌症患者笔记本
+# 癌症患者诊疗周期向导
 
-一个基于 Web Components 构建的病历管理应用，帮助肝门胆管癌患者记录检查项目、治疗阶段和胆红素指标。
+## 免责声明
 
-## 功能特性
+**⚠️ 重要提醒**
 
-- 📁 **档案管理** - 创建、查看、删除患者病历档案
-- 🔬 **检查项目追踪** - 记录已完成的各种检查项目（血液检查、影像学检查、病理活检等）
-- 💊 **治疗阶段记录** - 追踪手术治疗、化疗、放疗、靶向/免疫治疗等进度
-- 📈 **胆红素图表** - 记录并可视化胆红素指标变化
-- 💾 **本地存储** - 数据保存在浏览器本地，保护隐私
+本项目是我在陪伴母亲治疗肝门胆管癌过程中开发的。所有数据来源于个人诊疗经历和公开资料，**不构成专业医疗意见**。
+
+请务必以主治医生的建议为准，本工具仅供参考辅助，甄别使用。
+
+---
+
+## 项目介绍
+
+这是一个帮助癌症患者管理诊疗周期的辅助工具，主要针对肝门胆管癌（ hilar cholangiocarcinoma）患者设计。
+
+### 主要功能
+
+- **阶段管理**：跟踪患者从疑似诊断到治疗完成的各个阶段
+- **指标监测**：记录胆红素等关键指标，提供阶段性提示
+- **任务提醒**：根据当前阶段提醒用户需要完成的事项
+- **资料整理**：帮助患者整理和保存诊疗资料
+
+### 核心阶段
+
+1. **疑似诊断阶段**：发现异常后的初步确认
+2. **检查阶段**：完成各项检查明确病情
+3. **治疗阶段**：手术、化疗等治疗方案
+
+---
 
 ## 技术栈
 
-- **框架**: [Lit](https://lit.dev/) - 轻量级 Web Components 库
-- **构建工具**: [Vite](https://vitejs.dev/)
-- **图表**: [Chart.js](https://www.chartjs.org/)
-- **语言**: TypeScript
+- Lit + TypeScript
+- Web Components
+- LocalStorage 数据持久化
 
-## 开发
+## 运行项目
 
 ```bash
-# 安装依赖
 yarn install
-
-# 开发模式
 yarn dev
-
-# 构建生产版本
-yarn build
-
-# 预览生产版本
-yarn preview
 ```
 
-## 部署到 GitHub Pages
+---
 
-1. 构建项目：
-   ```bash
-   yarn build
-   ```
+## 关于肝门胆管癌
 
-2. 将 `dist` 目录的内容推送到 GitHub 仓库的 `gh-pages` 分支：
-   ```bash
-   #方式一：使用 git subtree
-   git subtree push --prefix dist origin gh-pages
+肝门部胆管癌（Perihilar cholangiocarcinoma）是胆道系统常见的恶性肿瘤，因其位置特殊、手术难度大，被称为"癌中之王"。
 
-   #方式二：直接推送 dist 内容到 gh-pages 分支
-   git push origin `git subtree split --prefix dist main`:gh-pages --force
-   ```
+### 关键指标
 
-3. 在 GitHub 仓库 Settings → Pages 中，将 Source 设置为 `gh-pages` 分支
+- **胆红素**：是评估肝功能和治疗可行性的重要指标
+  - < 50 μmol/L：可进行化疗
+  - 51-85 μmol/L：接近安全范围
+  - 85-170 μmol/L：明显升高，需关注
+  - 170-200 μmol/L：重度黄疸，建议术前引流
+  - > 200 μmol/L：极高危，必须先引流
 
-4. 访问 `https://[username].github.io/[repository]/`
+### 常见治疗方法
 
-## 项目结构
+- 手术切除
+- 胆道引流（PTCD/ERCP支架）
+- 化疗
+- 免疫治疗
+- 靶向治疗（如FGFR2抑制剂、IDH1抑制剂等）
 
-```
-src/
-├── components/          # Web Components 组件
-│   ├── archive-card.ts
-│   ├── bilirubin-chart.ts
-│   ├── disease-selector.ts
-│   ├── examination-tab.ts
-│   ├── note-card.ts
-│   ├── patient-info-form.ts
-│   ├── stage-guide.ts
-│   ├── stage-selector.ts
-│   └── treatment-tab.ts
-├── pages/               # 页面组件
-│   ├── archive-detail-page.ts
-│   ├── archive-list-page.ts
-│   ├── note-editor-page.ts
-│   └── stage-set-page.ts
-├── app-root.ts          # 应用根组件
-├── main.ts              # 入口文件
-├── storage.ts           # 存储工具
-└── types.ts             # TypeScript 类型定义
-```
+---
 
-## 许可证
+## 致谢
 
-MIT
+感谢在母亲治疗过程中给予帮助的所有医护人员和家人。

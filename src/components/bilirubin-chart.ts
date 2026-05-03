@@ -1,7 +1,10 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state, query } from 'lit/decorators.js';
 import Chart from 'chart.js/auto';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import type { BilirubinRecord } from '../types';
+
+Chart.register(annotationPlugin);
 
 @customElement('bilirubin-chart')
 export class BilirubinChart extends LitElement {
@@ -229,6 +232,67 @@ export class BilirubinChart extends LitElement {
       color: #999;
       font-size: 14px;
     }
+    .estimate-card {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f6ffed 0%, #e6fff1 100%);
+      border: 1px solid #b7eb8f;
+    }
+    .estimate-card.warning {
+      background: linear-gradient(135deg, #fffbe6 0%, #fff7e6 100%);
+      border-color: #ffe58f;
+    }
+    .estimate-card.danger {
+      background: linear-gradient(135deg, #fff1f0 0%, #ffe7e6 100%);
+      border-color: #ffccc7;
+    }
+    .estimate-card.success {
+      background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
+      border-color: #52c41a;
+    }
+    .estimate-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .estimate-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .estimate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .estimate-label {
+      color: #666;
+    }
+    .estimate-value {
+      font-weight: 600;
+      color: #333;
+    }
+    .estimate-value.danger {
+      color: #ff4d4f;
+    }
+    .estimate-value.warning {
+      color: #faad14;
+    }
+    .estimate-value.success {
+      color: #52c41a;
+    }
+    .estimate-message {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
   `;
 
   private getSortedRecords(): BilirubinRecord[] {
@@ -236,6 +300,51 @@ export class BilirubinChart extends LitElement {
     return [...this.records].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
+  }
+
+  private calculateEstimate(): { daysTo50: number; trend: 'down' | 'up' | 'stable'; currentValue: number } | null {
+    const sortedRecords = this.getSortedRecords();
+    if (sortedRecords.length < 2) return null;
+
+    const n = sortedRecords.length;
+    const xValues = sortedRecords.map(r => new Date(r.date).getTime());
+    const yValues = sortedRecords.map(r => r.total);
+
+    const xMin = xValues[0];
+    const xNormalized = xValues.map(x => (x - xMin) / (1000 * 60 * 60 * 24));
+    const yMean = yValues.reduce((a, b) => a + b, 0) / n;
+
+    let numerator = 0;
+    let denominator = 0;
+    for (let i = 0; i < n; i++) {
+      numerator += (xNormalized[i]) * (yValues[i] - yMean);
+      denominator += xNormalized[i] * xNormalized[i];
+    }
+
+    if (denominator === 0) return null;
+    const slope = numerator / denominator;
+
+    const lastRecord = sortedRecords[sortedRecords.length - 1];
+    const lastValue = lastRecord.total;
+    const lastDate = new Date(lastRecord.date).getTime();
+
+    let trend: 'down' | 'up' | 'stable' = 'stable';
+    if (slope < -1) trend = 'down';
+    else if (slope > 1) trend = 'up';
+
+    if (lastValue <= 50) {
+      return { daysTo50: 0, trend, currentValue: lastValue };
+    }
+
+    if (trend !== 'down' || slope >= 0) {
+      return { daysTo50: -1, trend, currentValue: lastValue };
+    }
+
+    const daysTo50 = Math.ceil((50 - lastValue) / slope);
+    const today = Date.now();
+    const targetDate = new Date(lastDate + daysTo50 * 24 * 60 * 60 * 1000);
+
+    return { daysTo50, trend, currentValue: lastValue };
   }
 
   private initChart(): void {
@@ -302,11 +411,59 @@ export class BilirubinChart extends LitElement {
           tooltip: {
             mode: 'index',
             intersect: false
+          },
+          annotation: {
+            annotations: {
+              zone1: {
+                type: 'box',
+                yMin: 0,
+                yMax: 50,
+                backgroundColor: 'rgba(82, 196, 26, 0.1)',
+                borderWidth: 0,
+                label: {
+                  display: true,
+                  content: '可治疗',
+                  position: 'end',
+                  color: '#52c41a',
+                  font: { size: 10 }
+                }
+              },
+              zone2: {
+                type: 'box',
+                yMin: 50,
+                yMax: 100,
+                backgroundColor: 'rgba(250, 173, 20, 0.1)',
+                borderWidth: 0,
+                label: {
+                  display: true,
+                  content: '需评估',
+                  position: 'end',
+                  color: '#faad14',
+                  font: { size: 10 }
+                }
+              },
+              zone3: {
+                type: 'box',
+                yMin: 100,
+                yMax: 400,
+                backgroundColor: 'rgba(255, 77, 79, 0.1)',
+                borderWidth: 0,
+                label: {
+                  display: true,
+                  content: '待治疗',
+                  position: 'end',
+                  color: '#ff4d4f',
+                  font: { size: 10 }
+                }
+              }
+            }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
+            min: 0,
+            max: 400,
             title: {
               display: true,
               text: 'μmol/L'
@@ -416,6 +573,7 @@ export class BilirubinChart extends LitElement {
   render() {
     const hasRecords = this.records && this.records.length > 0;
     const sortedRecords = this.getSortedRecords();
+    const estimate = this.calculateEstimate();
 
     return html`
       <div class="chart-container">
@@ -458,6 +616,39 @@ export class BilirubinChart extends LitElement {
           <div class="normal-range">
             正常范围：总胆红素 5.1-19.0 μmol/L | 直接胆红素 0-6.8 μmol/L
           </div>
+          ${estimate && estimate.daysTo50 >= 0 ? html`
+            <div class="estimate-card ${estimate.currentValue <= 50 ? 'success' : estimate.daysTo50 <= 30 ? 'warning' : 'danger'}">
+              <div class="estimate-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                到达可治疗水平预估
+              </div>
+              <div class="estimate-content">
+                <div class="estimate-row">
+                  <span class="estimate-label">当前总胆红素</span>
+                  <span class="estimate-value ${estimate.currentValue <= 50 ? 'success' : estimate.currentValue <= 100 ? 'warning' : 'danger'}">${estimate.currentValue.toFixed(1)} μmol/L</span>
+                </div>
+                <div class="estimate-row">
+                  <span class="estimate-label">趋势状态</span>
+                  <span class="estimate-value">${estimate.trend === 'down' ? '📉 下降中' : estimate.trend === 'up' ? '📈 上升中' : '➡️ 稳定'}</span>
+                </div>
+                ${estimate.currentValue > 50 ? html`
+                  <div class="estimate-row">
+                    <span class="estimate-label">预计到达50的时间</span>
+                    <span class="estimate-value ${estimate.daysTo50 <= 30 ? 'warning' : 'danger'}">约 ${estimate.daysTo50} 天</span>
+                  </div>
+                ` : ''}
+              </div>
+              <div class="estimate-message">
+                ${estimate.currentValue <= 50 ? '🎉 已达到可治疗水平，请与医生讨论化疗方案。' :
+                  estimate.daysTo50 <= 30 ? '⏰ 预计一个月内可达到治疗条件，继续保持。' :
+                  estimate.daysTo50 > 0 ? '⏰ 预计需要更长时间，建议与医生讨论其他治疗方案。' :
+                  '⚠️ 当前趋势无法预估到达时间，建议继续监测。'}
+              </div>
+            </div>
+          ` : ''}
           ${this.showTable ? html`
             <div class="data-table">
               <table>

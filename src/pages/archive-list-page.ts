@@ -80,6 +80,34 @@ export class ArchiveListPage extends LitElement {
       margin-bottom: 16px;
       opacity: 0.5;
     }
+    .disclaimer-banner {
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .disclaimer-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .disclaimer-content {
+      flex: 1;
+    }
+    .disclaimer-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fa8c16;
+      margin-bottom: 4px;
+    }
+    .disclaimer-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
   `;
 
   private handleCreateArchive(): void {
@@ -114,6 +142,15 @@ export class ArchiveListPage extends LitElement {
           </svg>
           新建档案
         </button>
+        <div class="disclaimer-banner">
+          <div class="disclaimer-icon">ℹ️</div>
+          <div class="disclaimer-content">
+            <div class="disclaimer-title">免责声明</div>
+            <div class="disclaimer-text">
+              本项目是我在陪伴母亲治疗肝门胆管癌过程中开发的。所有数据来源于个人诊疗经历和公开资料，<strong>不构成专业医疗意见</strong>。请务必以主治医生的建议为准，本工具仅供参考辅助，甄别使用。
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="archives-section">
