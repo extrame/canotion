@@ -1,4 +1,4 @@
-import type { Archive } from './types';
+import type { Archive, Article, ArticleStorage } from './types';
 
 export interface PatientInfo {
   name: string;
@@ -14,6 +14,7 @@ export interface StorageData {
 }
 
 const STORAGE_KEY = 'canotion-patient-data';
+const ARTICLES_KEY = 'canotion-articles';
 
 const defaultPatientInfo: PatientInfo = {
   name: '',
@@ -56,4 +57,38 @@ class StorageService {
   }
 }
 
+class ArticleStorageService {
+  load(): ArticleStorage {
+    try {
+      const saved = localStorage.getItem(ARTICLES_KEY);
+      if (saved) {
+        const data = JSON.parse(saved) as ArticleStorage;
+        return {
+          articles: data.articles || [],
+          lastUpdated: data.lastUpdated || new Date().toISOString()
+        };
+      }
+    } catch (e) {
+      console.error('Failed to load articles from localStorage:', e);
+    }
+    return {
+      articles: [],
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  save(data: ArticleStorage): void {
+    try {
+      localStorage.setItem(ARTICLES_KEY, JSON.stringify(data));
+    } catch (e) {
+      console.error('Failed to save articles to localStorage:', e);
+    }
+  }
+
+  clear(): void {
+    localStorage.removeItem(ARTICLES_KEY);
+  }
+}
+
 export const storageService = new StorageService();
+export const articleStorageService = new ArticleStorageService();

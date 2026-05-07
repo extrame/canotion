@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { Archive, Disease, TreatmentItem, BilirubinRecord } from '../types';
 import './bilirubin-chart';
+import './treatment-plan-selector';
 
 @customElement('treatment-tab')
 export class TreatmentTab extends LitElement {
@@ -120,6 +121,9 @@ export class TreatmentTab extends LitElement {
     .bilirubin-section {
       margin-top: 20px;
     }
+    .plan-selector-section {
+      margin-top: 24px;
+    }
   `;
 
   private hasBloodTest(): boolean {
@@ -209,6 +213,10 @@ export class TreatmentTab extends LitElement {
           ></bilirubin-chart>
         </div>
       ` : ''}
+
+      <div class="plan-selector-section">
+        <treatment-plan-selector></treatment-plan-selector>
+      </div>
 
       <div class="guide-section">
         <div class="guide-title">
