@@ -8,6 +8,7 @@ export interface Archive {
   completedTreatmentIds: string[];
   currentStage: 'examination' | 'treatment';
   bilirubinRecords: BilirubinRecord[];
+  pathologyReport?: PathologyReport;
 }
 
 export interface BilirubinRecord {
@@ -17,6 +18,46 @@ export interface BilirubinRecord {
   direct: number;
   indirect: number;
   unit: string;
+}
+
+// ==================== 病理报告相关类型 ====================
+
+/** Ki-67 增殖活性分级 */
+export type Ki67Grade = 'low' | 'moderate' | 'high' | 'very-high';
+
+/** 免疫组化单项结果 */
+export interface IHCItem {
+  name: string;
+  fullName: string;
+  value: string;       // 如 "40%", "2+", "阳性", "阴性"
+  numericValue?: number; // 可选的数值（如 Ki-67 的百分比）
+  interpretation?: string; // 临床解读
+}
+
+/** 病理报告 */
+export interface PathologyReport {
+  reportDate: string;
+  specimenSource: string;  // 标本来源：穿刺活检、手术切除等
+  histologicalType: string; // 组织学类型：如 腺癌
+  differentiation: 'well' | 'moderate' | 'poor' | 'undifferentiated'; // 分化程度
+  bismuthType?: string;    // Bismuth 分型
+  tnmStage?: string;       // TNM 分期
+  vascularInvasion: boolean;  // 脉管侵犯
+  perineuralInvasion: boolean; // 神经侵犯
+  marginStatus: 'R0' | 'R1' | 'R2' | 'pending'; // 切缘状态
+  lymphNodeStatus?: string;  // 淋巴结转移情况
+  ihcResults: IHCItem[];     // 免疫组化结果列表
+  geneTestResults?: GeneTestResult[]; // 基因检测结果
+  notes?: string;            // 备注
+}
+
+/** 基因检测结果 */
+export interface GeneTestResult {
+  geneName: string;
+  mutationType: string;  // 如 "融合突变", "点突变", "过表达", "扩增"
+  result: string;        // 如 "阳性", "阴性", "未检出"
+  clinicalSignificance: string; // 临床意义
+  therapeuticImplication?: string; // 治疗指导意义
 }
 
 export interface Disease {
@@ -122,10 +163,47 @@ export interface Article {
   published_at?: string;
 }
 
+// 文章配套组件类型
+export type ComponentType = 
+  | 'archive-matcher'      // 档案匹配评估
+  | 'decision-tree'        // 决策树
+  | 'stage-guide'          // 阶段向导
+  | 'bilirubin-calculator' // 胆红素计算器
+  | 'treatment-timeline'   // 治疗时间线
+  | 'drainage-chart';      // PTCD引流记录
+
 export interface EmbeddedComponent {
-  name: string;
-  props?: Record<string, unknown>;
-  children?: string;
+  id: string;
+  type: ComponentType;
+  title: string;
+  config?: ComponentConfig;
+}
+
+// 组件配置类型
+export interface ComponentConfig {
+  // 档案匹配器配置
+  matchRules?: MatchRule[];
+  recommendations?: Recommendation[];
+  // 决策树配置
+  treeType?: 'diagnosis' | 'treatment' | 'followup';
+  // 通用配置
+  showByDefault?: boolean;
+}
+
+export interface MatchRule {
+  field: string;
+  operator: 'eq' | 'gt' | 'lt' | 'in' | 'contains';
+  value: any;
+  weight: number;
+  description: string;
+}
+
+export interface Recommendation {
+  condition: string;
+  priority: 'high' | 'medium' | 'low';
+  title: string;
+  content: string;
+  action?: string;
 }
 
 export interface ArticleStorage {

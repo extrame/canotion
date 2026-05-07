@@ -33,7 +33,7 @@ export async function getPublishedArticles(): Promise<Article[]> {
 }
 
 /**
- * 获取所有文章（后台管理）
+ * 获取所有文章（后台管理 - 需要认证）
  */
 export async function getAllArticles(): Promise<Article[]> {
   const { data, error } = await supabase
@@ -87,9 +87,15 @@ export async function getArticlesByTag(tag: string): Promise<Article[]> {
 }
 
 /**
- * 创建文章
+ * 创建文章（需要认证）
  */
 export async function createArticle(article: Partial<Article> & { is_published?: boolean }): Promise<Article> {
+  // 检查用户是否登录
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) {
+    throw new Error('请先登录')
+  }
+
   const now = new Date().toISOString()
   const isPublished = article.is_published || false
 
@@ -119,12 +125,18 @@ export async function createArticle(article: Partial<Article> & { is_published?:
 }
 
 /**
- * 更新文章
+ * 更新文章（需要认证）
  */
 export async function updateArticle(
   id: string,
   article: Partial<Article> & { is_published?: boolean }
 ): Promise<Article> {
+  // 检查用户是否登录
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) {
+    throw new Error('请先登录')
+  }
+
   const now = new Date().toISOString()
   const updates: any = {
     ...article,
@@ -156,9 +168,15 @@ export async function updateArticle(
 }
 
 /**
- * 删除文章
+ * 删除文章（需要认证）
  */
 export async function deleteArticle(id: string): Promise<void> {
+  // 检查用户是否登录
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) {
+    throw new Error('请先登录')
+  }
+
   const { error } = await supabase
     .from('articles')
     .delete()

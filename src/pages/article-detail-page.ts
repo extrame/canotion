@@ -1,7 +1,10 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { marked } from 'marked';
-import type { Article } from '../types';
+import type { Article, Archive, EmbeddedComponent } from '../types';
+import { getArticle } from '../services/article-loader';
+import '../components/article-archive-matcher';
+import '../components/decision-tree';
 
 type ContentPart = {
   type: 'markdown';
@@ -17,9 +20,17 @@ type ContentPart = {
 export class ArticleDetailPage extends LitElement {
   @property({ type: Object })
   public article: Article | null = null;
+  @property({ type: Array })
+  public archives: Archive[] = [];
+  @property({ type: String })
+  public articleSlug: string = '';
 
   @state()
   private contentParts: ContentPart[] = [];
+  @state()
+  private loading: boolean = false;
+  @state()
+  private error: string = '';
 
   @state()
   private activeComponent: { name: string; props: Record<string, unknown> } | null = null;
@@ -271,12 +282,41 @@ export class ArticleDetailPage extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.parseArticleContent();
+    if (this.articleSlug) {
+      this.loadArticle();
+    } else if (this.article) {
+      this.parseArticleContent();
+    }
   }
 
   updated(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('article')) {
+    if (changedProperties.has('articleSlug') && this.articleSlug) {
+      this.loadArticle();
+    }
+    if (changedProperties.has('article') && this.article) {
       this.parseArticleContent();
+    }
+  }
+
+  private async loadArticle() {
+    if (!this.articleSlug) return;
+    
+    this.loading = true;
+    this.error = '';
+    
+    try {
+      const article = await getArticle(this.articleSlug);
+      if (article) {
+        this.article = article;
+        this.parseArticleContent();
+      } else {
+        this.error = '文章不存在';
+      }
+    } catch (err) {
+      this.error = '加载文章失败';
+      console.error(err);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -356,9 +396,40 @@ export class ArticleDetailPage extends LitElement {
     const titles: Record<string, string> = {
       'stage-guide': '诊疗阶段向导',
       'bilirubin-chart': '胆红素监测表',
-      'drainage-chart': '引流记录表'
+      'drainage-chart': '引流记录表',
+      'archive-matcher': '档案匹配评估',
+      'decision-tree': '诊疗决策树'
     };
     return titles[name] || name;
+  }
+
+  private renderEmbeddedComponent(component: EmbeddedComponent) {
+    switch (component.type) {
+      case 'archive-matcher':
+        return html`
+          <article-archive-matcher
+            .article="${this.article}"
+            .componentConfig="${component}"
+            .archives="${this.archives}"
+            @action-click="${this.handleComponentAction}"
+          ></article-archive-matcher>
+        `;
+      case 'decision-tree':
+        return html`
+          <decision-tree
+            .archive="${this.archives[0]}"
+            .type="${component.config?.treeType || 'treatment'}"
+            @action-click="${this.handleComponentAction}"
+          ></decision-tree>
+        `;
+      default:
+        return html`<div>未知组件类型: ${component.type}</div>`;
+    }
+  }
+
+  private handleComponentAction(e: CustomEvent) {
+    // 处理组件触发的动作
+    console.log('Component action:', e.detail);
   }
 
   private renderComponentEmbed(part: { type: 'component'; name: string; props: Record<string, unknown>; inner: string }) {
@@ -440,6 +511,20 @@ export class ArticleDetailPage extends LitElement {
           : this.renderComponentEmbed(part)
         )}
       </div>
+
+      ${this.article.embeddedComponents && this.article.embeddedComponents.length > 0 ? html`
+        <div class="embedded-components-section">
+          <div class="section-title">
+            <span class="section-icon">🧩</span>
+            配套工具
+          </div>
+          ${this.article.embeddedComponents.map(component => html`
+            <div class="embedded-component-wrapper">
+              ${this.renderEmbeddedComponent(component)}
+            </div>
+          `)}
+        </div>
+      ` : ''}
 
       ${this.activeComponent ? html`
         <div class="component-active-overlay" @click="${this.handleOverlayClick}">

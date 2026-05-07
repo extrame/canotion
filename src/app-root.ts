@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import type { Archive, Disease, BilirubinRecord, StageSelectResult, Article } from './types';
+import type { Archive, Disease, BilirubinRecord, StageSelectResult, Article, PathologyReport } from './types';
 import './components/disease-selector';
 import './components/stage-selector';
 import './components/stage-guide';
@@ -12,7 +12,7 @@ import './pages/pathology-detail-page';
 import './pages/article-list-page';
 import './pages/article-detail-page';
 import './pages/article-editor-page';
-import { getArticleById } from './supabase';
+import { getArticle } from './services/article-loader';
 
 type AppMode = 'archive' | 'article';
 type CurrentPage = 'list' | 'detail' | 'editor';
@@ -257,7 +257,8 @@ export class AppRoot extends LitElement {
   }
 
   private async viewArticle(articleId: string): Promise<void> {
-    const article = await getArticleById(articleId);
+    // 使用本地 Markdown 加载服务
+    const article = await getArticle(articleId);
     if (article) {
       this.mode = 'article';
       this.currentArticle = article;
@@ -392,6 +393,17 @@ export class AppRoot extends LitElement {
     this.addBilirubinRecord(e.detail);
   }
 
+  private handlePathologySave(e: CustomEvent<PathologyReport>): void {
+    if (!this.currentArchive) return;
+    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
+    if (archive) {
+      archive.pathologyReport = e.detail;
+      this.saveArchives();
+      this.currentArchive = { ...archive };
+      this.archives = [...this.archives];
+    }
+  }
+
   private handleArticleClick(e: CustomEvent<Article>): void {
     this.navigateTo(`#/article/${e.detail.id}`);
   }
@@ -460,7 +472,11 @@ export class AppRoot extends LitElement {
             <nutrition-detail-page></nutrition-detail-page>
           ` : ''}
           ${this.archivePage === 'detail' && this.currentDetailPage === 'pathology' ? html`
-            <pathology-detail-page></pathology-detail-page>
+            <pathology-detail-page
+              .archive="${this.currentArchive}"
+              @back="${this.handleBack}"
+              @pathology-save="${this.handlePathologySave}"
+            ></pathology-detail-page>
           ` : ''}
         ` : html`
           ${this.articlePage === 'list' ? html`
@@ -472,6 +488,7 @@ export class AppRoot extends LitElement {
           ${this.articlePage === 'detail' && this.currentArticle ? html`
             <article-detail-page
               .article="${this.currentArticle}"
+              .archives="${this.archives}"
               @back="${this.handleBack}"
               @component-click="${this.handleComponentClick}"
             ></article-detail-page>

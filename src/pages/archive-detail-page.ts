@@ -349,6 +349,21 @@ export class ArchiveDetailPage extends LitElement {
       background: #ffccc7;
       border: 1px solid #ff4d4f;
     }
+    .privacy-notice {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #52c41a;
+    }
+    .privacy-notice-icon {
+      font-size: 18px;
+    }
     .bilirubin-result-header {
       display: flex;
       align-items: center;
@@ -572,6 +587,10 @@ export class ArchiveDetailPage extends LitElement {
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
           </button>
+        </div>
+        <div class="privacy-notice">
+          <span class="privacy-notice-icon">🔒</span>
+          <span>本档案所有数据仅存储在您的设备本地，不会上传到服务器</span>
         </div>
       </div>
 

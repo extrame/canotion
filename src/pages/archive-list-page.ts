@@ -108,6 +108,34 @@ export class ArchiveListPage extends LitElement {
       color: #666;
       line-height: 1.5;
     }
+    .privacy-banner {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .privacy-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .privacy-content {
+      flex: 1;
+    }
+    .privacy-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #52c41a;
+      margin-bottom: 4px;
+    }
+    .privacy-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
   `;
 
   private handleCreateArchive(): void {
@@ -148,6 +176,15 @@ export class ArchiveListPage extends LitElement {
             <div class="disclaimer-title">免责声明</div>
             <div class="disclaimer-text">
               本项目是我在陪伴母亲治疗肝门胆管癌过程中开发的。所有数据来源于个人诊疗经历和公开资料，<strong>不构成专业医疗意见</strong>。请务必以主治医生的建议为准，本工具仅供参考辅助，甄别使用。
+            </div>
+          </div>
+        </div>
+        <div class="privacy-banner">
+          <div class="privacy-icon">🔒</div>
+          <div class="privacy-content">
+            <div class="privacy-title">隐私保护说明</div>
+            <div class="privacy-text">
+              <strong>您的隐私数据仅存储在本地浏览器中</strong>，不会上传到任何服务器。包括：档案信息、胆红素记录、PTCD引流量等所有个人健康数据。请放心使用，但请注意清除浏览器数据会导致档案丢失，建议定期备份重要数据。
             </div>
           </div>
         </div>

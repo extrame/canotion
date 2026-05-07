@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { getPublishedArticles, getArticlesByTag, searchArticles } from '../supabase';
+import { getAllArticles, getArticlesByTag, searchArticles } from '../services/article-loader';
+import { getCurrentUser, canEditArticles, signOut, onAuthStateChange, type User } from '../services/auth-service';
 import type { Article } from '../types';
 
 @customElement('article-list-page')
@@ -10,6 +11,15 @@ export class ArticleListPage extends LitElement {
   @state() private error = '';
   @state() private selectedTag: string | null = null;
   @state() private searchKeyword = '';
+  @state() private user: User | null = null;
+  @state() private canEdit = false;
+  @state() private showLoginModal = false;
+  @state() private loginEmail = '';
+  @state() private loginPassword = '';
+  @state() private loginError = '';
+  @state() private loginLoading = false;
+
+  private authUnsubscribe?: () => void;
 
   static styles = css`
     :host {
@@ -22,6 +32,12 @@ export class ArticleListPage extends LitElement {
       margin-bottom: 24px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
     .header h1 {
       color: white;
       font-size: 28px;
@@ -31,10 +47,36 @@ export class ArticleListPage extends LitElement {
       color: rgba(255,255,255,0.8);
       font-size: 14px;
     }
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-info {
+      color: white;
+      font-size: 14px;
+      text-align: right;
+    }
+    .user-role {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+    .login-btn, .logout-btn {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover, .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
     .search-section {
       display: flex;
       gap: 12px;
-      margin-top: 20px;
     }
     .search-input {
       flex: 1;
@@ -202,20 +244,136 @@ export class ArticleListPage extends LitElement {
       transform: scale(1.1);
       box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5);
     }
+    .write-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .form-input:focus {
+      border-color: #667eea;
+    }
+    .modal-error {
+      background: #fff2f0;
+      border: 1px solid #ffccc7;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      color: #cf1322;
+      font-size: 14px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+    }
+    .modal-btn-primary:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+    .modal-btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .modal-btn-secondary {
+      background: #f5f5f5;
+      color: #666;
+      border: none;
+    }
+    .modal-btn-secondary:hover {
+      background: #e8e8e8;
+    }
   `;
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
     this.loadArticles();
+    this.checkUserPermissions();
+    
+    // 监听登录状态变化
+    const { data } = onAuthStateChange((user) => {
+      this.user = user;
+      this.checkUserPermissions();
+    });
+    this.authUnsubscribe = data.subscription.unsubscribe;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.authUnsubscribe?.();
+  }
+
+  async checkUserPermissions() {
+    const user = await getCurrentUser();
+    this.user = user;
+    this.canEdit = await canEditArticles();
   }
 
   async loadArticles() {
     this.loading = true;
     this.error = '';
     try {
-      this.articles = await getPublishedArticles();
+      // 从本地加载文章列表
+      this.articles = getAllArticles();
     } catch (err) {
-      this.error = '加载文章失败，请检查网络连接';
+      this.error = '加载文章失败';
       console.error(err);
     } finally {
       this.loading = false;
@@ -268,10 +426,58 @@ export class ArticleListPage extends LitElement {
   }
 
   private handleWriteArticle(): void {
+    if (!this.canEdit) {
+      this.showLoginModal = true;
+      return;
+    }
     this.dispatchEvent(new CustomEvent('write-article', {
       bubbles: true,
       composed: true
     }));
+  }
+
+  private async handleLogin(): Promise<void> {
+    if (!this.loginEmail.trim() || !this.loginPassword.trim()) {
+      this.loginError = '请输入邮箱和密码';
+      return;
+    }
+
+    this.loginLoading = true;
+    this.loginError = '';
+
+    try {
+      const { signInWithEmail } = await import('../services/auth-service');
+      await signInWithEmail(this.loginEmail.trim(), this.loginPassword.trim());
+      
+      // 检查权限
+      const canEdit = await canEditArticles();
+      if (!canEdit) {
+        this.loginError = '您没有编辑文章的权限';
+        await signOut();
+        this.loginLoading = false;
+        return;
+      }
+
+      this.showLoginModal = false;
+      this.loginEmail = '';
+      this.loginPassword = '';
+      await this.checkUserPermissions();
+    } catch (err: any) {
+      this.loginError = err.message || '登录失败';
+    } finally {
+      this.loginLoading = false;
+    }
+  }
+
+  private async handleLogout(): Promise<void> {
+    try {
+      const { signOut } = await import('../services/auth-service');
+      await signOut();
+      this.user = null;
+      this.canEdit = false;
+    } catch (err) {
+      console.error('退出失败:', err);
+    }
   }
 
   private getAllTags(): string[] {
@@ -291,13 +497,37 @@ export class ArticleListPage extends LitElement {
     });
   }
 
+  private getRoleLabel(role: string): string {
+    const labels: Record<string, string> = {
+      admin: '管理员',
+      editor: '编辑',
+      user: '用户'
+    };
+    return labels[role] || role;
+  }
+
   render() {
     const tags = this.getAllTags();
 
     return html`
       <div class="header">
-        <h1>📚 文章中心</h1>
-        <p>阅读专业指南，评估治疗方案</p>
+        <div class="header-top">
+          <div>
+            <h1>📚 文章中心</h1>
+            <p>阅读专业指南，评估治疗方案</p>
+          </div>
+          <div class="user-section">
+            ${this.user ? html`
+              <div class="user-info">
+                <div>${this.user.email}</div>
+                <div class="user-role">${this.getRoleLabel(this.user.role)}</div>
+              </div>
+              <button class="logout-btn" @click="${this.handleLogout}">退出</button>
+            ` : html`
+              <button class="login-btn" @click="${() => this.showLoginModal = true}">登录</button>
+            `}
+          </div>
+        </div>
         <div class="search-section">
           <input
             type="text"
@@ -379,9 +609,68 @@ export class ArticleListPage extends LitElement {
         `}
       </div>
 
-      <button class="write-btn" @click="${this.handleWriteArticle}" title="写文章">
+      <button 
+        class="write-btn" 
+        @click="${this.handleWriteArticle}" 
+        title="${this.canEdit ? '写文章' : '需要登录才能写文章'}"
+        ?disabled="${!this.canEdit && !this.user}"
+      >
         ✏️
       </button>
+
+      ${this.showLoginModal ? html`
+        <div class="modal-overlay" @click="${(e: Event) => {
+          if (e.target === e.currentTarget) this.showLoginModal = false;
+        }}">
+          <div class="modal">
+            <div class="modal-title">🔐 管理员登录</div>
+            
+            ${this.loginError ? html`
+              <div class="modal-error">${this.loginError}</div>
+            ` : ''}
+            
+            <div class="form-group">
+              <label class="form-label">邮箱</label>
+              <input
+                type="email"
+                class="form-input"
+                placeholder="输入邮箱"
+                .value="${this.loginEmail}"
+                @input="${(e: Event) => { this.loginEmail = (e.target as HTMLInputElement).value; }}"
+                @keydown="${(e: KeyboardEvent) => { if (e.key === 'Enter') this.handleLogin(); }}"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">密码</label>
+              <input
+                type="password"
+                class="form-input"
+                placeholder="输入密码"
+                .value="${this.loginPassword}"
+                @input="${(e: Event) => { this.loginPassword = (e.target as HTMLInputElement).value; }}"
+                @keydown="${(e: KeyboardEvent) => { if (e.key === 'Enter') this.handleLogin(); }}"
+              />
+            </div>
+            
+            <div class="modal-actions">
+              <button 
+                class="modal-btn modal-btn-secondary" 
+                @click="${() => this.showLoginModal = false}"
+              >
+                取消
+              </button>
+              <button 
+                class="modal-btn modal-btn-primary" 
+                @click="${this.handleLogin}"
+                ?disabled="${this.loginLoading}"
+              >
+                ${this.loginLoading ? '登录中...' : '登录'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ` : ''}
     `;
   }
 }
