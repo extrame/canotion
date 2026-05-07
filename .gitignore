@@ -1,14 +1,16 @@
 # 依赖目录
 node_modules/
 
-# 构建输出（docs 目录用于 GitHub Pages，不忽略）
+# 构建输出（docs 由 CI 生成，不提交）
 dist/
 build/
+docs/
 
 # 环境变量文件（包含敏感信息）
 .env
 .env.local
 .env.*.local
+.env.production
 
 # IDE
 .vscode/
