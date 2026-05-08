@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { Archive, Disease } from '../types';
+import { backupService, type ImportResult } from '../services/backup-service';
 
 @customElement('archive-list-page')
 export class ArchiveListPage extends LitElement {
@@ -9,6 +10,15 @@ export class ArchiveListPage extends LitElement {
 
   @state()
   private showSelector = false;
+
+  @state()
+  private showImportDialog = false;
+
+  @state()
+  private importResult: ImportResult | null = null;
+
+  @state()
+  private isImporting = false;
 
   static styles = css`
     :host {
@@ -136,6 +146,242 @@ export class ArchiveListPage extends LitElement {
       color: #666;
       line-height: 1.5;
     }
+
+    .backup-section {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .backup-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f5f5f5;
+      color: #666;
+      border: 1px solid #d9d9d9;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .backup-btn:hover {
+      background: #e6f7ff;
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+    .backup-btn.export {
+      background: #e6f7ff;
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+    .backup-btn.export:hover {
+      background: #1890ff;
+      color: white;
+    }
+
+    /* 导入对话框 */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .dialog {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      width: 90%;
+      max-width: 480px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .dialog-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #333;
+    }
+    .file-input-wrapper {
+      border: 2px dashed #d9d9d9;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+    .file-input-wrapper:hover {
+      border-color: #1890ff;
+      background: #f0f9ff;
+    }
+    .file-input-wrapper.has-file {
+      border-color: #52c41a;
+      background: #f6ffed;
+    }
+    .file-input {
+      display: none;
+    }
+    .file-input-label {
+      cursor: pointer;
+      color: #666;
+    }
+    .file-input-label strong {
+      color: #1890ff;
+    }
+    .merge-strategy {
+      margin-bottom: 16px;
+    }
+    .merge-strategy label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .merge-strategy select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+    }
+    .dialog-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    .dialog-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    .dialog-btn.cancel {
+      background: #f5f5f5;
+      color: #666;
+    }
+    .dialog-btn.cancel:hover {
+      background: #e8e8e8;
+    }
+    .dialog-btn.confirm {
+      background: #1890ff;
+      color: white;
+    }
+    .dialog-btn.confirm:hover {
+      background: #40a9ff;
+    }
+    .dialog-btn.confirm:disabled {
+      background: #d9d9d9;
+      cursor: not-allowed;
+    }
+    .import-result {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .import-result.success {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+    }
+    .import-result.error {
+      background: #fff2f0;
+      border: 1px solid #ffccc7;
+    }
+    .import-result-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .import-result.success .import-result-title {
+      color: #52c41a;
+    }
+    .import-result.error .import-result-title {
+      color: #ff4d4f;
+    }
+    .import-result-message {
+      font-size: 14px;
+      color: #666;
+    }
+    .import-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #d9d9d9;
+    }
+    .import-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #666;
+    }
+    .import-stat-value {
+      font-weight: 600;
+      color: #1890ff;
+    }
+
+    @media (max-width: 600px) {
+      .header {
+        background: transparent;
+        border-radius: 0;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: none;
+      }
+      .header h1 {
+        font-size: 22px;
+      }
+      .new-archive-btn {
+        padding: 12px 20px;
+        font-size: 15px;
+      }
+      .archives-section {
+        background: transparent;
+        border-radius: 0;
+        padding: 12px;
+        box-shadow: none;
+      }
+      .archives-grid {
+        gap: 12px;
+      }
+      .disclaimer-banner,
+      .privacy-banner {
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 12px;
+        border: none;
+      }
+      .disclaimer-banner {
+        background: #fffbe6;
+      }
+      .privacy-banner {
+        background: #f6ffed;
+      }
+      .backup-section {
+        flex-direction: column;
+      }
+      .backup-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .dialog {
+        width: 95%;
+        padding: 20px;
+      }
+    }
   `;
 
   private handleCreateArchive(): void {
@@ -156,6 +402,91 @@ export class ArchiveListPage extends LitElement {
 
   private handleSelectorClose(): void {
     this.showSelector = false;
+  }
+
+  private handleExport(): void {
+    backupService.exportAll();
+  }
+
+  private handleImportClick(): void {
+    this.showImportDialog = true;
+    this.importResult = null;
+  }
+
+  private handleImportDialogClose(): void {
+    this.showImportDialog = false;
+    this.importResult = null;
+  }
+
+  private async handleFileSelect(e: Event): Promise<void> {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.isImporting = true;
+    const select = this.shadowRoot?.querySelector('.merge-strategy select') as HTMLSelectElement;
+    const mergeStrategy = (select?.value || 'merge') as 'replace' | 'merge' | 'skip-existing';
+
+    const result = await backupService.importFromFile(file, { mergeStrategy });
+    this.importResult = result;
+    this.isImporting = false;
+
+    if (result.success) {
+      // 触发刷新事件，通知父组件重新加载数据
+      this.dispatchEvent(new CustomEvent('data-imported', {
+        bubbles: true,
+        composed: true,
+        detail: result
+      }));
+    }
+
+    // 清空文件输入
+    input.value = '';
+  }
+
+  private handleDragOver(e: DragEvent): void {
+    e.preventDefault();
+    const wrapper = e.currentTarget as HTMLElement;
+    wrapper.classList.add('drag-over');
+  }
+
+  private handleDragLeave(e: DragEvent): void {
+    e.preventDefault();
+    const wrapper = e.currentTarget as HTMLElement;
+    wrapper.classList.remove('drag-over');
+  }
+
+  private async handleDrop(e: DragEvent): Promise<void> {
+    e.preventDefault();
+    const wrapper = e.currentTarget as HTMLElement;
+    wrapper.classList.remove('drag-over');
+
+    const file = e.dataTransfer?.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.json')) {
+      this.importResult = {
+        success: false,
+        message: '请选择 JSON 格式的备份文件'
+      };
+      return;
+    }
+
+    this.isImporting = true;
+    const select = this.shadowRoot?.querySelector('.merge-strategy select') as HTMLSelectElement;
+    const mergeStrategy = (select?.value || 'merge') as 'replace' | 'merge' | 'skip-existing';
+
+    const result = await backupService.importFromFile(file, { mergeStrategy });
+    this.importResult = result;
+    this.isImporting = false;
+
+    if (result.success) {
+      this.dispatchEvent(new CustomEvent('data-imported', {
+        bubbles: true,
+        composed: true,
+        detail: result
+      }));
+    }
   }
 
   render() {
@@ -187,6 +518,25 @@ export class ArchiveListPage extends LitElement {
               <strong>您的隐私数据仅存储在本地浏览器中</strong>，不会上传到任何服务器。包括：档案信息、胆红素记录、PTCD引流量等所有个人健康数据。请放心使用，但请注意清除浏览器数据会导致档案丢失，建议定期备份重要数据。
             </div>
           </div>
+        </div>
+
+        <div class="backup-section">
+          <button class="backup-btn export" @click="${this.handleExport}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            导出备份
+          </button>
+          <button class="backup-btn" @click="${this.handleImportClick}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            导入恢复
+          </button>
         </div>
       </div>
 
@@ -221,6 +571,78 @@ export class ArchiveListPage extends LitElement {
           @disease-select="${this.handleDiseaseSelect}"
           @close="${this.handleSelectorClose}"
         ></disease-selector>
+      ` : ''}
+
+      ${this.showImportDialog ? html`
+        <div class="dialog-overlay" @click="${this.handleImportDialogClose}">
+          <div class="dialog" @click="${(e: Event) => e.stopPropagation()}">
+            <div class="dialog-title">📥 导入备份数据</div>
+
+            ${this.importResult ? html`
+              <div class="import-result ${this.importResult.success ? 'success' : 'error'}">
+                <div class="import-result-title">
+                  ${this.importResult.success ? '✅ 导入成功' : '❌ 导入失败'}
+                </div>
+                <div class="import-result-message">${this.importResult.message}</div>
+                ${this.importResult.success && (this.importResult.importedArchives !== undefined || this.importResult.importedArticles !== undefined) ? html`
+                  <div class="import-stats">
+                    ${this.importResult.importedArchives !== undefined ? html`
+                      <div class="import-stat">
+                        <span>档案:</span>
+                        <span class="import-stat-value">${this.importResult.importedArchives}</span>
+                      </div>
+                    ` : ''}
+                    ${this.importResult.importedArticles !== undefined ? html`
+                      <div class="import-stat">
+                        <span>文章:</span>
+                        <span class="import-stat-value">${this.importResult.importedArticles}</span>
+                      </div>
+                    ` : ''}
+                  </div>
+                ` : ''}
+              </div>
+            ` : ''}
+
+            <div class="merge-strategy">
+              <label>合并策略</label>
+              <select ?disabled="${this.isImporting || !!this.importResult}">
+                <option value="merge">智能合并（相同ID覆盖，不同ID追加）</option>
+                <option value="skip-existing">跳过已存在（保留现有数据）</option>
+                <option value="replace">完全替换（清空现有数据）</option>
+              </select>
+            </div>
+
+            <div
+              class="file-input-wrapper"
+              @dragover="${this.handleDragOver}"
+              @dragleave="${this.handleDragLeave}"
+              @drop="${this.handleDrop}"
+            >
+              <input
+                type="file"
+                id="import-file"
+                class="file-input"
+                accept=".json"
+                ?disabled="${this.isImporting}"
+                @change="${this.handleFileSelect}"
+              >
+              <label class="file-input-label" for="import-file">
+                ${this.isImporting ? html`
+                  <div>⏳ 正在导入...</div>
+                ` : html`
+                  <div>📁 点击选择或拖拽文件到此处</div>
+                  <div style="font-size: 12px; margin-top: 8px; color: #999;">支持 .json 格式的备份文件</div>
+                `}
+              </label>
+            </div>
+
+            <div class="dialog-actions">
+              <button class="dialog-btn cancel" @click="${this.handleImportDialogClose}">
+                ${this.importResult?.success ? '关闭' : '取消'}
+              </button>
+            </div>
+          </div>
+        </div>
       ` : ''}
     `;
   }

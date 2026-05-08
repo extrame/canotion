@@ -200,7 +200,7 @@ export interface MatchRule {
 
 export interface Recommendation {
   condition: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: 'high' | 'medium' | 'low' | 'gene';
   title: string;
   content: string;
   action?: string;

@@ -340,6 +340,114 @@ export class ExaminationTab extends LitElement {
     .warning-icon {
       margin-right: 4px;
     }
+
+    @media (max-width: 600px) {
+      .guide-section {
+        margin-bottom: 16px;
+      }
+      .guide-title {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      .guide-list {
+        gap: 8px;
+      }
+      .guide-item {
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+      }
+      .guide-item.current {
+        background: #fff7e6;
+      }
+      .guide-item.next {
+        background: #f6ffed;
+      }
+      .guide-item.pending {
+        background: #fafafa;
+      }
+      .guide-item.completed {
+        background: #f5f0ff;
+      }
+      .item-name {
+        font-size: 13px;
+      }
+      .item-desc {
+        font-size: 11px;
+      }
+      .completed-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+      .bilirubin-section {
+        margin-top: 16px;
+      }
+      .core-task-section {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #fffbe6;
+      }
+      .core-task-title {
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+      .core-task-item {
+        padding: 8px 0;
+      }
+      .core-task-name {
+        font-size: 13px;
+      }
+      .core-task-desc {
+        font-size: 11px;
+      }
+      .task-group {
+        border-radius: 8px;
+        border: none;
+        background: #fafafa;
+      }
+      .task-group-header {
+        padding: 10px 12px;
+      }
+      .task-group-name {
+        font-size: 13px;
+      }
+      .task-group-items {
+        padding: 6px 12px 10px 40px;
+      }
+      .task-sub-item {
+        padding: 6px 0;
+      }
+      .task-sub-name {
+        font-size: 12px;
+      }
+      .task-sub-desc {
+        font-size: 11px;
+      }
+      .portal-vein-section {
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #fffbe6;
+      }
+      .portal-vein-title {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      .portal-vein-option {
+        font-size: 12px;
+      }
+      .portal-vein-warning {
+        margin-top: 8px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: none;
+        background: #fff1f0;
+        font-size: 11px;
+      }
+    }
   `;
 
   private hasBloodTest(): boolean {

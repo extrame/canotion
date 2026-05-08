@@ -73,6 +73,35 @@ export class ArchiveCard extends LitElement {
       font-size: 12px;
       font-weight: 500;
     }
+
+    @media (max-width: 600px) {
+      .card {
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .disease-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        font-size: 20px;
+      }
+      .card-title {
+        font-size: 17px;
+      }
+      .card-date {
+        font-size: 11px;
+      }
+      .card-stats {
+        padding-top: 10px;
+      }
+      .stat-item {
+        font-size: 12px;
+      }
+      .stage-badge {
+        font-size: 11px;
+        padding: 3px 10px;
+      }
+    }
   `;
 
   private getDiseaseIcon(diseaseType: string): string {

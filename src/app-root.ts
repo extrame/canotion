@@ -426,6 +426,11 @@ export class AppRoot extends LitElement {
     }
   }
 
+  private handleDataImported(): void {
+    // 重新加载档案数据
+    this.archives = this.loadArchives();
+  }
+
   private getDiseaseForArchive(): Disease | null {
     if (!this.currentArchive) return null;
     return this.diseases.find(d => d.id === this.currentArchive!.diseaseType) || null;
@@ -456,6 +461,7 @@ export class AppRoot extends LitElement {
             <archive-list-page
               .archives="${this.archives}"
               @create-archive="${this.handleCreateArchive}"
+              @data-imported="${this.handleDataImported}"
             ></archive-list-page>
           ` : ''}
           ${this.archivePage === 'detail' && this.currentArchive && disease ? html`

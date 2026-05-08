@@ -259,6 +259,73 @@ export class StageGuide extends LitElement {
       background: #52c41a;
       color: white;
     }
+
+    @media (max-width: 600px) {
+      .guide-card {
+        border-radius: 0;
+        padding: 16px;
+        box-shadow: none;
+      }
+      .stage-header {
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .stage-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        font-size: 24px;
+      }
+      .stage-name {
+        font-size: 18px;
+      }
+      .tab-container {
+        margin-top: 16px;
+      }
+      .tab-header {
+        gap: 6px;
+        padding-bottom: 10px;
+      }
+      .tab-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+      }
+      .cross-stage-section {
+        margin-bottom: 16px;
+      }
+      .cross-stage-title {
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+      .task-group {
+        border-radius: 8px;
+        border: none;
+        background: #fafafa;
+      }
+      .task-group-header {
+        padding: 10px 12px;
+      }
+      .task-group-name {
+        font-size: 13px;
+      }
+      .task-group-items {
+        padding: 6px 12px 10px 40px;
+      }
+      .task-sub-item {
+        padding: 6px 0;
+      }
+      .task-sub-name {
+        font-size: 12px;
+      }
+      .task-sub-desc {
+        font-size: 11px;
+      }
+      .edit-btn {
+        border-radius: 8px;
+        margin-top: 12px;
+      }
+    }
   `;
 
   private handleTabClick(tab: 'examination' | 'treatment'): void {

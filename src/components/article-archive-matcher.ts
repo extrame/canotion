@@ -162,6 +162,10 @@ export class ArticleArchiveMatcher extends LitElement {
       border-left-color: #52c41a;
       background: #f6ffed;
     }
+    .rec-card.gene {
+      border-left-color: #722ed1;
+      background: #f9f0ff;
+    }
     .rec-header {
       display: flex;
       align-items: center;
@@ -185,6 +189,10 @@ export class ArticleArchiveMatcher extends LitElement {
     .rec-priority.low {
       background: #b7eb8f;
       color: #389e0d;
+    }
+    .rec-priority.gene {
+      background: #d3adf7;
+      color: #722ed1;
     }
     .rec-card-title {
       font-size: 15px;
@@ -253,13 +261,11 @@ export class ArticleArchiveMatcher extends LitElement {
     let totalWeight = 0;
     let matchedWeight = 0;
 
-    // 分期匹配
     const stageMatch = this.matchStage(archive);
     results.push(stageMatch);
     totalWeight += stageMatch.weight;
     if (stageMatch.status === 'match') matchedWeight += stageMatch.weight;
 
-    // 胆红素水平匹配
     const bilirubinMatch = this.matchBilirubin(archive);
     results.push(bilirubinMatch);
     totalWeight += bilirubinMatch.weight;
@@ -267,17 +273,22 @@ export class ArticleArchiveMatcher extends LitElement {
       matchedWeight += bilirubinMatch.weight;
     }
 
-    // 治疗阶段匹配
     const treatmentMatch = this.matchTreatmentStage(archive);
     results.push(treatmentMatch);
     totalWeight += treatmentMatch.weight;
     if (treatmentMatch.status === 'match') matchedWeight += treatmentMatch.weight;
 
-    // 检查项目匹配
     const examMatch = this.matchExaminations(archive);
     results.push(examMatch);
     totalWeight += examMatch.weight;
     if (examMatch.status === 'match') matchedWeight += examMatch.weight;
+
+    const geneMatch = this.matchGenes(archive);
+    results.push(geneMatch);
+    totalWeight += geneMatch.weight;
+    if (geneMatch.status === 'match' || geneMatch.status === 'partial') {
+      matchedWeight += geneMatch.weight;
+    }
 
     this.matchResults = results;
     this.overallMatch = Math.round((matchedWeight / totalWeight) * 100);
@@ -432,10 +443,47 @@ export class ArticleArchiveMatcher extends LitElement {
     }
   }
 
+  private matchGenes(archive: Archive): MatchResult {
+    const geneTestResults = archive.pathologyReport?.geneTestResults || [];
+    
+    if (geneTestResults.length === 0) {
+      return {
+        field: 'gene',
+        label: '基因检测',
+        status: 'info',
+        message: '暂无基因检测记录，建议进行分子分型检测',
+        weight: 25
+      };
+    }
+
+    const targetGenes = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2'];
+    const positiveGenes = geneTestResults
+      .filter(g => targetGenes.some(t => g.geneName.toUpperCase().includes(t.toUpperCase())) && g.result === '阳性')
+      .map(g => g.geneName);
+
+    if (positiveGenes.length > 0) {
+      return {
+        field: 'gene',
+        label: '基因检测',
+        status: 'match',
+        message: `检测到可靶向基因突变: ${positiveGenes.join(', ')}`,
+        weight: 25
+      };
+    }
+
+    const allGenes = geneTestResults.map(g => g.geneName).join(', ');
+    return {
+      field: 'gene',
+      label: '基因检测',
+      status: 'info',
+      message: `已检测基因: ${allGenes}，未发现本文涉及的可靶向突变`,
+      weight: 25
+    };
+  }
+
   private generateRecommendations(archive: Archive, results: MatchResult[]) {
     const recommendations: Recommendation[] = [];
 
-    // 根据胆红素水平给出建议
     const bilirubinResult = results.find(r => r.field === 'bilirubin');
     if (bilirubinResult?.status === 'mismatch') {
       recommendations.push({
@@ -453,7 +501,6 @@ export class ArticleArchiveMatcher extends LitElement {
       });
     }
 
-    // 根据检查完成度给出建议
     const examResult = results.find(r => r.field === 'examination');
     if (examResult?.status === 'partial') {
       recommendations.push({
@@ -464,7 +511,16 @@ export class ArticleArchiveMatcher extends LitElement {
       });
     }
 
-    // 根据分期给出建议
+    const geneResult = results.find(r => r.field === 'gene');
+    if (geneResult?.status === 'info' && geneResult.message.includes('暂无')) {
+      recommendations.push({
+        priority: 'gene',
+        title: '建议进行基因检测',
+        content: '基因检测可帮助制定精准治疗方案，特别是HER2、FGFR2、IDH1等靶点的检测。',
+        action: '了解靶向治疗'
+      });
+    }
+
     if (archive.currentStage === 'examination') {
       recommendations.push({
         priority: 'low',
@@ -551,10 +607,10 @@ export class ArticleArchiveMatcher extends LitElement {
         <div class="recommendations">
           <div class="rec-title">💡 个性化建议</div>
           ${this.recommendations.map(rec => html`
-            <div class="rec-card ${rec.priority}">
+            <div class="rec-card ${rec.priority === 'gene' ? 'gene' : rec.priority}">
               <div class="rec-header">
                 <span class="rec-priority ${rec.priority}">
-                  ${rec.priority === 'high' ? '重要' : rec.priority === 'medium' ? '建议' : '提示'}
+                  ${rec.priority === 'high' ? '重要' : rec.priority === 'medium' ? '建议' : rec.priority === 'gene' ? '靶向' : '提示'}
                 </span>
                 <span class="rec-card-title">${rec.title}</span>
               </div>

@@ -124,6 +124,52 @@ export class TreatmentTab extends LitElement {
     .plan-selector-section {
       margin-top: 24px;
     }
+
+    @media (max-width: 600px) {
+      .guide-section {
+        margin-bottom: 16px;
+      }
+      .guide-title {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      .guide-list {
+        gap: 8px;
+      }
+      .guide-item {
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+      }
+      .guide-item.current {
+        background: #fff7e6;
+      }
+      .guide-item.next {
+        background: #f6ffed;
+      }
+      .guide-item.pending {
+        background: #fafafa;
+      }
+      .guide-item.completed {
+        background: #f5f0ff;
+      }
+      .item-name {
+        font-size: 13px;
+      }
+      .item-desc {
+        font-size: 11px;
+      }
+      .completed-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+      .bilirubin-section {
+        margin-top: 16px;
+      }
+      .plan-selector-section {
+        margin-top: 16px;
+      }
+    }
   `;
 
   private hasBloodTest(): boolean {

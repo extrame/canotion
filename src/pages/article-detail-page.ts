@@ -178,6 +178,21 @@ export class ArticleDetailPage extends LitElement {
       background: #f8f9fa;
       font-weight: 600;
     }
+    .content-block td.gene-highlight {
+      background: #e6f7ff;
+      font-weight: 600;
+      position: relative;
+    }
+    .content-block td.gene-highlight::after {
+      content: '🎯';
+      font-size: 12px;
+      position: absolute;
+      top: 2px;
+      right: 4px;
+    }
+    .content-block td.gene-no-match {
+      opacity: 0.5;
+    }
     .content-block a {
       color: #667eea;
       text-decoration: none;
@@ -392,6 +407,40 @@ export class ArticleDetailPage extends LitElement {
     });
   }
 
+  private highlightGenesInContent(html: string): string {
+    if (this.archives.length === 0) return html;
+    
+    const geneTestResults = this.archives[0]?.pathologyReport?.geneTestResults || [];
+    const positiveGenes = geneTestResults
+      .filter(g => g.result === '阳性')
+      .map(g => g.geneName.toUpperCase());
+    
+    if (positiveGenes.length === 0) return html;
+
+    const genePatterns = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2', 'ERBB3'];
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    const tables = tempDiv.querySelectorAll('table');
+    tables.forEach(table => {
+      const cells = table.querySelectorAll('td');
+      cells.forEach(cell => {
+        const cellText = cell.textContent || '';
+        const matchedGene = genePatterns.find(gene => 
+          positiveGenes.some(pg => pg.includes(gene) || gene.includes(pg)) &&
+          cellText.includes(gene)
+        );
+        
+        if (matchedGene) {
+          cell.classList.add('gene-highlight');
+        }
+      });
+    });
+    
+    return tempDiv.innerHTML;
+  }
+
   private getComponentTitle(name: string): string {
     const titles: Record<string, string> = {
       'stage-guide': '诊疗阶段向导',
@@ -507,7 +556,7 @@ export class ArticleDetailPage extends LitElement {
 
       <div class="article-content">
         ${this.contentParts.map(part => part.type === 'markdown'
-          ? html`<div class="content-block" .innerHTML="${marked.parse(part.content, { async: false }) as string}"></div>`
+          ? html`<div class="content-block" .innerHTML="${this.highlightGenesInContent(marked.parse(part.content, { async: false }) as string)}"></div>`
           : this.renderComponentEmbed(part)
         )}
       </div>

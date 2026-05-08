@@ -399,6 +399,107 @@ export class ArchiveDetailPage extends LitElement {
       color: #333;
       line-height: 1.6;
     }
+
+    @media (max-width: 600px) {
+      .archive-header {
+        border-radius: 0;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: none;
+      }
+      .header-top {
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .archive-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        font-size: 24px;
+      }
+      .archive-name {
+        font-size: 20px;
+      }
+      .back-btn,
+      .delete-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+      .guide-section {
+        margin-top: 12px;
+      }
+      .stage-prompt {
+        border-radius: 0;
+        padding: 20px 16px;
+        border: none;
+        background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+      }
+      .stage-prompt-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 28px;
+      }
+      .stage-prompt-title {
+        font-size: 18px;
+      }
+      .suspect-section {
+        border-radius: 0;
+        padding: 16px;
+        box-shadow: none;
+        margin-top: 12px;
+      }
+      .suspect-header {
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .suspect-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        font-size: 24px;
+      }
+      .suspect-title {
+        font-size: 18px;
+      }
+      .suspect-tips {
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .suspect-department {
+        border-radius: 8px;
+        padding: 14px;
+      }
+      .suspect-docs-checkbox {
+        padding: 12px;
+        border-radius: 8px;
+      }
+      .suspect-next-btn {
+        border-radius: 8px;
+      }
+      .bilirubin-input-section {
+        border-radius: 8px;
+        padding: 12px;
+        border: none;
+        background: #fafafa;
+      }
+      .bilirubin-input-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .bilirubin-save-btn {
+        width: 100%;
+      }
+      .bilirubin-result {
+        border-radius: 8px;
+        border: none;
+      }
+      .privacy-notice {
+        border-radius: 8px;
+        border: none;
+        padding: 10px 12px;
+      }
+    }
   `;
 
   private hasCompletedItems(): boolean {
