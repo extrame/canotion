@@ -1,5 +1,5 @@
 var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],enumerable:!0});return n||e(r,Symbol.toStringTag,{value:`Module`}),r};(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var n=globalThis,r=n.ShadowRoot&&(n.ShadyCSS===void 0||n.ShadyCSS.nativeShadow)&&`adoptedStyleSheets`in Document.prototype&&`replace`in CSSStyleSheet.prototype,i=Symbol(),a=new WeakMap,o=class{constructor(e,t,n){if(this._$cssResult$=!0,n!==i)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=e,this.t=t}get styleSheet(){let e=this.o,t=this.t;if(r&&e===void 0){let n=t!==void 0&&t.length===1;n&&(e=a.get(t)),e===void 0&&((this.o=e=new CSSStyleSheet).replaceSync(this.cssText),n&&a.set(t,e))}return e}toString(){return this.cssText}},s=e=>new o(typeof e==`string`?e:e+``,void 0,i),c=(e,...t)=>new o(e.length===1?e[0]:t.reduce((t,n,r)=>t+(e=>{if(!0===e._$cssResult$)return e.cssText;if(typeof e==`number`)return e;throw Error(`Value passed to 'css' function must be a 'css' function result: `+e+`. Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.`)})(n)+e[r+1],e[0]),e,i),l=(e,t)=>{if(r)e.adoptedStyleSheets=t.map(e=>e instanceof CSSStyleSheet?e:e.styleSheet);else for(let r of t){let t=document.createElement(`style`),i=n.litNonce;i!==void 0&&t.setAttribute(`nonce`,i),t.textContent=r.cssText,e.appendChild(t)}},u=r?e=>e:e=>e instanceof CSSStyleSheet?(e=>{let t=``;for(let n of e.cssRules)t+=n.cssText;return s(t)})(e):e,{is:d,defineProperty:f,getOwnPropertyDescriptor:p,getOwnPropertyNames:m,getOwnPropertySymbols:h,getPrototypeOf:g}=Object,_=globalThis,v=_.trustedTypes,y=v?v.emptyScript:``,b=_.reactiveElementPolyfillSupport,x=(e,t)=>e,S={toAttribute(e,t){switch(t){case Boolean:e=e?y:null;break;case Object:case Array:e=e==null?e:JSON.stringify(e)}return e},fromAttribute(e,t){let n=e;switch(t){case Boolean:n=e!==null;break;case Number:n=e===null?null:Number(e);break;case Object:case Array:try{n=JSON.parse(e)}catch{n=null}}return n}},C=(e,t)=>!d(e,t),w={attribute:!0,type:String,converter:S,reflect:!1,useDefault:!1,hasChanged:C};Symbol.metadata??=Symbol(`metadata`),_.litPropertyMetadata??=new WeakMap;var T=class extends HTMLElement{static addInitializer(e){this._$Ei(),(this.l??=[]).push(e)}static get observedAttributes(){return this.finalize(),this._$Eh&&[...this._$Eh.keys()]}static createProperty(e,t=w){if(t.state&&(t.attribute=!1),this._$Ei(),this.prototype.hasOwnProperty(e)&&((t=Object.create(t)).wrapped=!0),this.elementProperties.set(e,t),!t.noAccessor){let n=Symbol(),r=this.getPropertyDescriptor(e,n,t);r!==void 0&&f(this.prototype,e,r)}}static getPropertyDescriptor(e,t,n){let{get:r,set:i}=p(this.prototype,e)??{get(){return this[t]},set(e){this[t]=e}};return{get:r,set(t){let a=r?.call(this);i?.call(this,t),this.requestUpdate(e,a,n)},configurable:!0,enumerable:!0}}static getPropertyOptions(e){return this.elementProperties.get(e)??w}static _$Ei(){if(this.hasOwnProperty(x(`elementProperties`)))return;let e=g(this);e.finalize(),e.l!==void 0&&(this.l=[...e.l]),this.elementProperties=new Map(e.elementProperties)}static finalize(){if(this.hasOwnProperty(x(`finalized`)))return;if(this.finalized=!0,this._$Ei(),this.hasOwnProperty(x(`properties`))){let e=this.properties,t=[...m(e),...h(e)];for(let n of t)this.createProperty(n,e[n])}let e=this[Symbol.metadata];if(e!==null){let t=litPropertyMetadata.get(e);if(t!==void 0)for(let[e,n]of t)this.elementProperties.set(e,n)}this._$Eh=new Map;for(let[e,t]of this.elementProperties){let n=this._$Eu(e,t);n!==void 0&&this._$Eh.set(n,e)}this.elementStyles=this.finalizeStyles(this.styles)}static finalizeStyles(e){let t=[];if(Array.isArray(e)){let n=new Set(e.flat(1/0).reverse());for(let e of n)t.unshift(u(e))}else e!==void 0&&t.push(u(e));return t}static _$Eu(e,t){let n=t.attribute;return!1===n?void 0:typeof n==`string`?n:typeof e==`string`?e.toLowerCase():void 0}constructor(){super(),this._$Ep=void 0,this.isUpdatePending=!1,this.hasUpdated=!1,this._$Em=null,this._$Ev()}_$Ev(){this._$ES=new Promise(e=>this.enableUpdating=e),this._$AL=new Map,this._$E_(),this.requestUpdate(),this.constructor.l?.forEach(e=>e(this))}addController(e){(this._$EO??=new Set).add(e),this.renderRoot!==void 0&&this.isConnected&&e.hostConnected?.()}removeController(e){this._$EO?.delete(e)}_$E_(){let e=new Map,t=this.constructor.elementProperties;for(let n of t.keys())this.hasOwnProperty(n)&&(e.set(n,this[n]),delete this[n]);e.size>0&&(this._$Ep=e)}createRenderRoot(){let e=this.shadowRoot??this.attachShadow(this.constructor.shadowRootOptions);return l(e,this.constructor.elementStyles),e}connectedCallback(){this.renderRoot??=this.createRenderRoot(),this.enableUpdating(!0),this._$EO?.forEach(e=>e.hostConnected?.())}enableUpdating(e){}disconnectedCallback(){this._$EO?.forEach(e=>e.hostDisconnected?.())}attributeChangedCallback(e,t,n){this._$AK(e,n)}_$ET(e,t){let n=this.constructor.elementProperties.get(e),r=this.constructor._$Eu(e,n);if(r!==void 0&&!0===n.reflect){let i=(n.converter?.toAttribute===void 0?S:n.converter).toAttribute(t,n.type);this._$Em=e,i==null?this.removeAttribute(r):this.setAttribute(r,i),this._$Em=null}}_$AK(e,t){let n=this.constructor,r=n._$Eh.get(e);if(r!==void 0&&this._$Em!==r){let e=n.getPropertyOptions(r),i=typeof e.converter==`function`?{fromAttribute:e.converter}:e.converter?.fromAttribute===void 0?S:e.converter;this._$Em=r;let a=i.fromAttribute(t,e.type);this[r]=a??this._$Ej?.get(r)??a,this._$Em=null}}requestUpdate(e,t,n,r=!1,i){if(e!==void 0){let a=this.constructor;if(!1===r&&(i=this[e]),n??=a.getPropertyOptions(e),!((n.hasChanged??C)(i,t)||n.useDefault&&n.reflect&&i===this._$Ej?.get(e)&&!this.hasAttribute(a._$Eu(e,n))))return;this.C(e,t,n)}!1===this.isUpdatePending&&(this._$ES=this._$EP())}C(e,t,{useDefault:n,reflect:r,wrapped:i},a){n&&!(this._$Ej??=new Map).has(e)&&(this._$Ej.set(e,a??t??this[e]),!0!==i||a!==void 0)||(this._$AL.has(e)||(this.hasUpdated||n||(t=void 0),this._$AL.set(e,t)),!0===r&&this._$Em!==e&&(this._$Eq??=new Set).add(e))}async _$EP(){this.isUpdatePending=!0;try{await this._$ES}catch(e){Promise.reject(e)}let e=this.scheduleUpdate();return e!=null&&await e,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){if(!this.isUpdatePending)return;if(!this.hasUpdated){if(this.renderRoot??=this.createRenderRoot(),this._$Ep){for(let[e,t]of this._$Ep)this[e]=t;this._$Ep=void 0}let e=this.constructor.elementProperties;if(e.size>0)for(let[t,n]of e){let{wrapped:e}=n,r=this[t];!0!==e||this._$AL.has(t)||r===void 0||this.C(t,void 0,n,r)}}let e=!1,t=this._$AL;try{e=this.shouldUpdate(t),e?(this.willUpdate(t),this._$EO?.forEach(e=>e.hostUpdate?.()),this.update(t)):this._$EM()}catch(t){throw e=!1,this._$EM(),t}e&&this._$AE(t)}willUpdate(e){}_$AE(e){this._$EO?.forEach(e=>e.hostUpdated?.()),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(e)),this.updated(e)}_$EM(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$ES}shouldUpdate(e){return!0}update(e){this._$Eq&&=this._$Eq.forEach(e=>this._$ET(e,this[e])),this._$EM()}updated(e){}firstUpdated(e){}};T.elementStyles=[],T.shadowRootOptions={mode:`open`},T[x(`elementProperties`)]=new Map,T[x(`finalized`)]=new Map,b?.({ReactiveElement:T}),(_.reactiveElementVersions??=[]).push(`2.1.2`);var E=globalThis,ee=e=>e,te=E.trustedTypes,ne=te?te.createPolicy(`lit-html`,{createHTML:e=>e}):void 0,re=`$lit$`,ie=`lit$${Math.random().toFixed(9).slice(2)}$`,ae=`?`+ie,oe=`<${ae}>`,se=document,ce=()=>se.createComment(``),le=e=>e===null||typeof e!=`object`&&typeof e!=`function`,ue=Array.isArray,de=e=>ue(e)||typeof e?.[Symbol.iterator]==`function`,fe=`[ 	
-\f\r]`,pe=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,me=/-->/g,he=/>/g,ge=RegExp(`>|${fe}(?:([^\\s"'>=/]+)(${fe}*=${fe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,`g`),_e=/'/g,ve=/"/g,ye=/^(?:script|style|textarea|title)$/i,D=(e=>(t,...n)=>({_$litType$:e,strings:t,values:n}))(1),be=Symbol.for(`lit-noChange`),xe=Symbol.for(`lit-nothing`),Se=new WeakMap,Ce=se.createTreeWalker(se,129);function we(e,t){if(!ue(e)||!e.hasOwnProperty(`raw`))throw Error(`invalid template strings array`);return ne===void 0?t:ne.createHTML(t)}var Te=(e,t)=>{let n=e.length-1,r=[],i,a=t===2?`<svg>`:t===3?`<math>`:``,o=pe;for(let t=0;t<n;t++){let n=e[t],s,c,l=-1,u=0;for(;u<n.length&&(o.lastIndex=u,c=o.exec(n),c!==null);)u=o.lastIndex,o===pe?c[1]===`!--`?o=me:c[1]===void 0?c[2]===void 0?c[3]!==void 0&&(o=ge):(ye.test(c[2])&&(i=RegExp(`</`+c[2],`g`)),o=ge):o=he:o===ge?c[0]===`>`?(o=i??pe,l=-1):c[1]===void 0?l=-2:(l=o.lastIndex-c[2].length,s=c[1],o=c[3]===void 0?ge:c[3]===`"`?ve:_e):o===ve||o===_e?o=ge:o===me||o===he?o=pe:(o=ge,i=void 0);let d=o===ge&&e[t+1].startsWith(`/>`)?` `:``;a+=o===pe?n+oe:l>=0?(r.push(s),n.slice(0,l)+re+n.slice(l)+ie+d):n+ie+(l===-2?t:d)}return[we(e,a+(e[n]||`<?>`)+(t===2?`</svg>`:t===3?`</math>`:``)),r]},Ee=class e{constructor({strings:t,_$litType$:n},r){let i;this.parts=[];let a=0,o=0,s=t.length-1,c=this.parts,[l,u]=Te(t,n);if(this.el=e.createElement(l,r),Ce.currentNode=this.el.content,n===2||n===3){let e=this.el.content.firstChild;e.replaceWith(...e.childNodes)}for(;(i=Ce.nextNode())!==null&&c.length<s;){if(i.nodeType===1){if(i.hasAttributes())for(let e of i.getAttributeNames())if(e.endsWith(re)){let t=u[o++],n=i.getAttribute(e).split(ie),r=/([.?@])?(.*)/.exec(t);c.push({type:1,index:a,name:r[2],strings:n,ctor:r[1]===`.`?je:r[1]===`?`?Me:r[1]===`@`?Ne:Ae}),i.removeAttribute(e)}else e.startsWith(ie)&&(c.push({type:6,index:a}),i.removeAttribute(e));if(ye.test(i.tagName)){let e=i.textContent.split(ie),t=e.length-1;if(t>0){i.textContent=te?te.emptyScript:``;for(let n=0;n<t;n++)i.append(e[n],ce()),Ce.nextNode(),c.push({type:2,index:++a});i.append(e[t],ce())}}}else if(i.nodeType===8)if(i.data===ae)c.push({type:2,index:a});else{let e=-1;for(;(e=i.data.indexOf(ie,e+1))!==-1;)c.push({type:7,index:a}),e+=ie.length-1}a++}}static createElement(e,t){let n=se.createElement(`template`);return n.innerHTML=e,n}};function De(e,t,n=e,r){if(t===be)return t;let i=r===void 0?n._$Cl:n._$Co?.[r],a=le(t)?void 0:t._$litDirective$;return i?.constructor!==a&&(i?._$AO?.(!1),a===void 0?i=void 0:(i=new a(e),i._$AT(e,n,r)),r===void 0?n._$Cl=i:(n._$Co??=[])[r]=i),i!==void 0&&(t=De(e,i._$AS(e,t.values),i,r)),t}var Oe=class{constructor(e,t){this._$AV=[],this._$AN=void 0,this._$AD=e,this._$AM=t}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(e){let{el:{content:t},parts:n}=this._$AD,r=(e?.creationScope??se).importNode(t,!0);Ce.currentNode=r;let i=Ce.nextNode(),a=0,o=0,s=n[0];for(;s!==void 0;){if(a===s.index){let t;s.type===2?t=new ke(i,i.nextSibling,this,e):s.type===1?t=new s.ctor(i,s.name,s.strings,this,e):s.type===6&&(t=new Pe(i,this,e)),this._$AV.push(t),s=n[++o]}a!==s?.index&&(i=Ce.nextNode(),a++)}return Ce.currentNode=se,r}p(e){let t=0;for(let n of this._$AV)n!==void 0&&(n.strings===void 0?n._$AI(e[t]):(n._$AI(e,n,t),t+=n.strings.length-2)),t++}},ke=class e{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(e,t,n,r){this.type=2,this._$AH=xe,this._$AN=void 0,this._$AA=e,this._$AB=t,this._$AM=n,this.options=r,this._$Cv=r?.isConnected??!0}get parentNode(){let e=this._$AA.parentNode,t=this._$AM;return t!==void 0&&e?.nodeType===11&&(e=t.parentNode),e}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(e,t=this){e=De(this,e,t),le(e)?e===xe||e==null||e===``?(this._$AH!==xe&&this._$AR(),this._$AH=xe):e!==this._$AH&&e!==be&&this._(e):e._$litType$===void 0?e.nodeType===void 0?de(e)?this.k(e):this._(e):this.T(e):this.$(e)}O(e){return this._$AA.parentNode.insertBefore(e,this._$AB)}T(e){this._$AH!==e&&(this._$AR(),this._$AH=this.O(e))}_(e){this._$AH!==xe&&le(this._$AH)?this._$AA.nextSibling.data=e:this.T(se.createTextNode(e)),this._$AH=e}$(e){let{values:t,_$litType$:n}=e,r=typeof n==`number`?this._$AC(e):(n.el===void 0&&(n.el=Ee.createElement(we(n.h,n.h[0]),this.options)),n);if(this._$AH?._$AD===r)this._$AH.p(t);else{let e=new Oe(r,this),n=e.u(this.options);e.p(t),this.T(n),this._$AH=e}}_$AC(e){let t=Se.get(e.strings);return t===void 0&&Se.set(e.strings,t=new Ee(e)),t}k(t){ue(this._$AH)||(this._$AH=[],this._$AR());let n=this._$AH,r,i=0;for(let a of t)i===n.length?n.push(r=new e(this.O(ce()),this.O(ce()),this,this.options)):r=n[i],r._$AI(a),i++;i<n.length&&(this._$AR(r&&r._$AB.nextSibling,i),n.length=i)}_$AR(e=this._$AA.nextSibling,t){for(this._$AP?.(!1,!0,t);e!==this._$AB;){let t=ee(e).nextSibling;ee(e).remove(),e=t}}setConnected(e){this._$AM===void 0&&(this._$Cv=e,this._$AP?.(e))}},Ae=class{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(e,t,n,r,i){this.type=1,this._$AH=xe,this._$AN=void 0,this.element=e,this.name=t,this._$AM=r,this.options=i,n.length>2||n[0]!==``||n[1]!==``?(this._$AH=Array(n.length-1).fill(new String),this.strings=n):this._$AH=xe}_$AI(e,t=this,n,r){let i=this.strings,a=!1;if(i===void 0)e=De(this,e,t,0),a=!le(e)||e!==this._$AH&&e!==be,a&&(this._$AH=e);else{let r=e,o,s;for(e=i[0],o=0;o<i.length-1;o++)s=De(this,r[n+o],t,o),s===be&&(s=this._$AH[o]),a||=!le(s)||s!==this._$AH[o],s===xe?e=xe:e!==xe&&(e+=(s??``)+i[o+1]),this._$AH[o]=s}a&&!r&&this.j(e)}j(e){e===xe?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,e??``)}},je=class extends Ae{constructor(){super(...arguments),this.type=3}j(e){this.element[this.name]=e===xe?void 0:e}},Me=class extends Ae{constructor(){super(...arguments),this.type=4}j(e){this.element.toggleAttribute(this.name,!!e&&e!==xe)}},Ne=class extends Ae{constructor(e,t,n,r,i){super(e,t,n,r,i),this.type=5}_$AI(e,t=this){if((e=De(this,e,t,0)??xe)===be)return;let n=this._$AH,r=e===xe&&n!==xe||e.capture!==n.capture||e.once!==n.once||e.passive!==n.passive,i=e!==xe&&(n===xe||r);r&&this.element.removeEventListener(this.name,this,n),i&&this.element.addEventListener(this.name,this,e),this._$AH=e}handleEvent(e){typeof this._$AH==`function`?this._$AH.call(this.options?.host??this.element,e):this._$AH.handleEvent(e)}},Pe=class{constructor(e,t,n){this.element=e,this.type=6,this._$AN=void 0,this._$AM=t,this.options=n}get _$AU(){return this._$AM._$AU}_$AI(e){De(this,e)}},Fe=E.litHtmlPolyfillSupport;Fe?.(Ee,ke),(E.litHtmlVersions??=[]).push(`3.3.2`);var Ie=(e,t,n)=>{let r=n?.renderBefore??t,i=r._$litPart$;if(i===void 0){let e=n?.renderBefore??null;r._$litPart$=i=new ke(t.insertBefore(ce(),e),e,void 0,n??{})}return i._$AI(e),i},Le=globalThis,O=class extends T{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){let e=super.createRenderRoot();return this.renderOptions.renderBefore??=e.firstChild,e}update(e){let t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=Ie(t,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return be}};O._$litElement$=!0,O.finalized=!0,Le.litElementHydrateSupport?.({LitElement:O});var Re=Le.litElementPolyfillSupport;Re?.({LitElement:O}),(Le.litElementVersions??=[]).push(`4.2.2`);var k=e=>(t,n)=>{n===void 0?customElements.define(e,t):n.addInitializer(()=>{customElements.define(e,t)})},ze={attribute:!0,type:String,converter:S,reflect:!1,hasChanged:C},Be=(e=ze,t,n)=>{let{kind:r,metadata:i}=n,a=globalThis.litPropertyMetadata.get(i);if(a===void 0&&globalThis.litPropertyMetadata.set(i,a=new Map),r===`setter`&&((e=Object.create(e)).wrapped=!0),a.set(n.name,e),r===`accessor`){let{name:r}=n;return{set(n){let i=t.get.call(this);t.set.call(this,n),this.requestUpdate(r,i,e,!0,n)},init(t){return t!==void 0&&this.C(r,void 0,e,t),t}}}if(r===`setter`){let{name:r}=n;return function(n){let i=this[r];t.call(this,n),this.requestUpdate(r,i,e,!0,n)}}throw Error(`Unsupported decorator location: `+r)};function A(e){return(t,n)=>typeof n==`object`?Be(e,t,n):((e,t,n)=>{let r=t.hasOwnProperty(n);return t.constructor.createProperty(n,e),r?Object.getOwnPropertyDescriptor(t,n):void 0})(e,t,n)}function j(e){return A({...e,state:!0,attribute:!1})}var Ve=(e,t,n)=>(n.configurable=!0,n.enumerable=!0,Reflect.decorate&&typeof t!=`object`&&Object.defineProperty(e,t,n),n);function He(e,t){return(n,r,i)=>{let a=t=>t.renderRoot?.querySelector(e)??null;if(t){let{get:e,set:t}=typeof r==`object`?n:i??(()=>{let e=Symbol();return{get(){return this[e]},set(t){this[e]=t}}})();return Ve(n,r,{get(){let n=e.call(this);return n===void 0&&(n=a(this),(n!==null||this.hasUpdated)&&t.call(this,n)),n}})}return Ve(n,r,{get(){return a(this)}})}}function M(e,t,n,r){var i=arguments.length,a=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect==`object`&&typeof Reflect.decorate==`function`)a=Reflect.decorate(e,t,n,r);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(i<3?o(a):i>3?o(t,n,a):o(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a}var Ue=class extends O{constructor(...e){super(...e),this.show=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:`🫀`,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}static{this.styles=c`
+\f\r]`,pe=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,me=/-->/g,he=/>/g,ge=RegExp(`>|${fe}(?:([^\\s"'>=/]+)(${fe}*=${fe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,`g`),_e=/'/g,ve=/"/g,ye=/^(?:script|style|textarea|title)$/i,D=(e=>(t,...n)=>({_$litType$:e,strings:t,values:n}))(1),be=Symbol.for(`lit-noChange`),xe=Symbol.for(`lit-nothing`),Se=new WeakMap,Ce=se.createTreeWalker(se,129);function we(e,t){if(!ue(e)||!e.hasOwnProperty(`raw`))throw Error(`invalid template strings array`);return ne===void 0?t:ne.createHTML(t)}var Te=(e,t)=>{let n=e.length-1,r=[],i,a=t===2?`<svg>`:t===3?`<math>`:``,o=pe;for(let t=0;t<n;t++){let n=e[t],s,c,l=-1,u=0;for(;u<n.length&&(o.lastIndex=u,c=o.exec(n),c!==null);)u=o.lastIndex,o===pe?c[1]===`!--`?o=me:c[1]===void 0?c[2]===void 0?c[3]!==void 0&&(o=ge):(ye.test(c[2])&&(i=RegExp(`</`+c[2],`g`)),o=ge):o=he:o===ge?c[0]===`>`?(o=i??pe,l=-1):c[1]===void 0?l=-2:(l=o.lastIndex-c[2].length,s=c[1],o=c[3]===void 0?ge:c[3]===`"`?ve:_e):o===ve||o===_e?o=ge:o===me||o===he?o=pe:(o=ge,i=void 0);let d=o===ge&&e[t+1].startsWith(`/>`)?` `:``;a+=o===pe?n+oe:l>=0?(r.push(s),n.slice(0,l)+re+n.slice(l)+ie+d):n+ie+(l===-2?t:d)}return[we(e,a+(e[n]||`<?>`)+(t===2?`</svg>`:t===3?`</math>`:``)),r]},Ee=class e{constructor({strings:t,_$litType$:n},r){let i;this.parts=[];let a=0,o=0,s=t.length-1,c=this.parts,[l,u]=Te(t,n);if(this.el=e.createElement(l,r),Ce.currentNode=this.el.content,n===2||n===3){let e=this.el.content.firstChild;e.replaceWith(...e.childNodes)}for(;(i=Ce.nextNode())!==null&&c.length<s;){if(i.nodeType===1){if(i.hasAttributes())for(let e of i.getAttributeNames())if(e.endsWith(re)){let t=u[o++],n=i.getAttribute(e).split(ie),r=/([.?@])?(.*)/.exec(t);c.push({type:1,index:a,name:r[2],strings:n,ctor:r[1]===`.`?je:r[1]===`?`?Me:r[1]===`@`?Ne:Ae}),i.removeAttribute(e)}else e.startsWith(ie)&&(c.push({type:6,index:a}),i.removeAttribute(e));if(ye.test(i.tagName)){let e=i.textContent.split(ie),t=e.length-1;if(t>0){i.textContent=te?te.emptyScript:``;for(let n=0;n<t;n++)i.append(e[n],ce()),Ce.nextNode(),c.push({type:2,index:++a});i.append(e[t],ce())}}}else if(i.nodeType===8)if(i.data===ae)c.push({type:2,index:a});else{let e=-1;for(;(e=i.data.indexOf(ie,e+1))!==-1;)c.push({type:7,index:a}),e+=ie.length-1}a++}}static createElement(e,t){let n=se.createElement(`template`);return n.innerHTML=e,n}};function De(e,t,n=e,r){if(t===be)return t;let i=r===void 0?n._$Cl:n._$Co?.[r],a=le(t)?void 0:t._$litDirective$;return i?.constructor!==a&&(i?._$AO?.(!1),a===void 0?i=void 0:(i=new a(e),i._$AT(e,n,r)),r===void 0?n._$Cl=i:(n._$Co??=[])[r]=i),i!==void 0&&(t=De(e,i._$AS(e,t.values),i,r)),t}var Oe=class{constructor(e,t){this._$AV=[],this._$AN=void 0,this._$AD=e,this._$AM=t}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(e){let{el:{content:t},parts:n}=this._$AD,r=(e?.creationScope??se).importNode(t,!0);Ce.currentNode=r;let i=Ce.nextNode(),a=0,o=0,s=n[0];for(;s!==void 0;){if(a===s.index){let t;s.type===2?t=new ke(i,i.nextSibling,this,e):s.type===1?t=new s.ctor(i,s.name,s.strings,this,e):s.type===6&&(t=new Pe(i,this,e)),this._$AV.push(t),s=n[++o]}a!==s?.index&&(i=Ce.nextNode(),a++)}return Ce.currentNode=se,r}p(e){let t=0;for(let n of this._$AV)n!==void 0&&(n.strings===void 0?n._$AI(e[t]):(n._$AI(e,n,t),t+=n.strings.length-2)),t++}},ke=class e{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(e,t,n,r){this.type=2,this._$AH=xe,this._$AN=void 0,this._$AA=e,this._$AB=t,this._$AM=n,this.options=r,this._$Cv=r?.isConnected??!0}get parentNode(){let e=this._$AA.parentNode,t=this._$AM;return t!==void 0&&e?.nodeType===11&&(e=t.parentNode),e}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(e,t=this){e=De(this,e,t),le(e)?e===xe||e==null||e===``?(this._$AH!==xe&&this._$AR(),this._$AH=xe):e!==this._$AH&&e!==be&&this._(e):e._$litType$===void 0?e.nodeType===void 0?de(e)?this.k(e):this._(e):this.T(e):this.$(e)}O(e){return this._$AA.parentNode.insertBefore(e,this._$AB)}T(e){this._$AH!==e&&(this._$AR(),this._$AH=this.O(e))}_(e){this._$AH!==xe&&le(this._$AH)?this._$AA.nextSibling.data=e:this.T(se.createTextNode(e)),this._$AH=e}$(e){let{values:t,_$litType$:n}=e,r=typeof n==`number`?this._$AC(e):(n.el===void 0&&(n.el=Ee.createElement(we(n.h,n.h[0]),this.options)),n);if(this._$AH?._$AD===r)this._$AH.p(t);else{let e=new Oe(r,this),n=e.u(this.options);e.p(t),this.T(n),this._$AH=e}}_$AC(e){let t=Se.get(e.strings);return t===void 0&&Se.set(e.strings,t=new Ee(e)),t}k(t){ue(this._$AH)||(this._$AH=[],this._$AR());let n=this._$AH,r,i=0;for(let a of t)i===n.length?n.push(r=new e(this.O(ce()),this.O(ce()),this,this.options)):r=n[i],r._$AI(a),i++;i<n.length&&(this._$AR(r&&r._$AB.nextSibling,i),n.length=i)}_$AR(e=this._$AA.nextSibling,t){for(this._$AP?.(!1,!0,t);e!==this._$AB;){let t=ee(e).nextSibling;ee(e).remove(),e=t}}setConnected(e){this._$AM===void 0&&(this._$Cv=e,this._$AP?.(e))}},Ae=class{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(e,t,n,r,i){this.type=1,this._$AH=xe,this._$AN=void 0,this.element=e,this.name=t,this._$AM=r,this.options=i,n.length>2||n[0]!==``||n[1]!==``?(this._$AH=Array(n.length-1).fill(new String),this.strings=n):this._$AH=xe}_$AI(e,t=this,n,r){let i=this.strings,a=!1;if(i===void 0)e=De(this,e,t,0),a=!le(e)||e!==this._$AH&&e!==be,a&&(this._$AH=e);else{let r=e,o,s;for(e=i[0],o=0;o<i.length-1;o++)s=De(this,r[n+o],t,o),s===be&&(s=this._$AH[o]),a||=!le(s)||s!==this._$AH[o],s===xe?e=xe:e!==xe&&(e+=(s??``)+i[o+1]),this._$AH[o]=s}a&&!r&&this.j(e)}j(e){e===xe?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,e??``)}},je=class extends Ae{constructor(){super(...arguments),this.type=3}j(e){this.element[this.name]=e===xe?void 0:e}},Me=class extends Ae{constructor(){super(...arguments),this.type=4}j(e){this.element.toggleAttribute(this.name,!!e&&e!==xe)}},Ne=class extends Ae{constructor(e,t,n,r,i){super(e,t,n,r,i),this.type=5}_$AI(e,t=this){if((e=De(this,e,t,0)??xe)===be)return;let n=this._$AH,r=e===xe&&n!==xe||e.capture!==n.capture||e.once!==n.once||e.passive!==n.passive,i=e!==xe&&(n===xe||r);r&&this.element.removeEventListener(this.name,this,n),i&&this.element.addEventListener(this.name,this,e),this._$AH=e}handleEvent(e){typeof this._$AH==`function`?this._$AH.call(this.options?.host??this.element,e):this._$AH.handleEvent(e)}},Pe=class{constructor(e,t,n){this.element=e,this.type=6,this._$AN=void 0,this._$AM=t,this.options=n}get _$AU(){return this._$AM._$AU}_$AI(e){De(this,e)}},Fe=E.litHtmlPolyfillSupport;Fe?.(Ee,ke),(E.litHtmlVersions??=[]).push(`3.3.2`);var Ie=(e,t,n)=>{let r=n?.renderBefore??t,i=r._$litPart$;if(i===void 0){let e=n?.renderBefore??null;r._$litPart$=i=new ke(t.insertBefore(ce(),e),e,void 0,n??{})}return i._$AI(e),i},Le=globalThis,O=class extends T{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){let e=super.createRenderRoot();return this.renderOptions.renderBefore??=e.firstChild,e}update(e){let t=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(e),this._$Do=Ie(t,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return be}};O._$litElement$=!0,O.finalized=!0,Le.litElementHydrateSupport?.({LitElement:O});var Re=Le.litElementPolyfillSupport;Re?.({LitElement:O}),(Le.litElementVersions??=[]).push(`4.2.2`);var k=e=>(t,n)=>{n===void 0?customElements.define(e,t):n.addInitializer(()=>{customElements.define(e,t)})},ze={attribute:!0,type:String,converter:S,reflect:!1,hasChanged:C},Be=(e=ze,t,n)=>{let{kind:r,metadata:i}=n,a=globalThis.litPropertyMetadata.get(i);if(a===void 0&&globalThis.litPropertyMetadata.set(i,a=new Map),r===`setter`&&((e=Object.create(e)).wrapped=!0),a.set(n.name,e),r===`accessor`){let{name:r}=n;return{set(n){let i=t.get.call(this);t.set.call(this,n),this.requestUpdate(r,i,e,!0,n)},init(t){return t!==void 0&&this.C(r,void 0,e,t),t}}}if(r===`setter`){let{name:r}=n;return function(n){let i=this[r];t.call(this,n),this.requestUpdate(r,i,e,!0,n)}}throw Error(`Unsupported decorator location: `+r)};function A(e){return(t,n)=>typeof n==`object`?Be(e,t,n):((e,t,n)=>{let r=t.hasOwnProperty(n);return t.constructor.createProperty(n,e),r?Object.getOwnPropertyDescriptor(t,n):void 0})(e,t,n)}function j(e){return A({...e,state:!0,attribute:!1})}var Ve=(e,t,n)=>(n.configurable=!0,n.enumerable=!0,Reflect.decorate&&typeof t!=`object`&&Object.defineProperty(e,t,n),n);function He(e,t){return(n,r,i)=>{let a=t=>t.renderRoot?.querySelector(e)??null;if(t){let{get:e,set:t}=typeof r==`object`?n:i??(()=>{let e=Symbol();return{get(){return this[e]},set(t){this[e]=t}}})();return Ve(n,r,{get(){let n=e.call(this);return n===void 0&&(n=a(this),(n!==null||this.hasUpdated)&&t.call(this,n)),n}})}return Ve(n,r,{get(){return a(this)}})}}function M(e,t,n,r){var i=arguments.length,a=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect==`object`&&typeof Reflect.decorate==`function`)a=Reflect.decorate(e,t,n,r);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(i<3?o(a):i>3?o(t,n,a):o(t,n))||a);return i>3&&a&&Object.defineProperty(t,n,a),a}var Ue=class extends O{constructor(...e){super(...e),this.show=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:``,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}static{this.styles=c`
     :host {
       display: block;
     }
@@ -715,7 +715,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
   `}getSortedRecords(){return!this.records||this.records.length===0?[]:[...this.records].sort((e,t)=>new Date(e.date).getTime()-new Date(t.date).getTime())}calculateEstimate(){let e=this.getSortedRecords();if(e.length<2)return null;let t=e.length,n=e.map(e=>new Date(e.date).getTime()),r=e.map(e=>e.total),i=n[0],a=n.map(e=>(e-i)/(1e3*60*60*24)),o=r.reduce((e,t)=>e+t,0)/t,s=0,c=0;for(let e=0;e<t;e++)s+=a[e]*(r[e]-o),c+=a[e]*a[e];if(c===0)return null;let l=s/c,u=e[e.length-1],d=u.total,f=new Date(u.date).getTime(),p=`stable`;if(l<-1?p=`down`:l>1&&(p=`up`),d<=50)return{daysTo50:0,trend:p,currentValue:d};if(p!==`down`||l>=0)return{daysTo50:-1,trend:p,currentValue:d};let m=Math.ceil((50-d)/l);return new Date(f+m*24*60*60*1e3),{daysTo50:m,trend:p,currentValue:d}}initChart(){if(!this.canvas)return;let e=this.getSortedRecords();if(e.length===0)return;let t={labels:e.map(e=>{let t=new Date(e.date);return`${t.getMonth()+1}/${t.getDate()}`}),datasets:[{label:`总胆红素`,data:e.map(e=>e.total),borderColor:`#ff4d4f`,backgroundColor:`rgba(255, 77, 79, 0.1)`,borderWidth:2,tension:.3,pointRadius:4,pointHoverRadius:6},{label:`直接胆红素`,data:e.map(e=>e.direct),borderColor:`#52c41a`,backgroundColor:`rgba(82, 196, 26, 0.1)`,borderWidth:2,tension:.3,pointRadius:4,pointHoverRadius:6},{label:`间接胆红素`,data:e.map(e=>e.indirect),borderColor:`#1890ff`,backgroundColor:`rgba(24, 144, 255, 0.1)`,borderWidth:2,tension:.3,pointRadius:4,pointHoverRadius:6}]};this.chart&&this.chart.destroy(),this.chart=new ad(this.canvas,{type:`line`,data:t,options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},tooltip:{mode:`index`,intersect:!1},annotation:{annotations:{zone1:{type:`box`,yMin:0,yMax:50,backgroundColor:`rgba(82, 196, 26, 0.1)`,borderWidth:0,label:{display:!0,content:`可治疗`,position:`end`,color:`#52c41a`,font:{size:10}}},zone2:{type:`box`,yMin:50,yMax:100,backgroundColor:`rgba(250, 173, 20, 0.1)`,borderWidth:0,label:{display:!0,content:`需评估`,position:`end`,color:`#faad14`,font:{size:10}}},zone3:{type:`box`,yMin:100,yMax:400,backgroundColor:`rgba(255, 77, 79, 0.1)`,borderWidth:0,label:{display:!0,content:`待治疗`,position:`end`,color:`#ff4d4f`,font:{size:10}}}}}},scales:{y:{beginAtZero:!0,min:0,max:400,title:{display:!0,text:`μmol/L`},grid:{color:`rgba(0, 0, 0, 0.05)`}},x:{grid:{display:!1}}},interaction:{mode:`nearest`,axis:`x`,intersect:!1}}})}updateChart(){if(!this.chart){this.initChart();return}let e=this.getSortedRecords();if(e.length===0){this.chart.destroy(),this.chart=null;return}let t=e.map(e=>{let t=new Date(e.date);return`${t.getMonth()+1}/${t.getDate()}`});this.chart.data.labels=t,this.chart.data.datasets[0].data=e.map(e=>e.total),this.chart.data.datasets[1].data=e.map(e=>e.direct),this.chart.data.datasets[2].data=e.map(e=>e.indirect),this.chart.update()}updated(e){e.has(`records`)&&this.updateChart()}handleAddClick(){this.inputDate=new Date().toISOString().split(`T`)[0],this.inputTotal=``,this.inputDirect=``,this.inputIndirect=``,this.showInput=!0}handleCancel(){this.showInput=!1}handleToggleTable(){this.showTable=!this.showTable}handleSave(){if(!this.inputDate||!this.inputTotal)return;let e=parseFloat(this.inputTotal)||0,t=parseFloat(this.inputDirect)||0,n=parseFloat(this.inputIndirect)||e-t;this.dispatchEvent(new CustomEvent(`add-record`,{bubbles:!0,composed:!0,detail:{id:Date.now().toString(),date:this.inputDate,total:e,direct:t,indirect:n,unit:`μmol/L`}})),this.showInput=!1}connectedCallback(){super.connectedCallback(),setTimeout(()=>this.initChart(),0)}disconnectedCallback(){super.disconnectedCallback(),this.chart&&=(this.chart.destroy(),null)}render(){let e=this.records&&this.records.length>0,t=this.getSortedRecords(),n=this.calculateEstimate();return D`
       <div class="chart-container">
         <div class="chart-header">
-          <span class="chart-title">📊 胆红素指标趋势</span>
+          <span class="chart-title">胆红素指标趋势</span>
           <div style="display: flex; gap: 8px;">
             ${e?D`
               <button class="table-toggle-btn ${this.showTable?`active`:``}" @click="${this.handleToggleTable}">
@@ -779,7 +779,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                 `:``}
               </div>
               <div class="estimate-message">
-                ${n.currentValue<=50?`🎉 已达到可治疗水平，请与医生讨论化疗方案。`:n.daysTo50<=30?`⏰ 预计一个月内可达到治疗条件，继续保持。`:n.daysTo50>0?`⏰ 预计需要更长时间，建议与医生讨论其他治疗方案。`:`⚠️ 当前趋势无法预估到达时间，建议继续监测。`}
+                ${n.currentValue<=50?`已达到可治疗水平，请与医生讨论化疗方案。`:n.daysTo50<=30?`预计一个月内可达到治疗条件，继续保持。`:n.daysTo50>0?`预计需要更长时间，建议与医生讨论其他治疗方案。`:`当前趋势无法预估到达时间，建议继续监测。`}
               </div>
             </div>
           `:``}
@@ -1097,7 +1097,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         `}
 
         <div class="tips">
-          <div class="tips-title">💡 记录提示</div>
+          <div class="tips-title">记录提示</div>
           <div>• 建议每日固定时间记录引流量（如早上8点）</div>
           <div>• 正常PTCD引流量约为200-400ml/天</div>
           <div>• 引流量突然减少或增多时请及时联系医生</div>
@@ -1271,24 +1271,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       border-bottom: none;
       padding-bottom: 0;
     }
-    .core-task-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 12px;
-    }
-    .core-task-icon.warning {
-      background: #fff1f0;
-      color: #ff4d4f;
-    }
-    .core-task-icon.tip {
-      background: #f6ffed;
-      color: #52c41a;
-    }
     .core-task-content {
       flex: 1;
     }
@@ -1345,13 +1327,8 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
     .task-group-header:hover {
       background: #f0f0f0;
     }
-    .task-group-icon {
-      font-size: 16px;
-    }
-    .task-group-content {
-      flex: 1;
-    }
     .task-group-name {
+      flex: 1;
       font-weight: 600;
       font-size: 14px;
       color: #333;
@@ -1360,7 +1337,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 2px;
     }
     .task-group-time {
       font-size: 12px;
@@ -1400,10 +1376,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
     .task-sub-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
-    }
-    .task-sub-icon {
-      font-size: 14px;
-      margin-top: 2px;
     }
     .task-sub-content {
       flex: 1;
@@ -1566,7 +1538,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       }
     }
   `}hasBloodTest(){return this.archive?(this.archive.completedExamIds||[]).includes(`blood-test`):!1}hasPTCD(){return this.archive?(this.archive.completedTreatmentIds||[]).includes(`biliary-drainage`):!1}hasCTMRI(){return this.archive?(this.archive.completedExamIds||[]).includes(`ct-mri`):!1}handlePortalVeinThrombusChange(e){let t=e.target.checked;this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:{hasPortalVeinTumorThrombus:t}}))}calculateBilirubinEstimateTime(){if(!this.archive||!this.archive.bilirubinRecords||this.archive.bilirubinRecords.length===0)return;let e=[...this.archive.bilirubinRecords].sort((e,t)=>new Date(t.date).getTime()-new Date(e.date).getTime())[0];if(e.total<=50)return`已达标`;let t=e.total-50,n=Math.ceil(t/50);return n<=0?`已达标`:n===1?`约1周`:`约${n}周`}getExamStatus(e){if(!this.archive)return`pending`;let t=this.archive.completedExamIds||[];if(t.includes(e))return`completed`;if(!this.disease)return`pending`;let n=this.disease.examItems.findIndex(t=>t.id===e);if(t.length===0)return n===0?`current`:`pending`;let r=Math.max(...t.map(e=>this.disease.examItems.findIndex(t=>t.id===e)));return n<=r?`completed`:n===r+1?`next`:`pending`}handleAddBilirubinRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainageRecord(e){this.archive&&this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}toggleGroup(e){this.expandedGroups.has(e)?this.expandedGroups.delete(e):this.expandedGroups.add(e),this.expandedGroups=new Set(this.expandedGroups)}getCoreTasksForDisease(e){return{"hilar-cholangiocarcinoma":{standalone:[{name:`总胆红素降至50以内`,desc:D`总胆红素需要降至<span class="bilirubin-target">50μmol/L以下</span>才能考虑化疗。
-              若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,icon:`💛`,required:!0,estimateTime:this.calculateBilirubinEstimateTime()}],groups:[{id:`pathology`,name:`马上进行病理确认`,icon:`🔬`,estimateTime:`约2-3周`,detailRoute:`#/pathology-detail`,items:[{name:`基本病理检测`,desc:`通过组织样本明确肿瘤性质，是制定治疗方案的基础依据。`,icon:`🔬`,required:!0},{name:`免疫组化染色检测`,desc:`检测肿瘤标志物表达情况，指导靶向和免疫治疗药物选择。`,icon:`🧪`,required:!0},{name:`基因检测`,desc:`检测基因突变情况（FGFR2、IDH1、MSI/TMB、HER2、NTRK等），为靶向治疗提供依据。胆道肿瘤常见靶点：FGFR2融合、IDH1突变等。`,icon:`🧬`,required:!1}]}]}}[e]||{standalone:[],groups:[]}}render(){if(!this.archive||!this.disease)return D``;let e=this.hasBloodTest(),t=this.hasPTCD(),n=this.getCoreTasksForDisease(this.disease.id),r=n.standalone.length>0||n.groups.length>0;return D`
+              若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,icon:``,required:!0,estimateTime:this.calculateBilirubinEstimateTime()}],groups:[{id:`pathology`,name:`马上进行病理确认`,icon:``,estimateTime:`约2-3周`,detailRoute:`#/pathology-detail`,items:[{name:`基本病理检测`,desc:`通过组织样本明确肿瘤性质，是制定治疗方案的基础依据。`,icon:``,required:!0},{name:`免疫组化染色检测`,desc:`检测肿瘤标志物表达情况，指导靶向和免疫治疗药物选择。`,icon:``,required:!0},{name:`基因检测`,desc:`检测基因突变情况（FGFR2、IDH1、MSI/TMB、HER2、NTRK等），为靶向治疗提供依据。胆道肿瘤常见靶点：FGFR2融合、IDH1突变等。`,icon:``,required:!1}]}]}}[e]||{standalone:[],groups:[]}}render(){if(!this.archive||!this.disease)return D``;let e=this.hasBloodTest(),t=this.hasPTCD(),n=this.getCoreTasksForDisease(this.disease.id),r=n.standalone.length>0||n.groups.length>0;return D`
       ${this.disease&&r?D`
         <div class="core-task-section">
           <div class="core-task-title">
@@ -1580,7 +1552,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           ${n.standalone.map(e=>D`
             <div class="core-task-item">
-              <div class="core-task-icon warning">${e.icon}</div>
               <div class="core-task-content">
                 <div class="core-task-name">
                   ${e.name}
@@ -1600,24 +1571,20 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </div>
-                <div class="task-group-icon">${e.icon}</div>
-                <div class="task-group-content">
-                  <div class="task-group-name">${e.name}</div>
-                  <div class="task-group-meta">
-                    ${e.estimateTime?D`<span class="task-group-time">${e.estimateTime}</span>`:``}
-                    ${e.detailRoute?D`
-                      <span class="task-group-detail" @click="${t=>{t.stopPropagation(),window.location.hash=e.detailRoute}}">
-                        查看详情 →
-                      </span>
-                    `:``}
-                  </div>
+                <div class="task-group-name">${e.name}</div>
+                <div class="task-group-meta">
+                  ${e.estimateTime?D`<span class="task-group-time">${e.estimateTime}</span>`:``}
+                  ${e.detailRoute?D`
+                    <span class="task-group-detail" @click="${t=>{t.stopPropagation(),window.location.hash=e.detailRoute}}">
+                      查看详情 →
+                    </span>
+                  `:``}
                 </div>
               </div>
               ${this.expandedGroups.has(e.id)?D`
                 <div class="task-group-items">
                   ${e.items.map(e=>D`
                     <div class="task-sub-item">
-                      <div class="task-sub-icon">${e.icon}</div>
                       <div class="task-sub-content">
                         <div class="task-sub-name">
                           ${e.name}
@@ -1627,7 +1594,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                           ${e.desc}
                           ${e.name===`基因检测`&&this.archive?.hasPortalVeinTumorThrombus?D`
                             <div style="margin-top: 8px; padding: 10px; background: #fff1f0; border-radius: 8px; border: 1px solid #ffccc7;">
-                              <div style="font-size: 12px; color: #ff4d4f; font-weight: 600;">⚠️ 门静脉癌栓患者注意</div>
+                              <div style="font-size: 12px; color: #ff4d4f; font-weight: 600;">门静脉癌栓患者注意</div>
                               <div style="font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5;">
                                 若治疗过程中发生消化道出血需要输血，基因检测需推迟<span style="color: #ff4d4f; font-weight: 600;">至少15天</span>。请提前与医生沟通安排基因检测抽血时间。
                               </div>
@@ -1771,7 +1738,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
     }
     .selector-title {
       font-size: 16px;
@@ -2039,9 +2005,10 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       color: #999;
     }
     .no-results-icon {
-      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
-      opacity: 0.5;
     }
     .no-results-text {
       font-size: 14px;
@@ -2073,10 +2040,17 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       opacity: 0.9;
       line-height: 1.5;
     }
-  `}isPlanSuitable(e){let{suitableFor:t}=e,n=this.assessment;return!(t.bismuthTypes&&!t.bismuthTypes.includes(n.bismuthType)||t.resectability&&!t.resectability.includes(n.resectability)||t.vascularInvasion&&!(n.vascularInvasion===`none`&&t.vascularInvasion.includes(`none`))&&n.vascularInvasion!==`none`&&!t.vascularInvasion.includes(n.vascularInvasion)||t.lymphNodeStatus&&!t.lymphNodeStatus.includes(n.lymphNodeStatus)||t.metastasis&&!t.metastasis.includes(n.metastasis)||t.ecogMax!==void 0&&n.ecogScore>t.ecogMax)}getFilteredPlans(){return this.treatmentPlans.filter(e=>this.isPlanSuitable(e))}getFilteredPlansByCategory(e){let t=this.getFilteredPlans();return e===`all`?t:t.filter(t=>t.category===e)}getCategoryCount(e){return e===`all`?this.getFilteredPlans().length:this.getFilteredPlans().filter(t=>t.category===e).length}getPrimaryRecommendation(){let e=this.getFilteredPlans(),t=e.filter(e=>e.recommendations.some(e=>e.level===`strong`));return t.length>0?t[0]:e.length>0?e[0]:null}getCategoryIcon(e){return{surgery:`🔪`,systemic:`💊`,radiation:`☢️`,palliative:`🩹`,transplant:`🏥`}[e]}getCategoryLabel(e){return{surgery:`手术`,systemic:`药物治疗`,radiation:`放疗`,palliative:`姑息治疗`,transplant:`肝移植`}[e]}handleFilterChange(e,t){this.assessment={...this.assessment,[e]:t}}togglePlan(e){this.expandedPlanId=this.expandedPlanId===e?null:e}render(){this.getFilteredPlans();let e=this.getPrimaryRecommendation();return D`
+  `}isPlanSuitable(e){let{suitableFor:t}=e,n=this.assessment;return!(t.bismuthTypes&&!t.bismuthTypes.includes(n.bismuthType)||t.resectability&&!t.resectability.includes(n.resectability)||t.vascularInvasion&&!(n.vascularInvasion===`none`&&t.vascularInvasion.includes(`none`))&&n.vascularInvasion!==`none`&&!t.vascularInvasion.includes(n.vascularInvasion)||t.lymphNodeStatus&&!t.lymphNodeStatus.includes(n.lymphNodeStatus)||t.metastasis&&!t.metastasis.includes(n.metastasis)||t.ecogMax!==void 0&&n.ecogScore>t.ecogMax)}getFilteredPlans(){return this.treatmentPlans.filter(e=>this.isPlanSuitable(e))}getFilteredPlansByCategory(e){let t=this.getFilteredPlans();return e===`all`?t:t.filter(t=>t.category===e)}getCategoryCount(e){return e===`all`?this.getFilteredPlans().length:this.getFilteredPlans().filter(t=>t.category===e).length}getPrimaryRecommendation(){let e=this.getFilteredPlans(),t=e.filter(e=>e.recommendations.some(e=>e.level===`strong`));return t.length>0?t[0]:e.length>0?e[0]:null}getCategoryIcon(e){return{surgery:``,systemic:``,radiation:``,palliative:``,transplant:``}[e]}getCategoryLabel(e){return{surgery:`手术`,systemic:`药物治疗`,radiation:`放疗`,palliative:`姑息治疗`,transplant:`肝移植`}[e]}handleFilterChange(e,t){this.assessment={...this.assessment,[e]:t}}togglePlan(e){this.expandedPlanId=this.expandedPlanId===e?null:e}render(){this.getFilteredPlans();let e=this.getPrimaryRecommendation();return D`
       <div class="selector-card">
         <div class="selector-header">
-          <div class="selector-icon">📋</div>
+          <div class="selector-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
           <div>
             <div class="selector-title">个性化治疗方案</div>
             <div class="selector-subtitle">根据患者评估信息智能推荐治疗方案</div>
@@ -2085,7 +2059,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
         ${e?D`
           <div class="summary-card">
-            <div class="summary-title">💡 推荐方案</div>
+            <div class="summary-title">推荐方案</div>
             <div class="summary-text">
               基于当前患者评估，<strong>${e.name}</strong> 为首选推荐方案。
               ${e.recommendations.some(e=>e.level===`strong`)?`该方案具有强有力的循证医学证据支持。`:`该方案可作为备选方案。`}
@@ -2225,7 +2199,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               class="category-tab ${this.activeCategory===e?`active`:``}"
               @click="${()=>this.activeCategory=e}"
             >
-              ${this.getCategoryIcon(e)} ${this.getCategoryLabel(e)} <span class="count">${this.getCategoryCount(e)}</span>
+              ${this.getCategoryLabel(e)} <span class="count">${this.getCategoryCount(e)}</span>
             </button>
           `)}
         </div>
@@ -2233,7 +2207,12 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         <div class="plans-list">
           ${this.getFilteredPlansByCategory(this.activeCategory).length===0?D`
             <div class="no-results">
-              <div class="no-results-icon">🔍</div>
+              <div class="no-results-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
               <div class="no-results-text">没有找到匹配的治疗方案</div>
               <div class="no-results-hint">请调整筛选条件后重试</div>
             </div>
@@ -2241,7 +2220,20 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
             <div class="plan-card ${e?.id===t.id?`primary`:``}">
               <div class="plan-header" @click="${()=>this.togglePlan(t.id)}">
                 <div class="plan-category-icon ${t.category}">
-                  ${this.getCategoryIcon(t.category)}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    ${t.category===`surgery`?D`
+                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                    `:t.category===`systemic`?D`
+                      <path d="M10.5 20.5L3.5 13.5L6.5 10.5L10.5 14.5L17.5 7.5L20.5 10.5L10.5 20.5Z"></path>
+                    `:t.category===`radiation`?D`
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <circle cx="12" cy="12" r="4"></circle>
+                    `:t.category===`palliative`?D`
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    `:D`
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    `}
+                  </svg>
                 </div>
                 <div class="plan-info">
                   <div class="plan-name">${t.name}</div>
@@ -2654,7 +2646,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
     }
     .cross-stage-list {
       display: flex;
@@ -2683,13 +2674,8 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
     .task-group-header:hover {
       background: #f0f0f0;
     }
-    .task-group-icon {
-      font-size: 16px;
-    }
-    .task-group-content {
-      flex: 1;
-    }
     .task-group-name {
+      flex: 1;
       font-weight: 600;
       font-size: 14px;
       color: #333;
@@ -2698,7 +2684,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 2px;
     }
     .task-group-time {
       font-size: 12px;
@@ -2738,10 +2723,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
     .task-sub-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
-    }
-    .task-sub-icon {
-      font-size: 14px;
-      margin-top: 2px;
     }
     .task-sub-content {
       flex: 1;
@@ -2840,11 +2821,20 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         margin-top: 12px;
       }
     }
-  `}handleTabClick(e){this.activeTab=e}toggleGroup(e){this.expandedGroups.has(e)?this.expandedGroups.delete(e):this.expandedGroups.add(e),this.expandedGroups=new Set(this.expandedGroups)}getCrossStageTasks(){return[{id:`nutrition`,name:`保证营养状态`,icon:`🍎`,detailRoute:`#/nutrition-detail`,items:[{name:`白蛋白（ALB）`,desc:`白蛋白是反映营养状态的关键指标，正常值35-50 g/L，低于35g/L需加强营养支持。直接影响身体恢复能力和化疗耐受性。`,icon:`🥚`,required:!0},{name:`微量元素`,desc:`锌、硒、镁等微量元素参与多种生理过程。缺锌导致免疫力下降、伤口愈合慢；缺硒影响化疗效果和身体恢复。`,icon:`⚡`,required:!0}]},{id:`complications`,name:`小心并发症`,icon:`⚠️`,items:[{name:`门静脉癌栓`,desc:`门静脉癌栓是胆管癌常见并发症，会导致门静脉压力升高、脾功能亢进、消化道出血风险增加。`,icon:`🔴`,required:!0},{name:`梗阻性黄疸`,desc:`肿瘤阻塞胆管导致胆红素升高，需密切监测胆红素变化，必要时进行胆道引流。`,icon:`💛`,required:!0},{name:`胆道感染`,desc:`胆道梗阻易导致胆管炎，表现为发热、腹痛、黄疸加重。出现发热需及时就医。`,icon:`🤒`,required:!0}]}]}handleEdit(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdatePortalVeinThrombus(e){this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return D`<div class="empty-state">加载中...</div>`;let e=this.archive.currentStage!==`treatment`;return D`
+  `}handleTabClick(e){this.activeTab=e}toggleGroup(e){this.expandedGroups.has(e)?this.expandedGroups.delete(e):this.expandedGroups.add(e),this.expandedGroups=new Set(this.expandedGroups)}getCrossStageTasks(){return[{id:`nutrition`,name:`保证营养状态`,icon:``,detailRoute:`#/nutrition-detail`,items:[{name:`白蛋白（ALB）`,desc:`白蛋白是反映营养状态的关键指标，正常值35-50 g/L，低于35g/L需加强营养支持。直接影响身体恢复能力和化疗耐受性。`,icon:``,required:!0},{name:`微量元素`,desc:`锌、硒、镁等微量元素参与多种生理过程。缺锌导致免疫力下降、伤口愈合慢；缺硒影响化疗效果和身体恢复。`,icon:``,required:!0}]},{id:`complications`,name:`小心并发症`,icon:``,items:[{name:`门静脉癌栓`,desc:`门静脉癌栓是胆管癌常见并发症，会导致门静脉压力升高、脾功能亢进、消化道出血风险增加。`,icon:``,required:!0},{name:`梗阻性黄疸`,desc:`肿瘤阻塞胆管导致胆红素升高，需密切监测胆红素变化，必要时进行胆道引流。`,icon:``,required:!0},{name:`胆道感染`,desc:`胆道梗阻易导致胆管炎，表现为发热、腹痛、黄疸加重。出现发热需及时就医。`,icon:``,required:!0}]}]}handleEdit(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdatePortalVeinThrombus(e){this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:e.detail}))}render(){if(!this.archive||!this.disease)return D`<div class="empty-state">加载中...</div>`;let e=this.archive.currentStage!==`treatment`;return D`
       <div class="guide-card">
         <div class="stage-header">
           <div class="stage-icon ${this.archive.currentStage}">
-            ${e?`🔍`:`💊`}
+            ${e?D`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            `:D`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+              </svg>
+            `}
           </div>
           <div class="stage-info">
             <div class="stage-label">当前阶段</div>
@@ -2854,7 +2844,11 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
         <div class="cross-stage-section">
           <div class="cross-stage-title">
-            <div class="cross-stage-icon" style="background: #fff2e6;">⚡</div>
+            <div class="cross-stage-icon" style="background: #fff2e6;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
             跨阶段核心任务（贯穿全程）
           </div>
           <div class="cross-stage-list">
@@ -2866,23 +2860,19 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                       <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                   </div>
-                  <div class="task-group-icon">${e.icon}</div>
-                  <div class="task-group-content">
-                    <div class="task-group-name">${e.name}</div>
-                    <div class="task-group-meta">
-                      ${e.detailRoute?D`
-                        <span class="task-group-detail" @click="${t=>{t.stopPropagation(),window.location.hash=e.detailRoute}}">
-                          查看详情 →
-                        </span>
-                      `:``}
-                    </div>
+                  <div class="task-group-name">${e.name}</div>
+                  <div class="task-group-meta">
+                    ${e.detailRoute?D`
+                      <span class="task-group-detail" @click="${t=>{t.stopPropagation(),window.location.hash=e.detailRoute}}">
+                        查看详情 →
+                      </span>
+                    `:``}
                   </div>
                 </div>
                 ${this.expandedGroups.has(e.id)?D`
                   <div class="task-group-items">
                     ${e.items.map(e=>D`
                       <div class="task-sub-item">
-                        <div class="task-sub-icon">${e.icon}</div>
                         <div class="task-sub-content">
                           <div class="task-sub-name">
                             ${e.name}
@@ -2905,13 +2895,13 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               class="tab-btn examination ${this.activeTab===`examination`?`active`:``}"
               @click="${()=>this.handleTabClick(`examination`)}"
             >
-              🔍 检查/等待治疗阶段
+              检查/等待治疗阶段
             </button>
             <button
               class="tab-btn treatment ${this.activeTab===`treatment`?`active`:``}"
               @click="${()=>this.handleTabClick(`treatment`)}"
             >
-              💊 治疗阶段
+              治疗阶段
             </button>
           </div>
           <div class="tab-content">
@@ -2967,7 +2957,10 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+    }
+    .disease-icon svg {
+      width: 24px;
+      height: 24px;
     }
     .card-title {
       font-size: 20px;
@@ -3013,7 +3006,10 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         width: 40px;
         height: 40px;
         border-radius: 10px;
-        font-size: 20px;
+      }
+      .disease-icon svg {
+        width: 20px;
+        height: 20px;
       }
       .card-title {
         font-size: 17px;
@@ -3032,10 +3028,14 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         padding: 3px 10px;
       }
     }
-  `}getDiseaseIcon(e){return{"hilar-cholangiocarcinoma":`🫀`}[e]||`📋`}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}handleClick(){this.archive&&(window.location.hash=`#/archive/${this.archive.id}`)}render(){if(!this.archive)return D``;let e=this.archive.currentStage===`examination`;return D`
+  `}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}handleClick(){this.archive&&(window.location.hash=`#/archive/${this.archive.id}`)}render(){if(!this.archive)return D``;let e=this.archive.currentStage===`examination`;return D`
       <div class="card" @click="${this.handleClick}">
         <div class="card-header">
-          <div class="disease-icon">${this.getDiseaseIcon(this.archive.diseaseType)}</div>
+          <div class="disease-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
           <div>
             <div class="card-title">${this.archive.diseaseName}</div>
             <div class="card-date">创建于 ${this.formatDate(this.archive.createdAt)}</div>
@@ -3043,7 +3043,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         </div>
         <div class="card-stats">
           <div class="stage-badge">
-            ${e?`🔍 检查阶段`:`💊 治疗阶段`}
+            ${e?`检查阶段`:`治疗阶段`}
           </div>
         </div>
       </div>
@@ -3411,7 +3411,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
     }
   `}handleCreateArchive(){this.showSelector=!0}handleDiseaseSelect(e){let t=e.detail;this.showSelector=!1,t&&this.dispatchEvent(new CustomEvent(`create-archive`,{bubbles:!0,composed:!0,detail:t}))}handleSelectorClose(){this.showSelector=!1}handleExport(){Om.exportAll()}handleImportClick(){this.showImportDialog=!0,this.importResult=null}handleImportDialogClose(){this.showImportDialog=!1,this.importResult=null}async handleFileSelect(e){let t=e.target,n=t.files?.[0];if(!n)return;this.isImporting=!0;let r=this.shadowRoot?.querySelector(`.merge-strategy select`)?.value||`merge`,i=await Om.importFromFile(n,{mergeStrategy:r});this.importResult=i,this.isImporting=!1,i.success&&this.dispatchEvent(new CustomEvent(`data-imported`,{bubbles:!0,composed:!0,detail:i})),t.value=``}handleDragOver(e){e.preventDefault(),e.currentTarget.classList.add(`drag-over`)}handleDragLeave(e){e.preventDefault(),e.currentTarget.classList.remove(`drag-over`)}async handleDrop(e){e.preventDefault(),e.currentTarget.classList.remove(`drag-over`);let t=e.dataTransfer?.files[0];if(!t)return;if(!t.name.endsWith(`.json`)){this.importResult={success:!1,message:`请选择 JSON 格式的备份文件`};return}this.isImporting=!0;let n=this.shadowRoot?.querySelector(`.merge-strategy select`)?.value||`merge`,r=await Om.importFromFile(t,{mergeStrategy:n});this.importResult=r,this.isImporting=!1,r.success&&this.dispatchEvent(new CustomEvent(`data-imported`,{bubbles:!0,composed:!0,detail:r}))}render(){return D`
       <div class="header">
-        <h1>🩺 癌症患者周期向导</h1>
+        <h1>癌症患者周期向导</h1>
         <p>根据公开资料，提供诊疗阶段提示</p>
         <button class="new-archive-btn" @click="${this.handleCreateArchive}">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3421,7 +3421,13 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
           新建档案
         </button>
         <div class="disclaimer-banner">
-          <div class="disclaimer-icon">ℹ️</div>
+          <div class="disclaimer-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
           <div class="disclaimer-content">
             <div class="disclaimer-title">免责声明</div>
             <div class="disclaimer-text">
@@ -3430,7 +3436,12 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
           </div>
         </div>
         <div class="privacy-banner">
-          <div class="privacy-icon">🔒</div>
+          <div class="privacy-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
           <div class="privacy-content">
             <div class="privacy-title">隐私保护说明</div>
             <div class="privacy-text">
@@ -3495,12 +3506,12 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       ${this.showImportDialog?D`
         <div class="dialog-overlay" @click="${this.handleImportDialogClose}">
           <div class="dialog" @click="${e=>e.stopPropagation()}">
-            <div class="dialog-title">📥 导入备份数据</div>
+            <div class="dialog-title">导入备份数据</div>
 
             ${this.importResult?D`
               <div class="import-result ${this.importResult.success?`success`:`error`}">
                 <div class="import-result-title">
-                  ${this.importResult.success?`✅ 导入成功`:`❌ 导入失败`}
+                  ${this.importResult.success?`导入成功`:`导入失败`}
                 </div>
                 <div class="import-result-message">${this.importResult.message}</div>
                 ${this.importResult.success&&(this.importResult.importedArchives!==void 0||this.importResult.importedArticles!==void 0)?D`
@@ -3549,7 +3560,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                 ${this.isImporting?D`
                   <div>⏳ 正在导入...</div>
                 `:D`
-                  <div>📁 点击选择或拖拽文件到此处</div>
+                  <div>点击选择或拖拽文件到此处</div>
                   <div style="font-size: 12px; margin-top: 8px; color: #999;">支持 .json 格式的备份文件</div>
                 `}
               </label>
@@ -3902,17 +3913,11 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       font-size: 13px;
       color: #52c41a;
     }
-    .privacy-notice-icon {
-      font-size: 18px;
-    }
     .bilirubin-result-header {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 8px;
-    }
-    .bilirubin-result-icon {
-      font-size: 18px;
     }
     .bilirubin-result-level {
       font-size: 14px;
@@ -4041,7 +4046,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         padding: 10px 12px;
       }
     }
-  `}hasCompletedItems(){if(!this.archive)return!1;let e=this.archive.completedExamIds||[],t=this.archive.completedTreatmentIds||[];return e.length>0||t.length>0}getDiseaseIcon(e){return{"hilar-cholangiocarcinoma":`🫀`}[e]||`📋`}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}getBilirubinAdvice(e){return e<50?{level:`✅ 达标`,class:`safe`,advice:`胆红素已降至化疗安全范围，可以考虑进行化疗。请继续监测。`}:e<=85?{level:`🟡 接近达标`,class:`warning`,advice:`胆红素已接近安全范围（<50 μmol/L），但仍需继续降至50以下才能进行化疗。`}:e<=170?{level:`🟠 明显升高`,class:`danger`,advice:`胆红素明显升高，需要密切关注。建议咨询医生考虑进行胆道引流治疗（PTCD/ERCP支架），几乎所有治疗都要求待胆红素降至50 μmol/L以下，请重点关注。`}:e<=200?{level:`🔴 重度黄疸`,class:`critical`,advice:`胆红素重度升高（>170 μmol/L）。根据诊疗指南，建议进行术前胆道引流（PTCD或ERCP支架）降低胆红素水平。胆红素需降至50 μmol/L以下才能考虑化疗或手术。`}:{level:`🚨 极高危`,class:`critical`,advice:`胆红素极高（>200 μmol/L）！此时不宜直接进行手术或化疗，风险极高。必须先进行PTCD外引流或支架置入内引流，待胆红素显著下降后再评估治疗方案。请立即就医！`}}handleBack(){this.dispatchEvent(new CustomEvent(`back`,{bubbles:!0,composed:!0}))}handleDelete(){this.dispatchEvent(new CustomEvent(`delete-archive`,{bubbles:!0,composed:!0}))}handleEditStage(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdatePortalVeinThrombus(e){this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdateSuspectDocsSaved(e){this.dispatchEvent(new CustomEvent(`update-suspect-docs-saved`,{bubbles:!0,composed:!0,detail:e.detail}))}handleDocsSavedChange(e){let t=e.target.checked;this.localSuspectDocsSaved=t,this.handleUpdateSuspectDocsSaved(new CustomEvent(`update-suspect-docs-saved`,{bubbles:!0,composed:!0,detail:{suspectDocsSaved:t}}))}handleConfirmSuspectStage(){this.dispatchEvent(new CustomEvent(`confirm-suspect-stage`,{bubbles:!0,composed:!0}))}handleShowBilirubinInput(){this.showBilirubinInput=!this.showBilirubinInput,this.showBilirubinInput&&(this.inputBilirubinDate=new Date().toISOString().split(`T`)[0],this.inputBilirubinTotal=``)}handleBilirubinDateChange(e){this.inputBilirubinDate=e.target.value}handleBilirubinTotalChange(e){this.inputBilirubinTotal=e.target.value}handleSaveBilirubin(){if(!this.inputBilirubinDate||!this.inputBilirubinTotal)return;let e=parseFloat(this.inputBilirubinTotal)||0;if(e<=0)return;let t={id:Date.now().toString(),date:this.inputBilirubinDate,total:e,direct:0,indirect:0,unit:`μmol/L`};this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:t})),this.showBilirubinInput=!1}render(){if(!this.archive||!this.disease)return D`<div>加载中...</div>`;let e=this.hasCompletedItems(),t=this.archive.currentStage===`suspect`,n=this.disease.suspectStageInfo,r=this.localSuspectDocsSaved||this.archive.suspectDocsSaved;return D`
+  `}hasCompletedItems(){if(!this.archive)return!1;let e=this.archive.completedExamIds||[],t=this.archive.completedTreatmentIds||[];return e.length>0||t.length>0}getDiseaseIcon(e){return``}formatDate(e){return new Date(e).toLocaleDateString(`zh-CN`,{year:`numeric`,month:`long`,day:`numeric`})}getBilirubinAdvice(e){return e<50?{level:`达标`,class:`safe`,advice:`胆红素已降至化疗安全范围，可以考虑进行化疗。请继续监测。`}:e<=85?{level:`接近达标`,class:`warning`,advice:`胆红素已接近安全范围（<50 μmol/L），但仍需继续降至50以下才能进行化疗。`}:e<=170?{level:`明显升高`,class:`danger`,advice:`胆红素明显升高，需要密切关注。建议咨询医生考虑进行胆道引流治疗（PTCD/ERCP支架），几乎所有治疗都要求待胆红素降至50 μmol/L以下，请重点关注。`}:e<=200?{level:`重度黄疸`,class:`critical`,advice:`胆红素重度升高（>170 μmol/L）。根据诊疗指南，建议进行术前胆道引流（PTCD或ERCP支架）降低胆红素水平。胆红素需降至50 μmol/L以下才能考虑化疗或手术。`}:{level:`极高危`,class:`critical`,advice:`胆红素极高（>200 μmol/L）！此时不宜直接进行手术或化疗，风险极高。必须先进行PTCD外引流或支架置入内引流，待胆红素显著下降后再评估治疗方案。请立即就医！`}}handleBack(){this.dispatchEvent(new CustomEvent(`back`,{bubbles:!0,composed:!0}))}handleDelete(){this.dispatchEvent(new CustomEvent(`delete-archive`,{bubbles:!0,composed:!0}))}handleEditStage(){this.dispatchEvent(new CustomEvent(`edit-stage`,{bubbles:!0,composed:!0}))}handleAddBilirubin(e){this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:e.detail}))}handleAddDrainage(e){this.dispatchEvent(new CustomEvent(`add-drainage`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdatePortalVeinThrombus(e){this.dispatchEvent(new CustomEvent(`update-portal-vein-thrombus`,{bubbles:!0,composed:!0,detail:e.detail}))}handleUpdateSuspectDocsSaved(e){this.dispatchEvent(new CustomEvent(`update-suspect-docs-saved`,{bubbles:!0,composed:!0,detail:e.detail}))}handleDocsSavedChange(e){let t=e.target.checked;this.localSuspectDocsSaved=t,this.handleUpdateSuspectDocsSaved(new CustomEvent(`update-suspect-docs-saved`,{bubbles:!0,composed:!0,detail:{suspectDocsSaved:t}}))}handleConfirmSuspectStage(){this.dispatchEvent(new CustomEvent(`confirm-suspect-stage`,{bubbles:!0,composed:!0}))}handleShowBilirubinInput(){this.showBilirubinInput=!this.showBilirubinInput,this.showBilirubinInput&&(this.inputBilirubinDate=new Date().toISOString().split(`T`)[0],this.inputBilirubinTotal=``)}handleBilirubinDateChange(e){this.inputBilirubinDate=e.target.value}handleBilirubinTotalChange(e){this.inputBilirubinTotal=e.target.value}handleSaveBilirubin(){if(!this.inputBilirubinDate||!this.inputBilirubinTotal)return;let e=parseFloat(this.inputBilirubinTotal)||0;if(e<=0)return;let t={id:Date.now().toString(),date:this.inputBilirubinDate,total:e,direct:0,indirect:0,unit:`μmol/L`};this.dispatchEvent(new CustomEvent(`add-bilirubin`,{bubbles:!0,composed:!0,detail:t})),this.showBilirubinInput=!1}render(){if(!this.archive||!this.disease)return D`<div>加载中...</div>`;let e=this.hasCompletedItems(),t=this.archive.currentStage===`suspect`,n=this.disease.suspectStageInfo,r=this.localSuspectDocsSaved||this.archive.suspectDocsSaved;return D`
       <div class="archive-header">
         <div class="header-top">
           <button class="back-btn" @click="${this.handleBack}">
@@ -4062,7 +4067,10 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
           </button>
         </div>
         <div class="privacy-notice">
-          <span class="privacy-notice-icon">🔒</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
           <span>本档案所有数据仅存储在您的设备本地，不会上传到服务器</span>
         </div>
       </div>
@@ -4070,7 +4078,13 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       ${t&&n?D`
         <div class="suspect-section">
           <div class="suspect-header">
-            <div class="suspect-icon">⚠️</div>
+            <div class="suspect-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
             <div class="suspect-info">
               <div class="suspect-title">${n.title}</div>
               <div class="suspect-subtitle">请按照以下提示做好准备</div>
@@ -4078,7 +4092,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
           </div>
 
           <div class="suspect-tips">
-            <div class="suspect-tips-title">📋 需要完成的事项</div>
+            <div class="suspect-tips-title">需要完成的事项</div>
             ${n.tips.map(e=>D`
               <div class="suspect-tip-item">
                 <span class="suspect-tip-icon">•</span>
@@ -4089,7 +4103,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           <div class="bilirubin-input-section">
             <div class="bilirubin-input-title">
-              💉 胆红素指标（第一时间录入）
+              胆红素指标（第一时间录入）
               <span style="font-size: 12px; color: #ff4d4f; font-weight: normal;">（后续所有治疗都必须在胆红素50以下才能进行）</span>
             </div>
 
@@ -4122,7 +4136,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                 style="background: #1890ff; margin-top: 0;"
                 @click="${this.handleShowBilirubinInput}"
               >
-                ${this.archive?.bilirubinRecords&&this.archive.bilirubinRecords.length>0?`📊 录入新胆红素数据`:`💉 录入胆红素指标`}
+                ${this.archive?.bilirubinRecords&&this.archive.bilirubinRecords.length>0?`录入新胆红素数据`:`录入胆红素指标`}
               </button>
             `}
 
@@ -4130,7 +4144,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               ${(()=>{let e=[...this.archive.bilirubinRecords].sort((e,t)=>new Date(t.date).getTime()-new Date(e.date).getTime())[0],t=this.getBilirubinAdvice(e.total);return D`
                   <div class="bilirubin-result ${t.class}">
                     <div class="bilirubin-result-header">
-                      <span class="bilirubin-result-icon">${e.total<50?`✅`:e.total<=85?`🟡`:e.total<=170?`🟠`:`🔴`}</span>
                       <span class="bilirubin-result-level">${t.level}</span>
                     </div>
                     <div class="bilirubin-result-value">
@@ -4178,7 +4191,12 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         </div>
       `:D`
         <div class="stage-prompt">
-          <div class="stage-prompt-icon">🔍</div>
+          <div class="stage-prompt-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
           <div class="stage-prompt-title">设置诊疗阶段</div>
           <div class="stage-prompt-desc">
             请选择您目前已完成的检查和治疗项目<br>
@@ -4248,7 +4266,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
     }
     .content-title-group {
       flex: 1;
@@ -4280,7 +4297,9 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       gap: 10px;
     }
     .warning-banner-icon {
-      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .warning-banner-content {
       font-size: 14px;
@@ -4322,13 +4341,14 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
     }
     .indicator-icon.albumin {
       background: #e6f7ff;
+      color: #1890ff;
     }
     .indicator-icon.mineral {
       background: #f6ffed;
+      color: #52c41a;
     }
     .indicator-name {
       font-size: 15px;
@@ -4393,7 +4413,13 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       padding-bottom: 0;
     }
     .relationship-icon {
-      font-size: 16px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
       margin-top: 2px;
     }
@@ -4476,7 +4502,15 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
         <div class="content-container">
           <div class="content-header">
-            <div class="content-icon">🍎</div>
+            <div class="content-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+            </div>
             <div class="content-title-group">
               <div class="content-title">营养状态准备</div>
               <div class="content-subtitle">化疗前的身体基础条件</div>
@@ -4485,7 +4519,13 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           <div class="warning-banner">
             <div class="warning-banner-title">
-              <div class="warning-banner-icon">⚠️</div>
+              <div class="warning-banner-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
               化疗前重点关注指标
             </div>
             <div class="warning-banner-content">
@@ -4495,13 +4535,17 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           <div class="key-indicators">
             <div class="section-title">
-              <span>🔬</span>
               重点关注指标
             </div>
 
             <div class="indicator-card">
               <div class="indicator-header">
-                <div class="indicator-icon albumin">🥚</div>
+                <div class="indicator-icon albumin">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 6v6l4 2"></path>
+                  </svg>
+                </div>
                 <div class="indicator-name">白蛋白（ALB）</div>
               </div>
               <div class="indicator-desc">
@@ -4512,13 +4556,17 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               </div>
               <div class="indicator-values">
                 <span class="value-tag normal">正常值：35-50 g/L</span>
-                <span class="value-tag low">⚠️ 低于35需警惕</span>
+                <span class="value-tag low">低于35需警惕</span>
               </div>
             </div>
 
             <div class="indicator-card">
               <div class="indicator-header">
-                <div class="indicator-icon mineral">⚡</div>
+                <div class="indicator-icon mineral">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
                 <div class="indicator-name">微量元素</div>
               </div>
               <div class="indicator-desc">
@@ -4537,32 +4585,48 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           <div class="relationship-section">
             <div class="relationship-title">
-              <span>📊</span>
               与身体情况及化疗耐受性的关系
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">💪</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>营养状态 → 身体储备</strong><br>
                 良好的营养状态意味着身体有充足的蛋白质和微量元素储备，能更好地承受化疗带来的副作用。
               </div>
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">🛡️</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>白蛋白水平 → 免疫力</strong><br>
                 白蛋白不仅是营养指标，也与免疫力密切相关。低白蛋白提示身体处于消耗状态，免疫力低下。
               </div>
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">💊</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#722ed1" stroke-width="2">
+                  <path d="M10.5 20.5L3.5 13.5L6.5 10.5L10.5 14.5L17.5 7.5L20.5 10.5L10.5 20.5Z"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>微量元素 → 药物代谢</strong><br>
                 微量元素参与药物代谢过程。缺乏会影响化疗药物的疗效和毒性反应。
               </div>
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">⚕️</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>综合评估 → 治疗决策</strong><br>
                 医生会根据白蛋白和微量元素水平综合评估患者的营养状态和治疗耐受性，必要时先进行营养支持治疗。
@@ -4572,7 +4636,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           <div class="tips-section">
             <div class="tips-title">
-              <span>💡</span>
               营养补充建议
             </div>
             <div class="tip-item">
@@ -4595,7 +4658,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
           <div class="important-note">
             <div class="important-note-title">
-              <span>⚠️</span>
               门静脉癌栓患者特别提示
             </div>
             <div class="important-note-content">
@@ -4904,7 +4966,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
         <!-- 基本信息 -->
         <div class="form-section">
-          <div class="section-title">📋 基本信息</div>
+          <div class="section-title">基本信息</div>
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">报告日期<span class="required">*</span></label>
@@ -5033,7 +5095,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         <div class="form-section">
           <div class="collapsible-header" @click="${()=>{this.showIhcSection=!this.showIhcSection}}">
             <div class="collapsible-left">
-              <span>🧪</span> 免疫组化结果
+              免疫组化结果
               ${this.ihcItems.length>0?D`
                 <span class="collapsible-badge">${this.ihcItems.length} 项</span>
               `:``}
@@ -5090,7 +5152,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         <div class="form-section">
           <div class="collapsible-header" @click="${()=>{this.showGeneSection=!this.showGeneSection}}">
             <div class="collapsible-left">
-              <span>🧬</span> 基因检测结果
+              基因检测结果
               ${this.geneItems.length>0?D`
                 <span class="collapsible-badge">${this.geneItems.length} 项</span>
               `:``}
@@ -5198,7 +5260,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
     }
     .report-date {
       font-size: 12px;
@@ -5210,9 +5271,10 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       color: #999;
     }
     .no-data-icon {
-      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
-      opacity: 0.5;
     }
     .no-data-text {
       font-size: 14px;
@@ -5481,16 +5543,24 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         grid-template-columns: 1fr;
       }
     }
-  `}get ki67Value(){return this.pathologyReport?.ihcResults?.find(e=>e.name.toUpperCase()===`KI-67`||e.name.toUpperCase()===`KI67`)?.numericValue??null}get ki67Grade(){let e=this.ki67Value;return e===null?null:e<10?Fm[0]:e<=30?Fm[1]:e<=60?Fm[2]:Fm[3]}getGaugeColor(){return this.ki67Grade?.color||`#ccc`}getGaugeOffset(){let e=this.ki67Value;if(e===null)return 0;let t=2*Math.PI*54;return t-Math.min(e,100)/100*t}getSuggestions(){let e=[],t=this.pathologyReport;if(!t)return e;this.ki67Grade;let n=this.ki67Value;n!==null&&n>30&&e.push({icon:`⚠️`,text:`Ki-67 为 ${n}%，肿瘤增殖活跃，建议加强术后随访频率，前2年每3个月复查一次`}),n!==null&&n>60&&e.push({icon:`🔴`,text:`Ki-67 极高，提示肿瘤侵袭性强，建议与主治医师讨论是否需要辅助化疗`}),n!==null&&n<=10&&e.push({icon:`✅`,text:`Ki-67 较低，肿瘤增殖活性不高，预后相对较好，但仍需按指南定期随访`}),(t.differentiation===`poor`||t.differentiation===`undifferentiated`)&&e.push({icon:`⚠️`,text:`${t.differentiation===`poor`?`低`:`未`}分化腺癌侵袭性强，建议完善基因检测以寻找靶向治疗机会`}),t.perineuralInvasion&&e.push({icon:`⚠️`,text:`存在神经侵犯，可能增加局部复发风险，建议术后辅助治疗并密切随访`}),t.vascularInvasion&&e.push({icon:`⚠️`,text:`存在脉管侵犯，提示远处转移风险增加，建议术后定期影像学检查`}),t.marginStatus===`R1`?e.push({icon:`🔴`,text:`切缘阳性（R1），建议术后辅助放化疗以降低局部复发风险`}):t.marginStatus===`R0`&&e.push({icon:`✅`,text:`切缘阴性（R0），根治性切除完整，但仍需按指南进行辅助治疗和随访`});let r=t.ihcResults?.find(e=>e.name.toUpperCase()===`P53`);return r&&r.numericValue&&r.numericValue>50&&e.push({icon:`🧬`,text:`P53 高表达（突变型），可能与肿瘤进展相关，建议关注免疫治疗机会`}),e}getDifferentiationLabel(e){return{well:`高分化`,moderate:`中分化`,poor:`低分化`,undifferentiated:`未分化`}[e]||e}getMarginStatusLabel(e){return{R0:`R0 - 切缘阴性`,R1:`R1 - 镜下切缘阳性`,R2:`R2 - 肉眼切缘阳性`,pending:`待评估`}[e]||e}getIHCColorClass(e){return(e.name.toUpperCase()===`KI-67`||e.name.toUpperCase()===`KI67`)&&e.numericValue!==void 0?e.numericValue>60?`high`:e.numericValue>30?`moderate`:`low`:e.name.toUpperCase()===`P53`&&e.numericValue!==void 0?e.numericValue>50?`high`:e.numericValue>20?`moderate`:`low`:``}toggleDetail(){this.showDetail=!this.showDetail}render(){if(!this.pathologyReport)return D`
+  `}get ki67Value(){return this.pathologyReport?.ihcResults?.find(e=>e.name.toUpperCase()===`KI-67`||e.name.toUpperCase()===`KI67`)?.numericValue??null}get ki67Grade(){let e=this.ki67Value;return e===null?null:e<10?Fm[0]:e<=30?Fm[1]:e<=60?Fm[2]:Fm[3]}getGaugeColor(){return this.ki67Grade?.color||`#ccc`}getGaugeOffset(){let e=this.ki67Value;if(e===null)return 0;let t=2*Math.PI*54;return t-Math.min(e,100)/100*t}getSuggestions(){let e=[],t=this.pathologyReport;if(!t)return e;this.ki67Grade;let n=this.ki67Value;n!==null&&n>30&&e.push({icon:``,text:`Ki-67 为 ${n}%，肿瘤增殖活跃，建议加强术后随访频率，前2年每3个月复查一次`}),n!==null&&n>60&&e.push({icon:``,text:`Ki-67 极高，提示肿瘤侵袭性强，建议与主治医师讨论是否需要辅助化疗`}),n!==null&&n<=10&&e.push({icon:``,text:`Ki-67 较低，肿瘤增殖活性不高，预后相对较好，但仍需按指南定期随访`}),(t.differentiation===`poor`||t.differentiation===`undifferentiated`)&&e.push({icon:``,text:`${t.differentiation===`poor`?`低`:`未`}分化腺癌侵袭性强，建议完善基因检测以寻找靶向治疗机会`}),t.perineuralInvasion&&e.push({icon:``,text:`存在神经侵犯，可能增加局部复发风险，建议术后辅助治疗并密切随访`}),t.vascularInvasion&&e.push({icon:``,text:`存在脉管侵犯，提示远处转移风险增加，建议术后定期影像学检查`}),t.marginStatus===`R1`?e.push({icon:``,text:`切缘阳性（R1），建议术后辅助放化疗以降低局部复发风险`}):t.marginStatus===`R0`&&e.push({icon:``,text:`切缘阴性（R0），根治性切除完整，但仍需按指南进行辅助治疗和随访`});let r=t.ihcResults?.find(e=>e.name.toUpperCase()===`P53`);return r&&r.numericValue&&r.numericValue>50&&e.push({icon:``,text:`P53 高表达（突变型），可能与肿瘤进展相关，建议关注免疫治疗机会`}),e}getDifferentiationLabel(e){return{well:`高分化`,moderate:`中分化`,poor:`低分化`,undifferentiated:`未分化`}[e]||e}getMarginStatusLabel(e){return{R0:`R0 - 切缘阴性`,R1:`R1 - 镜下切缘阳性`,R2:`R2 - 肉眼切缘阳性`,pending:`待评估`}[e]||e}getIHCColorClass(e){return(e.name.toUpperCase()===`KI-67`||e.name.toUpperCase()===`KI67`)&&e.numericValue!==void 0?e.numericValue>60?`high`:e.numericValue>30?`moderate`:`low`:e.name.toUpperCase()===`P53`&&e.numericValue!==void 0?e.numericValue>50?`high`:e.numericValue>20?`moderate`:`low`:``}toggleDetail(){this.showDetail=!this.showDetail}render(){if(!this.pathologyReport)return D`
         <div class="assessment-card">
           <div class="card-header">
             <div class="card-title">
-              <div class="card-title-icon">🔬</div>
+              <div class="card-title-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4"></path>
+                </svg>
+              </div>
               Ki-67 肿瘤增殖评估
             </div>
           </div>
           <div class="no-data">
-            <div class="no-data-icon">📋</div>
+            <div class="no-data-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
             <div class="no-data-text">暂无病理报告数据</div>
             <div style="font-size: 12px; color: #bbb;">录入病理报告后可查看 Ki-67 增殖评估</div>
           </div>
@@ -5499,7 +5569,11 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       <div class="assessment-card">
         <div class="card-header">
           <div class="card-title">
-            <div class="card-title-icon">🔬</div>
+            <div class="card-title-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4"></path>
+              </svg>
+            </div>
             Ki-67 肿瘤增殖评估
           </div>
           ${n.reportDate?D`
@@ -5533,7 +5607,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               </div>
               <div class="grade-description">${e.description}</div>
               <div class="risk-tag" style="background: ${e.bgColor}; color: ${e.color}">
-                ${e.riskLevel===`高风险`?`🔴`:e.riskLevel===`中高风险`?`🟠`:e.riskLevel===`中低风险`?`🟡`:`🟢`}
                 ${e.riskLevel}
               </div>
             </div>
@@ -5555,7 +5628,12 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
           </div>
         `:D`
           <div class="no-data" style="padding: 20px;">
-            <div class="no-data-icon">📊</div>
+            <div class="no-data-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+              </svg>
+            </div>
             <div class="no-data-text">病理报告中未包含 Ki-67 数据</div>
           </div>
         `}
@@ -5585,13 +5663,13 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
                 <div class="detail-item">
                   <div class="detail-item-label">脉管侵犯</div>
                   <div class="detail-item-value ${n.vascularInvasion?`positive`:`negative`}">
-                    ${n.vascularInvasion?`阳性 ⚠️`:`阴性 ✅`}
+                    ${n.vascularInvasion?`阳性`:`阴性`}
                   </div>
                 </div>
                 <div class="detail-item">
                   <div class="detail-item-label">神经侵犯</div>
                   <div class="detail-item-value ${n.perineuralInvasion?`positive`:`negative`}">
-                    ${n.perineuralInvasion?`阳性 ⚠️`:`阴性 ✅`}
+                    ${n.perineuralInvasion?`阳性`:`阴性`}
                   </div>
                 </div>
                 <div class="detail-item">
@@ -5626,7 +5704,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               ${n.ihcResults&&n.ihcResults.length>0?D`
                 <div class="ihc-section">
                   <div class="ihc-title">
-                    <span>🧪</span> 免疫组化结果
+                    免疫组化结果
                   </div>
                   <div class="ihc-grid">
                     ${n.ihcResults.map(e=>D`
@@ -5643,7 +5721,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               ${n.geneTestResults&&n.geneTestResults.length>0?D`
                 <div class="ihc-section">
                   <div class="ihc-title">
-                    <span>🧬</span> 基因检测结果
+                    基因检测结果
                   </div>
                   <div class="ihc-grid">
                     ${n.geneTestResults.map(e=>D`
@@ -5663,7 +5741,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
         ${r.length>0?D`
           <div class="suggestions">
             <div class="suggestions-title">
-              <span>💡</span> 个性化建议
+              个性化建议
             </div>
             ${r.map(e=>D`
               <div class="suggestion-item">
@@ -5769,7 +5847,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
     }
     .timeline-title-group {
       flex: 1;
@@ -5937,7 +6014,6 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
     }
     .bifurcation-paths { display: flex; gap: 12px; }
     .bifurcation-path {
@@ -6001,7 +6077,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
       background: white;
       border-radius: 8px;
     }
-    .warning-icon { font-size: 18px; flex-shrink: 0; }
+    .warning-icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .warning-text { font-size: 13px; color: #666; line-height: 1.5; }
     .warning-text strong { color: #d46b08; }
 
@@ -6039,7 +6115,11 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
     `}renderGuide(){return D`
       <div class="timeline-container">
         <div class="timeline-header">
-          <div class="timeline-icon">🔬</div>
+          <div class="timeline-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            </svg>
+          </div>
           <div class="timeline-title-group">
             <div class="timeline-title">病理确认流程</div>
             <div class="timeline-subtitle">了解病理确认的完整流程和注意事项</div>
@@ -6097,7 +6177,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="1"></circle></svg>
             </div>
             <div class="timeline-content">
-              <div class="timeline-item-name">出具报告 ⚡</div>
+              <div class="timeline-item-name">出具报告</div>
               <div class="timeline-item-desc">病理报告出炉，明确诊断结果</div>
               <div class="timeline-item-time">1-2天</div>
               <div class="banner urgent">
@@ -6112,7 +6192,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="1"></circle></svg>
             </div>
             <div class="timeline-content">
-              <div class="timeline-item-name">免疫组化染色检测 🔬</div>
+              <div class="timeline-item-name">免疫组化染色检测</div>
               <div class="timeline-item-desc">检测 Ki-67、P53、CK7/19 等肿瘤标志物表达情况，指导靶向和免疫治疗药物选择</div>
               <div class="timeline-item-time">约5-7天</div>
               <div class="banner required">
@@ -6127,7 +6207,7 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="1"></circle></svg>
             </div>
             <div class="timeline-content">
-              <div class="timeline-item-name">基因检测 🧬</div>
+              <div class="timeline-item-name">基因检测</div>
               <div class="timeline-item-desc">检测 FGFR2、IDH1、MSI/TMB、HER2、NTRK 等基因突变，为靶向治疗提供依据</div>
               <div class="timeline-item-time">约10-14天</div>
               <div class="banner gene">
@@ -6140,7 +6220,11 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
         <div class="bifurcation-section">
           <div class="bifurcation-title">
-            <div class="bifurcation-icon">⚡</div>
+            <div class="bifurcation-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
             分叉点：病理报告结果
           </div>
           <div class="bifurcation-paths">
@@ -6175,20 +6259,45 @@ var e=Object.defineProperty,t=(t,n)=>{let r={};for(var i in t)e(r,i,{get:t[i],en
 
         <div class="gene-test-warning">
           <div class="gene-test-warning-title">
-            <div style="font-size: 20px;">🧬</div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
             基因检测抽血注意事项
           </div>
           <div class="gene-test-warning-content">
             <div class="warning-item">
-              <div class="warning-icon">💉</div>
+              <div class="warning-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </div>
               <div class="warning-text"><strong>基因检测需要血液抽检</strong><br>为保证检测结果准确性，<strong>抽血前14天内应避免输血</strong>。</div>
             </div>
             <div class="warning-item">
-              <div class="warning-icon">⚠️</div>
+              <div class="warning-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
               <div class="warning-text"><strong>门静脉癌栓风险提示</strong><br>若并发门静脉癌栓，出现消化道出血的风险较高。一旦发生输血，基因检测将<strong>推迟至少15天</strong>。</div>
             </div>
             <div class="warning-item">
-              <div class="warning-icon">📋</div>
+              <div class="warning-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
               <div class="warning-text"><strong>建议措施</strong><br>请提前与医生沟通，在窗口期内优先安排基因检测抽血。</div>
             </div>
           </div>
@@ -6785,7 +6894,9 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
       margin-bottom: 16px;
     }
     .header-icon {
-      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .header-title {
       font-size: 18px;
@@ -6867,8 +6978,13 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
       border-bottom: none;
     }
     .match-icon {
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    .match-icon.match { color: #52c41a; }
+    .match-icon.partial { color: #faad14; }
+    .match-icon.mismatch { color: #ff4d4f; }
     .match-text {
       flex: 1;
       font-size: 14px;
@@ -6968,7 +7084,9 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
       color: #999;
     }
     .no-archive-icon {
-      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
     }
     .create-archive-btn {
@@ -6983,7 +7101,11 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
     }
   `}connectedCallback(){super.connectedCallback(),this.archives.length>0&&(this.selectedArchiveId=this.archives[0].id,this.calculateMatch())}get selectedArchive(){return this.archives.find(e=>e.id===this.selectedArchiveId)}calculateMatch(){let e=this.selectedArchive;if(!e)return;let t=[],n=0,r=0,i=this.matchStage(e);t.push(i),n+=i.weight,i.status===`match`&&(r+=i.weight);let a=this.matchBilirubin(e);t.push(a),n+=a.weight,(a.status===`match`||a.status===`info`)&&(r+=a.weight);let o=this.matchTreatmentStage(e);t.push(o),n+=o.weight,o.status===`match`&&(r+=o.weight);let s=this.matchExaminations(e);t.push(s),n+=s.weight,s.status===`match`&&(r+=s.weight);let c=this.matchGenes(e);t.push(c),n+=c.weight,(c.status===`match`||c.status===`partial`)&&(r+=c.weight),this.matchResults=t,this.overallMatch=Math.round(r/n*100),this.generateRecommendations(e,t)}matchStage(e){let t=this.article.title.includes(`手术`)||this.article.content.includes(`根治性切除`),n=this.article.title.includes(`化疗`)||this.article.content.includes(`系统治疗`);return t&&e.currentStage===`treatment`?{field:`stage`,label:`治疗阶段`,status:`match`,message:`您当前处于治疗阶段，本文手术方案适用`,weight:30}:n&&e.currentStage===`treatment`?{field:`stage`,label:`治疗阶段`,status:`match`,message:`您当前处于治疗阶段，本文化疗方案适用`,weight:30}:{field:`stage`,label:`治疗阶段`,status:`info`,message:`当前阶段: ${e.currentStage===`examination`?`检查阶段`:`治疗阶段`}`,weight:30}}matchBilirubin(e){let t=e.bilirubinRecords||[];if(t.length===0)return{field:`bilirubin`,label:`胆红素水平`,status:`info`,message:`暂无胆红素记录`,weight:25};let n=t[t.length-1].total;return n>200?{field:`bilirubin`,label:`胆红素水平`,status:`mismatch`,message:`总胆红素 ${n} μmol/L，极高危，需先引流`,weight:25}:n>85?{field:`bilirubin`,label:`胆红素水平`,status:`partial`,message:`总胆红素 ${n} μmol/L，建议术前引流`,weight:25}:n>51?{field:`bilirubin`,label:`胆红素水平`,status:`match`,message:`总胆红素 ${n} μmol/L，接近手术标准`,weight:25}:{field:`bilirubin`,label:`胆红素水平`,status:`match`,message:`总胆红素 ${n} μmol/L，符合手术条件`,weight:25}}matchTreatmentStage(e){let t=e.stageSelectResults?.flatMap(e=>e.completedTreatments||[])||[],n=t.includes(`biliary-drainage`);return t.includes(`surgery`)?{field:`treatment`,label:`治疗状态`,status:`match`,message:`已完成手术，可查看术后辅助治疗`,weight:25}:n?{field:`treatment`,label:`治疗状态`,status:`match`,message:`已完成胆道引流，可考虑手术评估`,weight:25}:{field:`treatment`,label:`治疗状态`,status:`info`,message:`尚未开始主要治疗`,weight:25}}matchExaminations(e){let t=e.stageSelectResults?.flatMap(e=>e.completedExaminations||[])||[];return[`ct`,`mri`,`mrcp`].some(e=>t.includes(e))?{field:`examination`,label:`检查完成度`,status:`match`,message:`已完成 ${t.length} 项检查`,weight:20}:{field:`examination`,label:`检查完成度`,status:`partial`,message:`建议完成CT/MRI/MRCP检查`,weight:20}}matchGenes(e){let t=e.pathologyReport?.geneTestResults||[];if(t.length===0)return{field:`gene`,label:`基因检测`,status:`info`,message:`暂无基因检测记录，建议进行分子分型检测`,weight:25};let n=[`HER2`,`FGFR2`,`IDH1`,`BRAF`,`NTRK`,`MSI-H`,`KRAS`,`RET`,`ERBB2`],r=t.filter(e=>n.some(t=>e.geneName.toUpperCase().includes(t.toUpperCase()))&&e.result===`阳性`).map(e=>e.geneName);return r.length>0?{field:`gene`,label:`基因检测`,status:`match`,message:`检测到可靶向基因突变: ${r.join(`, `)}`,weight:25}:{field:`gene`,label:`基因检测`,status:`info`,message:`已检测基因: ${t.map(e=>e.geneName).join(`, `)}，未发现本文涉及的可靶向突变`,weight:25}}generateRecommendations(e,t){let n=[],r=t.find(e=>e.field===`bilirubin`);r?.status===`mismatch`?n.push({priority:`high`,title:`胆红素过高，需先行引流`,content:`您的胆红素水平超过200μmol/L，属于极高危。根据指南推荐，应先行胆道引流（PTBD或ENBD），将胆红素降至51μmol/L以下再考虑手术。`,action:`查看引流方案`}):r?.status===`partial`&&n.push({priority:`medium`,title:`建议术前胆道引流`,content:`您的胆红素水平在85-200μmol/L之间，建议行术前胆道引流，降低手术风险。`,action:`了解引流方式`}),t.find(e=>e.field===`examination`)?.status===`partial`&&n.push({priority:`medium`,title:`完善术前检查`,content:`建议完成增强CT、MRI+MRCP检查，以准确评估肿瘤分期和可切除性。`,action:`查看检查清单`});let i=t.find(e=>e.field===`gene`);i?.status===`info`&&i.message.includes(`暂无`)&&n.push({priority:`gene`,title:`建议进行基因检测`,content:`基因检测可帮助制定精准治疗方案，特别是HER2、FGFR2、IDH1等靶点的检测。`,action:`了解靶向治疗`}),e.currentStage===`examination`&&n.push({priority:`low`,title:`当前处于检查阶段`,content:`建议完成所有必要检查后，由MDT团队评估最佳治疗方案。`,action:`查看检查阶段指南`}),this.recommendations=n}handleArchiveSelect(e){this.selectedArchiveId=e,this.calculateMatch()}handleAction(e){this.dispatchEvent(new CustomEvent(`action-click`,{bubbles:!0,composed:!0,detail:{action:e,articleId:this.article.id}}))}render(){return this.archives.length===0?D`
         <div class="no-archive">
-          <div class="no-archive-icon">📋</div>
+          <div class="no-archive-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
           <div>暂无患者档案</div>
           <div style="font-size: 13px; margin-top: 8px;">创建档案后可查看本文与您的匹配度</div>
           <button class="create-archive-btn" @click="${()=>this.handleAction(`create-archive`)}">
@@ -6992,7 +7114,12 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
         </div>
       `:D`
       <div class="header">
-        <span class="header-icon">📊</span>
+        <span class="header-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+          </svg>
+        </span>
         <span class="header-title">本文与您的档案匹配度</span>
       </div>
 
@@ -7022,8 +7149,29 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
         <div class="match-details">
           ${this.matchResults.map(e=>D`
             <div class="match-item">
-              <span class="match-icon">
-                ${e.status===`match`?`✅`:e.status===`partial`?`⚠️`:e.status===`mismatch`?`❌`:`ℹ️`}
+              <span class="match-icon ${e.status}">
+                ${e.status===`match`?D`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                `:e.status===`partial`?D`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                `:e.status===`mismatch`?D`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                `:D`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                `}
               </span>
               <span class="match-text">${e.message}</span>
             </div>
@@ -7033,7 +7181,7 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
 
       ${this.recommendations.length>0?D`
         <div class="recommendations">
-          <div class="rec-title">💡 个性化建议</div>
+          <div class="rec-title">个性化建议</div>
           ${this.recommendations.map(e=>D`
             <div class="rec-card ${e.priority===`gene`?`gene`:e.priority}">
               <div class="rec-header">
@@ -7301,7 +7449,11 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
       border-color: #52c41a;
     }
     .node-icon {
-      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
     .node-text {
@@ -7449,7 +7601,24 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
           @click="${()=>i&&this.toggleNode(e.id)}"
         >
           <span class="node-icon">
-            ${n===`completed`?`✅`:n===`current`?`📍`:i?`📁`:`📄`}
+            ${n===`completed`?D`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            `:n===`current`?D`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="4"></circle>
+              </svg>
+            `:i?D`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            `:D`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            `}
           </span>
           <div class="node-text">
             <div class="node-title">${e.title}</div>
@@ -7497,7 +7666,7 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
 
       ${t?.action?D`
         <div class="action-panel">
-          <div class="action-title">💡 下一步行动建议</div>
+          <div class="action-title">下一步行动建议</div>
           <div class="action-content">
             根据您当前的情况，建议：${t.title}
           </div>
@@ -8209,7 +8378,7 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
         </div>
 
         <div class="component-hint">
-          <div class="component-hint-title">💡 嵌入交互组件</div>
+          <div class="component-hint-title">嵌入交互组件</div>
           <div class="component-hint-code">
             &lt;web-component name="stage-guide"&gt;<br>
             &nbsp;&nbsp;点击此处使用诊疗阶段向导<br>
@@ -8217,7 +8386,7 @@ Please report this to https://github.com/markedjs/marked.`,e){let e=`<p>An error
           </div>
         </div>
       </div>
-    `}};M([A({type:Object})],Jx.prototype,`article`,void 0),M([j()],Jx.prototype,`title`,void 0),M([j()],Jx.prototype,`summary`,void 0),M([j()],Jx.prototype,`content`,void 0),M([j()],Jx.prototype,`author`,void 0),M([j()],Jx.prototype,`tagsInput`,void 0),M([j()],Jx.prototype,`isPublished`,void 0),M([j()],Jx.prototype,`saving`,void 0),M([j()],Jx.prototype,`error`,void 0),Jx=M([k(`article-editor-page`)],Jx);var Yx=class extends O{constructor(...e){super(...e),this.archives=[],this.mode=`archive`,this.archivePage=`list`,this.articlePage=`list`,this.currentArchive=null,this.currentArticle=null,this.currentDetailPage=null,this.showDiseaseSelector=!1,this.showStageSelector=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:`🫀`,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`picc`,name:`PICC置管`,desc:`经外周静脉穿刺中心静脉置管，保护静脉方便化疗输注`,category:`preparation`},{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}static{this.styles=c`
+    `}};M([A({type:Object})],Jx.prototype,`article`,void 0),M([j()],Jx.prototype,`title`,void 0),M([j()],Jx.prototype,`summary`,void 0),M([j()],Jx.prototype,`content`,void 0),M([j()],Jx.prototype,`author`,void 0),M([j()],Jx.prototype,`tagsInput`,void 0),M([j()],Jx.prototype,`isPublished`,void 0),M([j()],Jx.prototype,`saving`,void 0),M([j()],Jx.prototype,`error`,void 0),Jx=M([k(`article-editor-page`)],Jx);var Yx=class extends O{constructor(...e){super(...e),this.archives=[],this.mode=`archive`,this.archivePage=`list`,this.articlePage=`list`,this.currentArchive=null,this.currentArticle=null,this.currentDetailPage=null,this.showDiseaseSelector=!1,this.showStageSelector=!1,this.diseases=[{id:`hilar-cholangiocarcinoma`,name:`肝门胆管癌`,desc:`发生在肝门部的胆管癌`,icon:``,diagnosisKeyItem:`pathology-biopsy`,examItems:[{id:`blood-test`,name:`血液检查`,desc:`肝功能、肿瘤标志物CA19-9等`,category:`blood`},{id:`abdominal-ultrasound`,name:`腹部超声`,desc:`初步评估肝胆结构`,category:`imaging`},{id:`ct-mri`,name:`CT/MRI检查`,desc:`详细评估肿瘤位置和范围`,category:`imaging`},{id:`mrcp`,name:`MRCP`,desc:`磁共振胰胆管成像，显示胆道梗阻情况`,category:`imaging`},{id:`ercp`,name:`ERCP`,desc:`逆行胰胆管造影，可同时进行胆道引流`,category:`imaging`},{id:`pathology-biopsy`,name:`病理活检`,desc:`获取组织样本进行病理确诊`,category:`pathology`}],treatmentItems:[{id:`picc`,name:`PICC置管`,desc:`经外周静脉穿刺中心静脉置管，保护静脉方便化疗输注`,category:`preparation`},{id:`surgery`,name:`手术治疗`,desc:`肝门胆管癌根治术`,category:`surgery`},{id:`chemotherapy`,name:`化疗`,desc:`辅助化疗或姑息化疗`,category:`chemo`},{id:`radiation`,name:`放疗`,desc:`辅助放疗或姑息放疗`,category:`radiation`},{id:`targeted-immune`,name:`靶向/免疫治疗`,desc:`根据基因检测结果选择靶向药物或免疫治疗`,category:`targeted`},{id:`biliary-drainage`,name:`胆道引流`,desc:`PTCD或支架置入缓解黄疸`,category:`drainage`}]}]}static{this.styles=c`
     :host {
       display: block;
       min-height: 100vh;
