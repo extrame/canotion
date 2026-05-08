@@ -140,7 +140,6 @@ export class StageGuide extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
     }
     .cross-stage-list {
       display: flex;
@@ -169,13 +168,8 @@ export class StageGuide extends LitElement {
     .task-group-header:hover {
       background: #f0f0f0;
     }
-    .task-group-icon {
-      font-size: 16px;
-    }
-    .task-group-content {
-      flex: 1;
-    }
     .task-group-name {
+      flex: 1;
       font-weight: 600;
       font-size: 14px;
       color: #333;
@@ -184,7 +178,6 @@ export class StageGuide extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 2px;
     }
     .task-group-time {
       font-size: 12px;
@@ -224,10 +217,6 @@ export class StageGuide extends LitElement {
     .task-sub-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
-    }
-    .task-sub-icon {
-      font-size: 14px;
-      margin-top: 2px;
     }
     .task-sub-content {
       flex: 1;
@@ -352,19 +341,19 @@ export class StageGuide extends LitElement {
       {
         id: 'nutrition',
         name: '保证营养状态',
-        icon: '🍎',
+        icon: '',
         detailRoute: '#/nutrition-detail',
         items: [
           {
             name: '白蛋白（ALB）',
             desc: '白蛋白是反映营养状态的关键指标，正常值35-50 g/L，低于35g/L需加强营养支持。直接影响身体恢复能力和化疗耐受性。',
-            icon: '🥚',
+            icon: '',
             required: true
           },
           {
             name: '微量元素',
             desc: '锌、硒、镁等微量元素参与多种生理过程。缺锌导致免疫力下降、伤口愈合慢；缺硒影响化疗效果和身体恢复。',
-            icon: '⚡',
+            icon: '',
             required: true
           }
         ]
@@ -372,24 +361,24 @@ export class StageGuide extends LitElement {
       {
         id: 'complications',
         name: '小心并发症',
-        icon: '⚠️',
+        icon: '',
         items: [
           {
             name: '门静脉癌栓',
             desc: '门静脉癌栓是胆管癌常见并发症，会导致门静脉压力升高、脾功能亢进、消化道出血风险增加。',
-            icon: '🔴',
+            icon: '',
             required: true
           },
           {
             name: '梗阻性黄疸',
             desc: '肿瘤阻塞胆管导致胆红素升高，需密切监测胆红素变化，必要时进行胆道引流。',
-            icon: '💛',
+            icon: '',
             required: true
           },
           {
             name: '胆道感染',
             desc: '胆道梗阻易导致胆管炎，表现为发热、腹痛、黄疸加重。出现发热需及时就医。',
-            icon: '🤒',
+            icon: '',
             required: true
           }
         ]
@@ -436,7 +425,16 @@ export class StageGuide extends LitElement {
       <div class="guide-card">
         <div class="stage-header">
           <div class="stage-icon ${this.archive.currentStage}">
-            ${isExamination ? '🔍' : '💊'}
+            ${isExamination ? html`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            ` : html`
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+              </svg>
+            `}
           </div>
           <div class="stage-info">
             <div class="stage-label">当前阶段</div>
@@ -446,7 +444,11 @@ export class StageGuide extends LitElement {
 
         <div class="cross-stage-section">
           <div class="cross-stage-title">
-            <div class="cross-stage-icon" style="background: #fff2e6;">⚡</div>
+            <div class="cross-stage-icon" style="background: #fff2e6;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
             跨阶段核心任务（贯穿全程）
           </div>
           <div class="cross-stage-list">
@@ -458,23 +460,19 @@ export class StageGuide extends LitElement {
                       <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                   </div>
-                  <div class="task-group-icon">${group.icon}</div>
-                  <div class="task-group-content">
-                    <div class="task-group-name">${group.name}</div>
-                    <div class="task-group-meta">
-                      ${group.detailRoute ? html`
-                        <span class="task-group-detail" @click="${(e: Event) => { e.stopPropagation(); window.location.hash = group.detailRoute; }}">
-                          查看详情 →
-                        </span>
-                      ` : ''}
-                    </div>
+                  <div class="task-group-name">${group.name}</div>
+                  <div class="task-group-meta">
+                    ${group.detailRoute ? html`
+                      <span class="task-group-detail" @click="${(e: Event) => { e.stopPropagation(); window.location.hash = group.detailRoute; }}">
+                        查看详情 →
+                      </span>
+                    ` : ''}
                   </div>
                 </div>
                 ${this.expandedGroups.has(group.id) ? html`
                   <div class="task-group-items">
                     ${group.items.map(item => html`
                       <div class="task-sub-item">
-                        <div class="task-sub-icon">${item.icon}</div>
                         <div class="task-sub-content">
                           <div class="task-sub-name">
                             ${item.name}
@@ -497,13 +495,13 @@ export class StageGuide extends LitElement {
               class="tab-btn examination ${this.activeTab === 'examination' ? 'active' : ''}"
               @click="${() => this.handleTabClick('examination')}"
             >
-              🔍 检查/等待治疗阶段
+              检查/等待治疗阶段
             </button>
             <button
               class="tab-btn treatment ${this.activeTab === 'treatment' ? 'active' : ''}"
               @click="${() => this.handleTabClick('treatment')}"
             >
-              💊 治疗阶段
+              治疗阶段
             </button>
           </div>
           <div class="tab-content">

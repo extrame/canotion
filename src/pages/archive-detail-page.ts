@@ -361,17 +361,11 @@ export class ArchiveDetailPage extends LitElement {
       font-size: 13px;
       color: #52c41a;
     }
-    .privacy-notice-icon {
-      font-size: 18px;
-    }
     .bilirubin-result-header {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 8px;
-    }
-    .bilirubin-result-icon {
-      font-size: 18px;
     }
     .bilirubin-result-level {
       font-size: 14px;
@@ -510,10 +504,8 @@ export class ArchiveDetailPage extends LitElement {
   }
 
   private getDiseaseIcon(diseaseType: string): string {
-    const icons: Record<string, string> = {
-      'hilar-cholangiocarcinoma': '🫀'
-    };
-    return icons[diseaseType] || '📋';
+    // 返回空字符串，不再使用emoji图标
+    return '';
   }
 
   private formatDate(dateString: string): string {
@@ -528,31 +520,31 @@ export class ArchiveDetailPage extends LitElement {
   private getBilirubinAdvice(total: number): { level: string; class: string; advice: string } {
     if (total < 50) {
       return {
-        level: '✅ 达标',
+        level: '达标',
         class: 'safe',
         advice: '胆红素已降至化疗安全范围，可以考虑进行化疗。请继续监测。'
       };
     } else if (total <= 85) {
       return {
-        level: '🟡 接近达标',
+        level: '接近达标',
         class: 'warning',
         advice: '胆红素已接近安全范围（<50 μmol/L），但仍需继续降至50以下才能进行化疗。'
       };
     } else if (total <= 170) {
       return {
-        level: '🟠 明显升高',
+        level: '明显升高',
         class: 'danger',
         advice: '胆红素明显升高，需要密切关注。建议咨询医生考虑进行胆道引流治疗（PTCD/ERCP支架），几乎所有治疗都要求待胆红素降至50 μmol/L以下，请重点关注。'
       };
     } else if (total <= 200) {
       return {
-        level: '🔴 重度黄疸',
+        level: '重度黄疸',
         class: 'critical',
         advice: '胆红素重度升高（>170 μmol/L）。根据诊疗指南，建议进行术前胆道引流（PTCD或ERCP支架）降低胆红素水平。胆红素需降至50 μmol/L以下才能考虑化疗或手术。'
       };
     } else {
       return {
-        level: '🚨 极高危',
+        level: '极高危',
         class: 'critical',
         advice: '胆红素极高（>200 μmol/L）！此时不宜直接进行手术或化疗，风险极高。必须先进行PTCD外引流或支架置入内引流，待胆红素显著下降后再评估治疗方案。请立即就医！'
       };
@@ -690,7 +682,10 @@ export class ArchiveDetailPage extends LitElement {
           </button>
         </div>
         <div class="privacy-notice">
-          <span class="privacy-notice-icon">🔒</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
           <span>本档案所有数据仅存储在您的设备本地，不会上传到服务器</span>
         </div>
       </div>
@@ -698,7 +693,13 @@ export class ArchiveDetailPage extends LitElement {
       ${isSuspectStage && suspectStageInfo ? html`
         <div class="suspect-section">
           <div class="suspect-header">
-            <div class="suspect-icon">⚠️</div>
+            <div class="suspect-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
             <div class="suspect-info">
               <div class="suspect-title">${suspectStageInfo.title}</div>
               <div class="suspect-subtitle">请按照以下提示做好准备</div>
@@ -706,7 +707,7 @@ export class ArchiveDetailPage extends LitElement {
           </div>
 
           <div class="suspect-tips">
-            <div class="suspect-tips-title">📋 需要完成的事项</div>
+            <div class="suspect-tips-title">需要完成的事项</div>
             ${suspectStageInfo.tips.map(tip => html`
               <div class="suspect-tip-item">
                 <span class="suspect-tip-icon">•</span>
@@ -717,7 +718,7 @@ export class ArchiveDetailPage extends LitElement {
 
           <div class="bilirubin-input-section">
             <div class="bilirubin-input-title">
-              💉 胆红素指标（第一时间录入）
+              胆红素指标（第一时间录入）
               <span style="font-size: 12px; color: #ff4d4f; font-weight: normal;">（后续所有治疗都必须在胆红素50以下才能进行）</span>
             </div>
 
@@ -750,7 +751,7 @@ export class ArchiveDetailPage extends LitElement {
                 style="background: #1890ff; margin-top: 0;"
                 @click="${this.handleShowBilirubinInput}"
               >
-                ${this.archive?.bilirubinRecords && this.archive.bilirubinRecords.length > 0 ? '📊 录入新胆红素数据' : '💉 录入胆红素指标'}
+                ${this.archive?.bilirubinRecords && this.archive.bilirubinRecords.length > 0 ? '录入新胆红素数据' : '录入胆红素指标'}
               </button>
             `}
 
@@ -763,7 +764,6 @@ export class ArchiveDetailPage extends LitElement {
                 return html`
                   <div class="bilirubin-result ${advice.class}">
                     <div class="bilirubin-result-header">
-                      <span class="bilirubin-result-icon">${latest.total < 50 ? '✅' : latest.total <= 85 ? '🟡' : latest.total <= 170 ? '🟠' : '🔴'}</span>
                       <span class="bilirubin-result-level">${advice.level}</span>
                     </div>
                     <div class="bilirubin-result-value">
@@ -812,7 +812,12 @@ export class ArchiveDetailPage extends LitElement {
         </div>
       ` : html`
         <div class="stage-prompt">
-          <div class="stage-prompt-icon">🔍</div>
+          <div class="stage-prompt-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
           <div class="stage-prompt-title">设置诊疗阶段</div>
           <div class="stage-prompt-desc">
             请选择您目前已完成的检查和治疗项目<br>

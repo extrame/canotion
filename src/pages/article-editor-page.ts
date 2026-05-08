@@ -450,7 +450,7 @@ export class ArticleEditorPage extends LitElement {
         </div>
 
         <div class="component-hint">
-          <div class="component-hint-title">💡 嵌入交互组件</div>
+          <div class="component-hint-title">嵌入交互组件</div>
           <div class="component-hint-code">
             &lt;web-component name="stage-guide"&gt;<br>
             &nbsp;&nbsp;点击此处使用诊疗阶段向导<br>

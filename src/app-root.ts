@@ -54,7 +54,7 @@ export class AppRoot extends LitElement {
       id: 'hilar-cholangiocarcinoma',
       name: '肝门胆管癌',
       desc: '发生在肝门部的胆管癌',
-      icon: '🫀',
+      icon: '',
       diagnosisKeyItem: 'pathology-biopsy',
       examItems: [
         {

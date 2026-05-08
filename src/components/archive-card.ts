@@ -37,7 +37,10 @@ export class ArchiveCard extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+    }
+    .disease-icon svg {
+      width: 24px;
+      height: 24px;
     }
     .card-title {
       font-size: 20px;
@@ -83,7 +86,10 @@ export class ArchiveCard extends LitElement {
         width: 40px;
         height: 40px;
         border-radius: 10px;
-        font-size: 20px;
+      }
+      .disease-icon svg {
+        width: 20px;
+        height: 20px;
       }
       .card-title {
         font-size: 17px;
@@ -103,13 +109,6 @@ export class ArchiveCard extends LitElement {
       }
     }
   `;
-
-  private getDiseaseIcon(diseaseType: string): string {
-    const icons: Record<string, string> = {
-      'hilar-cholangiocarcinoma': '🫀'
-    };
-    return icons[diseaseType] || '📋';
-  }
 
   private formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -134,7 +133,11 @@ export class ArchiveCard extends LitElement {
     return html`
       <div class="card" @click="${this.handleClick}">
         <div class="card-header">
-          <div class="disease-icon">${this.getDiseaseIcon(this.archive.diseaseType)}</div>
+          <div class="disease-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
           <div>
             <div class="card-title">${this.archive.diseaseName}</div>
             <div class="card-date">创建于 ${this.formatDate(this.archive.createdAt)}</div>
@@ -142,7 +145,7 @@ export class ArchiveCard extends LitElement {
         </div>
         <div class="card-stats">
           <div class="stage-badge">
-            ${isExamination ? '🔍 检查阶段' : '💊 治疗阶段'}
+            ${isExamination ? '检查阶段' : '治疗阶段'}
           </div>
         </div>
       </div>

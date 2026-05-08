@@ -91,7 +91,6 @@ export class Ki67Assessment extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
     }
     .report-date {
       font-size: 12px;
@@ -103,9 +102,10 @@ export class Ki67Assessment extends LitElement {
       color: #999;
     }
     .no-data-icon {
-      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
-      opacity: 0.5;
     }
     .no-data-text {
       font-size: 14px;
@@ -416,19 +416,19 @@ export class Ki67Assessment extends LitElement {
     // 基于 Ki-67 的建议
     if (ki67 !== null && ki67 > 30) {
       suggestions.push({
-        icon: '⚠️',
+        icon: '',
         text: `Ki-67 为 ${ki67}%，肿瘤增殖活跃，建议加强术后随访频率，前2年每3个月复查一次`
       });
     }
     if (ki67 !== null && ki67 > 60) {
       suggestions.push({
-        icon: '🔴',
+        icon: '',
         text: 'Ki-67 极高，提示肿瘤侵袭性强，建议与主治医师讨论是否需要辅助化疗'
       });
     }
     if (ki67 !== null && ki67 <= 10) {
       suggestions.push({
-        icon: '✅',
+        icon: '',
         text: 'Ki-67 较低，肿瘤增殖活性不高，预后相对较好，但仍需按指南定期随访'
       });
     }
@@ -436,7 +436,7 @@ export class Ki67Assessment extends LitElement {
     // 基于分化程度的建议
     if (report.differentiation === 'poor' || report.differentiation === 'undifferentiated') {
       suggestions.push({
-        icon: '⚠️',
+        icon: '',
         text: `${report.differentiation === 'poor' ? '低' : '未'}分化腺癌侵袭性强，建议完善基因检测以寻找靶向治疗机会`
       });
     }
@@ -444,7 +444,7 @@ export class Ki67Assessment extends LitElement {
     // 基于神经侵犯的建议
     if (report.perineuralInvasion) {
       suggestions.push({
-        icon: '⚠️',
+        icon: '',
         text: '存在神经侵犯，可能增加局部复发风险，建议术后辅助治疗并密切随访'
       });
     }
@@ -452,7 +452,7 @@ export class Ki67Assessment extends LitElement {
     // 基于脉管侵犯的建议
     if (report.vascularInvasion) {
       suggestions.push({
-        icon: '⚠️',
+        icon: '',
         text: '存在脉管侵犯，提示远处转移风险增加，建议术后定期影像学检查'
       });
     }
@@ -460,12 +460,12 @@ export class Ki67Assessment extends LitElement {
     // 基于切缘的建议
     if (report.marginStatus === 'R1') {
       suggestions.push({
-        icon: '🔴',
+        icon: '',
         text: '切缘阳性（R1），建议术后辅助放化疗以降低局部复发风险'
       });
     } else if (report.marginStatus === 'R0') {
       suggestions.push({
-        icon: '✅',
+        icon: '',
         text: '切缘阴性（R0），根治性切除完整，但仍需按指南进行辅助治疗和随访'
       });
     }
@@ -476,7 +476,7 @@ export class Ki67Assessment extends LitElement {
     );
     if (p53 && p53.numericValue && p53.numericValue > 50) {
       suggestions.push({
-        icon: '🧬',
+        icon: '',
         text: 'P53 高表达（突变型），可能与肿瘤进展相关，建议关注免疫治疗机会'
       });
     }
@@ -530,12 +530,20 @@ export class Ki67Assessment extends LitElement {
         <div class="assessment-card">
           <div class="card-header">
             <div class="card-title">
-              <div class="card-title-icon">🔬</div>
+              <div class="card-title-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4"></path>
+                </svg>
+              </div>
               Ki-67 肿瘤增殖评估
             </div>
           </div>
           <div class="no-data">
-            <div class="no-data-icon">📋</div>
+            <div class="no-data-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
             <div class="no-data-text">暂无病理报告数据</div>
             <div style="font-size: 12px; color: #bbb;">录入病理报告后可查看 Ki-67 增殖评估</div>
           </div>
@@ -553,7 +561,11 @@ export class Ki67Assessment extends LitElement {
       <div class="assessment-card">
         <div class="card-header">
           <div class="card-title">
-            <div class="card-title-icon">🔬</div>
+            <div class="card-title-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4"></path>
+              </svg>
+            </div>
             Ki-67 肿瘤增殖评估
           </div>
           ${report.reportDate ? html`
@@ -587,7 +599,6 @@ export class Ki67Assessment extends LitElement {
               </div>
               <div class="grade-description">${grade.description}</div>
               <div class="risk-tag" style="background: ${grade.bgColor}; color: ${grade.color}">
-                ${grade.riskLevel === '高风险' ? '🔴' : grade.riskLevel === '中高风险' ? '🟠' : grade.riskLevel === '中低风险' ? '🟡' : '🟢'}
                 ${grade.riskLevel}
               </div>
             </div>
@@ -609,7 +620,12 @@ export class Ki67Assessment extends LitElement {
           </div>
         ` : html`
           <div class="no-data" style="padding: 20px;">
-            <div class="no-data-icon">📊</div>
+            <div class="no-data-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+              </svg>
+            </div>
             <div class="no-data-text">病理报告中未包含 Ki-67 数据</div>
           </div>
         `}
@@ -639,13 +655,13 @@ export class Ki67Assessment extends LitElement {
                 <div class="detail-item">
                   <div class="detail-item-label">脉管侵犯</div>
                   <div class="detail-item-value ${report.vascularInvasion ? 'positive' : 'negative'}">
-                    ${report.vascularInvasion ? '阳性 ⚠️' : '阴性 ✅'}
+                    ${report.vascularInvasion ? '阳性' : '阴性'}
                   </div>
                 </div>
                 <div class="detail-item">
                   <div class="detail-item-label">神经侵犯</div>
                   <div class="detail-item-value ${report.perineuralInvasion ? 'positive' : 'negative'}">
-                    ${report.perineuralInvasion ? '阳性 ⚠️' : '阴性 ✅'}
+                    ${report.perineuralInvasion ? '阳性' : '阴性'}
                   </div>
                 </div>
                 <div class="detail-item">
@@ -680,7 +696,7 @@ export class Ki67Assessment extends LitElement {
               ${report.ihcResults && report.ihcResults.length > 0 ? html`
                 <div class="ihc-section">
                   <div class="ihc-title">
-                    <span>🧪</span> 免疫组化结果
+                    免疫组化结果
                   </div>
                   <div class="ihc-grid">
                     ${report.ihcResults.map(item => html`
@@ -697,7 +713,7 @@ export class Ki67Assessment extends LitElement {
               ${report.geneTestResults && report.geneTestResults.length > 0 ? html`
                 <div class="ihc-section">
                   <div class="ihc-title">
-                    <span>🧬</span> 基因检测结果
+                    基因检测结果
                   </div>
                   <div class="ihc-grid">
                     ${report.geneTestResults.map(item => html`
@@ -717,7 +733,7 @@ export class Ki67Assessment extends LitElement {
         ${suggestions.length > 0 ? html`
           <div class="suggestions">
             <div class="suggestions-title">
-              <span>💡</span> 个性化建议
+              个性化建议
             </div>
             ${suggestions.map(s => html`
               <div class="suggestion-item">

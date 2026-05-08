@@ -492,7 +492,7 @@ export class ArchiveListPage extends LitElement {
   render() {
     return html`
       <div class="header">
-        <h1>🩺 癌症患者周期向导</h1>
+        <h1>癌症患者周期向导</h1>
         <p>根据公开资料，提供诊疗阶段提示</p>
         <button class="new-archive-btn" @click="${this.handleCreateArchive}">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -502,7 +502,13 @@ export class ArchiveListPage extends LitElement {
           新建档案
         </button>
         <div class="disclaimer-banner">
-          <div class="disclaimer-icon">ℹ️</div>
+          <div class="disclaimer-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
           <div class="disclaimer-content">
             <div class="disclaimer-title">免责声明</div>
             <div class="disclaimer-text">
@@ -511,7 +517,12 @@ export class ArchiveListPage extends LitElement {
           </div>
         </div>
         <div class="privacy-banner">
-          <div class="privacy-icon">🔒</div>
+          <div class="privacy-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
           <div class="privacy-content">
             <div class="privacy-title">隐私保护说明</div>
             <div class="privacy-text">
@@ -576,12 +587,12 @@ export class ArchiveListPage extends LitElement {
       ${this.showImportDialog ? html`
         <div class="dialog-overlay" @click="${this.handleImportDialogClose}">
           <div class="dialog" @click="${(e: Event) => e.stopPropagation()}">
-            <div class="dialog-title">📥 导入备份数据</div>
+            <div class="dialog-title">导入备份数据</div>
 
             ${this.importResult ? html`
               <div class="import-result ${this.importResult.success ? 'success' : 'error'}">
                 <div class="import-result-title">
-                  ${this.importResult.success ? '✅ 导入成功' : '❌ 导入失败'}
+                  ${this.importResult.success ? '导入成功' : '导入失败'}
                 </div>
                 <div class="import-result-message">${this.importResult.message}</div>
                 ${this.importResult.success && (this.importResult.importedArchives !== undefined || this.importResult.importedArticles !== undefined) ? html`
@@ -630,7 +641,7 @@ export class ArchiveListPage extends LitElement {
                 ${this.isImporting ? html`
                   <div>⏳ 正在导入...</div>
                 ` : html`
-                  <div>📁 点击选择或拖拽文件到此处</div>
+                  <div>点击选择或拖拽文件到此处</div>
                   <div style="font-size: 12px; margin-top: 8px; color: #999;">支持 .json 格式的备份文件</div>
                 `}
               </label>

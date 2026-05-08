@@ -108,7 +108,6 @@ export class PathologyDetailPage extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
     }
     .timeline-title-group {
       flex: 1;
@@ -276,7 +275,6 @@ export class PathologyDetailPage extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
     }
     .bifurcation-paths { display: flex; gap: 12px; }
     .bifurcation-path {
@@ -340,7 +338,7 @@ export class PathologyDetailPage extends LitElement {
       background: white;
       border-radius: 8px;
     }
-    .warning-icon { font-size: 18px; flex-shrink: 0; }
+    .warning-icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .warning-text { font-size: 13px; color: #666; line-height: 1.5; }
     .warning-text strong { color: #d46b08; }
 
@@ -425,7 +423,11 @@ export class PathologyDetailPage extends LitElement {
     return html`
       <div class="timeline-container">
         <div class="timeline-header">
-          <div class="timeline-icon">🔬</div>
+          <div class="timeline-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4"></path>
+            </svg>
+          </div>
           <div class="timeline-title-group">
             <div class="timeline-title">病理确认流程</div>
             <div class="timeline-subtitle">了解病理确认的完整流程和注意事项</div>
@@ -483,7 +485,7 @@ export class PathologyDetailPage extends LitElement {
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="1"></circle></svg>
             </div>
             <div class="timeline-content">
-              <div class="timeline-item-name">出具报告 ⚡</div>
+              <div class="timeline-item-name">出具报告</div>
               <div class="timeline-item-desc">病理报告出炉，明确诊断结果</div>
               <div class="timeline-item-time">1-2天</div>
               <div class="banner urgent">
@@ -498,7 +500,7 @@ export class PathologyDetailPage extends LitElement {
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="1"></circle></svg>
             </div>
             <div class="timeline-content">
-              <div class="timeline-item-name">免疫组化染色检测 🔬</div>
+              <div class="timeline-item-name">免疫组化染色检测</div>
               <div class="timeline-item-desc">检测 Ki-67、P53、CK7/19 等肿瘤标志物表达情况，指导靶向和免疫治疗药物选择</div>
               <div class="timeline-item-time">约5-7天</div>
               <div class="banner required">
@@ -513,7 +515,7 @@ export class PathologyDetailPage extends LitElement {
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="1"></circle></svg>
             </div>
             <div class="timeline-content">
-              <div class="timeline-item-name">基因检测 🧬</div>
+              <div class="timeline-item-name">基因检测</div>
               <div class="timeline-item-desc">检测 FGFR2、IDH1、MSI/TMB、HER2、NTRK 等基因突变，为靶向治疗提供依据</div>
               <div class="timeline-item-time">约10-14天</div>
               <div class="banner gene">
@@ -526,7 +528,11 @@ export class PathologyDetailPage extends LitElement {
 
         <div class="bifurcation-section">
           <div class="bifurcation-title">
-            <div class="bifurcation-icon">⚡</div>
+            <div class="bifurcation-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
             分叉点：病理报告结果
           </div>
           <div class="bifurcation-paths">
@@ -561,20 +567,45 @@ export class PathologyDetailPage extends LitElement {
 
         <div class="gene-test-warning">
           <div class="gene-test-warning-title">
-            <div style="font-size: 20px;">🧬</div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
             基因检测抽血注意事项
           </div>
           <div class="gene-test-warning-content">
             <div class="warning-item">
-              <div class="warning-icon">💉</div>
+              <div class="warning-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </div>
               <div class="warning-text"><strong>基因检测需要血液抽检</strong><br>为保证检测结果准确性，<strong>抽血前14天内应避免输血</strong>。</div>
             </div>
             <div class="warning-item">
-              <div class="warning-icon">⚠️</div>
+              <div class="warning-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
               <div class="warning-text"><strong>门静脉癌栓风险提示</strong><br>若并发门静脉癌栓，出现消化道出血的风险较高。一旦发生输血，基因检测将<strong>推迟至少15天</strong>。</div>
             </div>
             <div class="warning-item">
-              <div class="warning-icon">📋</div>
+              <div class="warning-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
               <div class="warning-text"><strong>建议措施</strong><br>请提前与医生沟通，在窗口期内优先安排基因检测抽血。</div>
             </div>
           </div>

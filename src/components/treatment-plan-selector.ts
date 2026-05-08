@@ -336,7 +336,6 @@ export class TreatmentPlanSelector extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
     }
     .selector-title {
       font-size: 16px;
@@ -604,9 +603,10 @@ export class TreatmentPlanSelector extends LitElement {
       color: #999;
     }
     .no-results-icon {
-      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
-      opacity: 0.5;
     }
     .no-results-text {
       font-size: 14px;
@@ -693,12 +693,13 @@ export class TreatmentPlanSelector extends LitElement {
   }
 
   private getCategoryIcon(category: TreatmentPlan['category']): string {
+    // 不再使用emoji图标
     const icons: Record<TreatmentPlan['category'], string> = {
-      surgery: '🔪',
-      systemic: '💊',
-      radiation: '☢️',
-      palliative: '🩹',
-      transplant: '🏥'
+      surgery: '',
+      systemic: '',
+      radiation: '',
+      palliative: '',
+      transplant: ''
     };
     return icons[category];
   }
@@ -729,7 +730,14 @@ export class TreatmentPlanSelector extends LitElement {
     return html`
       <div class="selector-card">
         <div class="selector-header">
-          <div class="selector-icon">📋</div>
+          <div class="selector-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
           <div>
             <div class="selector-title">个性化治疗方案</div>
             <div class="selector-subtitle">根据患者评估信息智能推荐治疗方案</div>
@@ -738,7 +746,7 @@ export class TreatmentPlanSelector extends LitElement {
 
         ${primaryRec ? html`
           <div class="summary-card">
-            <div class="summary-title">💡 推荐方案</div>
+            <div class="summary-title">推荐方案</div>
             <div class="summary-text">
               基于当前患者评估，<strong>${primaryRec.name}</strong> 为首选推荐方案。
               ${primaryRec.recommendations.some(r => r.level === 'strong')
@@ -895,7 +903,7 @@ export class TreatmentPlanSelector extends LitElement {
               class="category-tab ${this.activeCategory === cat ? 'active' : ''}"
               @click="${() => this.activeCategory = cat}"
             >
-              ${this.getCategoryIcon(cat)} ${this.getCategoryLabel(cat)} <span class="count">${this.getCategoryCount(cat)}</span>
+              ${this.getCategoryLabel(cat)} <span class="count">${this.getCategoryCount(cat)}</span>
             </button>
           `)}
         </div>
@@ -903,7 +911,12 @@ export class TreatmentPlanSelector extends LitElement {
         <div class="plans-list">
           ${this.getFilteredPlansByCategory(this.activeCategory).length === 0 ? html`
             <div class="no-results">
-              <div class="no-results-icon">🔍</div>
+              <div class="no-results-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
               <div class="no-results-text">没有找到匹配的治疗方案</div>
               <div class="no-results-hint">请调整筛选条件后重试</div>
             </div>
@@ -911,7 +924,20 @@ export class TreatmentPlanSelector extends LitElement {
             <div class="plan-card ${primaryRec?.id === plan.id ? 'primary' : ''}">
               <div class="plan-header" @click="${() => this.togglePlan(plan.id)}">
                 <div class="plan-category-icon ${plan.category}">
-                  ${this.getCategoryIcon(plan.category)}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    ${plan.category === 'surgery' ? html`
+                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                    ` : plan.category === 'systemic' ? html`
+                      <path d="M10.5 20.5L3.5 13.5L6.5 10.5L10.5 14.5L17.5 7.5L20.5 10.5L10.5 20.5Z"></path>
+                    ` : plan.category === 'radiation' ? html`
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <circle cx="12" cy="12" r="4"></circle>
+                    ` : plan.category === 'palliative' ? html`
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    ` : html`
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    `}
+                  </svg>
                 </div>
                 <div class="plan-info">
                   <div class="plan-name">${plan.name}</div>

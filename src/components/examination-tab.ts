@@ -154,24 +154,6 @@ export class ExaminationTab extends LitElement {
       border-bottom: none;
       padding-bottom: 0;
     }
-    .core-task-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 12px;
-    }
-    .core-task-icon.warning {
-      background: #fff1f0;
-      color: #ff4d4f;
-    }
-    .core-task-icon.tip {
-      background: #f6ffed;
-      color: #52c41a;
-    }
     .core-task-content {
       flex: 1;
     }
@@ -228,13 +210,8 @@ export class ExaminationTab extends LitElement {
     .task-group-header:hover {
       background: #f0f0f0;
     }
-    .task-group-icon {
-      font-size: 16px;
-    }
-    .task-group-content {
-      flex: 1;
-    }
     .task-group-name {
+      flex: 1;
       font-weight: 600;
       font-size: 14px;
       color: #333;
@@ -243,7 +220,6 @@ export class ExaminationTab extends LitElement {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 2px;
     }
     .task-group-time {
       font-size: 12px;
@@ -283,10 +259,6 @@ export class ExaminationTab extends LitElement {
     .task-sub-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
-    }
-    .task-sub-icon {
-      font-size: 14px;
-      margin-top: 2px;
     }
     .task-sub-content {
       flex: 1;
@@ -573,7 +545,7 @@ export class ExaminationTab extends LitElement {
             name: '总胆红素降至50以内',
             desc: html`总胆红素需要降至<span class="bilirubin-target">50μmol/L以下</span>才能考虑化疗。
               若总胆红素在<span class="bilirubin-target">100μmol/L以内</span>，建议联系医生评估是否存在可行方案。`,
-            icon: '💛',
+            icon: '',
             required: true,
             estimateTime: this.calculateBilirubinEstimateTime()
           }
@@ -582,26 +554,26 @@ export class ExaminationTab extends LitElement {
           {
             id: 'pathology',
             name: '马上进行病理确认',
-            icon: '🔬',
+            icon: '',
             estimateTime: '约2-3周',
             detailRoute: '#/pathology-detail',
             items: [
               {
                 name: '基本病理检测',
                 desc: '通过组织样本明确肿瘤性质，是制定治疗方案的基础依据。',
-                icon: '🔬',
+                icon: '',
                 required: true
               },
               {
                 name: '免疫组化染色检测',
                 desc: '检测肿瘤标志物表达情况，指导靶向和免疫治疗药物选择。',
-                icon: '🧪',
+                icon: '',
                 required: true
               },
               {
                 name: '基因检测',
                 desc: '检测基因突变情况（FGFR2、IDH1、MSI/TMB、HER2、NTRK等），为靶向治疗提供依据。胆道肿瘤常见靶点：FGFR2融合、IDH1突变等。',
-                icon: '🧬',
+                icon: '',
                 required: false
               }
             ]
@@ -636,7 +608,6 @@ export class ExaminationTab extends LitElement {
 
           ${taskConfig.standalone.map(task => html`
             <div class="core-task-item">
-              <div class="core-task-icon warning">${task.icon}</div>
               <div class="core-task-content">
                 <div class="core-task-name">
                   ${task.name}
@@ -656,24 +627,20 @@ export class ExaminationTab extends LitElement {
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </div>
-                <div class="task-group-icon">${group.icon}</div>
-                <div class="task-group-content">
-                  <div class="task-group-name">${group.name}</div>
-                  <div class="task-group-meta">
-                    ${group.estimateTime ? html`<span class="task-group-time">${group.estimateTime}</span>` : ''}
-                    ${group.detailRoute ? html`
-                      <span class="task-group-detail" @click="${(e: Event) => { e.stopPropagation(); window.location.hash = group.detailRoute; }}">
-                        查看详情 →
-                      </span>
-                    ` : ''}
-                  </div>
+                <div class="task-group-name">${group.name}</div>
+                <div class="task-group-meta">
+                  ${group.estimateTime ? html`<span class="task-group-time">${group.estimateTime}</span>` : ''}
+                  ${group.detailRoute ? html`
+                    <span class="task-group-detail" @click="${(e: Event) => { e.stopPropagation(); window.location.hash = group.detailRoute; }}">
+                      查看详情 →
+                    </span>
+                  ` : ''}
                 </div>
               </div>
               ${this.expandedGroups.has(group.id) ? html`
                 <div class="task-group-items">
                   ${group.items.map(item => html`
                     <div class="task-sub-item">
-                      <div class="task-sub-icon">${item.icon}</div>
                       <div class="task-sub-content">
                         <div class="task-sub-name">
                           ${item.name}
@@ -683,7 +650,7 @@ export class ExaminationTab extends LitElement {
                           ${item.desc}
                           ${item.name === '基因检测' && this.archive?.hasPortalVeinTumorThrombus ? html`
                             <div style="margin-top: 8px; padding: 10px; background: #fff1f0; border-radius: 8px; border: 1px solid #ffccc7;">
-                              <div style="font-size: 12px; color: #ff4d4f; font-weight: 600;">⚠️ 门静脉癌栓患者注意</div>
+                              <div style="font-size: 12px; color: #ff4d4f; font-weight: 600;">门静脉癌栓患者注意</div>
                               <div style="font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5;">
                                 若治疗过程中发生消化道出血需要输血，基因检测需推迟<span style="color: #ff4d4f; font-weight: 600;">至少15天</span>。请提前与医生沟通安排基因检测抽血时间。
                               </div>

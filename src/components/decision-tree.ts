@@ -72,7 +72,11 @@ export class DecisionTree extends LitElement {
       border-color: #52c41a;
     }
     .node-icon {
-      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
     .node-text {
@@ -434,9 +438,24 @@ export class DecisionTree extends LitElement {
           @click="${() => hasChildren && this.toggleNode(node.id)}"
         >
           <span class="node-icon">
-            ${status === 'completed' ? '✅' : 
-              status === 'current' ? '📍' : 
-              hasChildren ? '📁' : '📄'}
+            ${status === 'completed' ? html`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            ` : status === 'current' ? html`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="4"></circle>
+              </svg>
+            ` : hasChildren ? html`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            ` : html`
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            `}
           </span>
           <div class="node-text">
             <div class="node-title">${node.title}</div>
@@ -492,7 +511,7 @@ export class DecisionTree extends LitElement {
 
       ${currentNode?.action ? html`
         <div class="action-panel">
-          <div class="action-title">💡 下一步行动建议</div>
+          <div class="action-title">下一步行动建议</div>
           <div class="action-content">
             根据您当前的情况，建议：${currentNode.title}
           </div>

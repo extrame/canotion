@@ -578,7 +578,7 @@ export class BilirubinChart extends LitElement {
     return html`
       <div class="chart-container">
         <div class="chart-header">
-          <span class="chart-title">📊 胆红素指标趋势</span>
+          <span class="chart-title">胆红素指标趋势</span>
           <div style="display: flex; gap: 8px;">
             ${hasRecords ? html`
               <button class="table-toggle-btn ${this.showTable ? 'active' : ''}" @click="${this.handleToggleTable}">
@@ -642,10 +642,10 @@ export class BilirubinChart extends LitElement {
                 ` : ''}
               </div>
               <div class="estimate-message">
-                ${estimate.currentValue <= 50 ? '🎉 已达到可治疗水平，请与医生讨论化疗方案。' :
-                  estimate.daysTo50 <= 30 ? '⏰ 预计一个月内可达到治疗条件，继续保持。' :
-                  estimate.daysTo50 > 0 ? '⏰ 预计需要更长时间，建议与医生讨论其他治疗方案。' :
-                  '⚠️ 当前趋势无法预估到达时间，建议继续监测。'}
+                ${estimate.currentValue <= 50 ? '已达到可治疗水平，请与医生讨论化疗方案。' :
+                  estimate.daysTo50 <= 30 ? '预计一个月内可达到治疗条件，继续保持。' :
+                  estimate.daysTo50 > 0 ? '预计需要更长时间，建议与医生讨论其他治疗方案。' :
+                  '当前趋势无法预估到达时间，建议继续监测。'}
               </div>
             </div>
           ` : ''}

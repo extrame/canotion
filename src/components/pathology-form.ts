@@ -494,7 +494,7 @@ export class PathologyForm extends LitElement {
 
         <!-- 基本信息 -->
         <div class="form-section">
-          <div class="section-title">📋 基本信息</div>
+          <div class="section-title">基本信息</div>
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">报告日期<span class="required">*</span></label>
@@ -623,7 +623,7 @@ export class PathologyForm extends LitElement {
         <div class="form-section">
           <div class="collapsible-header" @click="${() => { this.showIhcSection = !this.showIhcSection; }}">
             <div class="collapsible-left">
-              <span>🧪</span> 免疫组化结果
+              免疫组化结果
               ${this.ihcItems.length > 0 ? html`
                 <span class="collapsible-badge">${this.ihcItems.length} 项</span>
               ` : ''}
@@ -680,7 +680,7 @@ export class PathologyForm extends LitElement {
         <div class="form-section">
           <div class="collapsible-header" @click="${() => { this.showGeneSection = !this.showGeneSection; }}">
             <div class="collapsible-left">
-              <span>🧬</span> 基因检测结果
+              基因检测结果
               ${this.geneItems.length > 0 ? html`
                 <span class="collapsible-badge">${this.geneItems.length} 项</span>
               ` : ''}

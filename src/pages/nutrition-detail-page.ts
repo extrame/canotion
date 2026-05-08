@@ -58,7 +58,6 @@ export class NutritionDetailPage extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
     }
     .content-title-group {
       flex: 1;
@@ -90,7 +89,9 @@ export class NutritionDetailPage extends LitElement {
       gap: 10px;
     }
     .warning-banner-icon {
-      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .warning-banner-content {
       font-size: 14px;
@@ -132,13 +133,14 @@ export class NutritionDetailPage extends LitElement {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
     }
     .indicator-icon.albumin {
       background: #e6f7ff;
+      color: #1890ff;
     }
     .indicator-icon.mineral {
       background: #f6ffed;
+      color: #52c41a;
     }
     .indicator-name {
       font-size: 15px;
@@ -203,7 +205,13 @@ export class NutritionDetailPage extends LitElement {
       padding-bottom: 0;
     }
     .relationship-icon {
-      font-size: 16px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
       margin-top: 2px;
     }
@@ -293,7 +301,15 @@ export class NutritionDetailPage extends LitElement {
 
         <div class="content-container">
           <div class="content-header">
-            <div class="content-icon">🍎</div>
+            <div class="content-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+            </div>
             <div class="content-title-group">
               <div class="content-title">营养状态准备</div>
               <div class="content-subtitle">化疗前的身体基础条件</div>
@@ -302,7 +318,13 @@ export class NutritionDetailPage extends LitElement {
 
           <div class="warning-banner">
             <div class="warning-banner-title">
-              <div class="warning-banner-icon">⚠️</div>
+              <div class="warning-banner-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
               化疗前重点关注指标
             </div>
             <div class="warning-banner-content">
@@ -312,13 +334,17 @@ export class NutritionDetailPage extends LitElement {
 
           <div class="key-indicators">
             <div class="section-title">
-              <span>🔬</span>
               重点关注指标
             </div>
 
             <div class="indicator-card">
               <div class="indicator-header">
-                <div class="indicator-icon albumin">🥚</div>
+                <div class="indicator-icon albumin">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 6v6l4 2"></path>
+                  </svg>
+                </div>
                 <div class="indicator-name">白蛋白（ALB）</div>
               </div>
               <div class="indicator-desc">
@@ -329,13 +355,17 @@ export class NutritionDetailPage extends LitElement {
               </div>
               <div class="indicator-values">
                 <span class="value-tag normal">正常值：35-50 g/L</span>
-                <span class="value-tag low">⚠️ 低于35需警惕</span>
+                <span class="value-tag low">低于35需警惕</span>
               </div>
             </div>
 
             <div class="indicator-card">
               <div class="indicator-header">
-                <div class="indicator-icon mineral">⚡</div>
+                <div class="indicator-icon mineral">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
                 <div class="indicator-name">微量元素</div>
               </div>
               <div class="indicator-desc">
@@ -354,32 +384,48 @@ export class NutritionDetailPage extends LitElement {
 
           <div class="relationship-section">
             <div class="relationship-title">
-              <span>📊</span>
               与身体情况及化疗耐受性的关系
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">💪</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>营养状态 → 身体储备</strong><br>
                 良好的营养状态意味着身体有充足的蛋白质和微量元素储备，能更好地承受化疗带来的副作用。
               </div>
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">🛡️</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>白蛋白水平 → 免疫力</strong><br>
                 白蛋白不仅是营养指标，也与免疫力密切相关。低白蛋白提示身体处于消耗状态，免疫力低下。
               </div>
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">💊</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#722ed1" stroke-width="2">
+                  <path d="M10.5 20.5L3.5 13.5L6.5 10.5L10.5 14.5L17.5 7.5L20.5 10.5L10.5 20.5Z"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>微量元素 → 药物代谢</strong><br>
                 微量元素参与药物代谢过程。缺乏会影响化疗药物的疗效和毒性反应。
               </div>
             </div>
             <div class="relationship-item">
-              <span class="relationship-icon">⚕️</span>
+              <div class="relationship-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
               <div class="relationship-text">
                 <strong>综合评估 → 治疗决策</strong><br>
                 医生会根据白蛋白和微量元素水平综合评估患者的营养状态和治疗耐受性，必要时先进行营养支持治疗。
@@ -389,7 +435,6 @@ export class NutritionDetailPage extends LitElement {
 
           <div class="tips-section">
             <div class="tips-title">
-              <span>💡</span>
               营养补充建议
             </div>
             <div class="tip-item">
@@ -412,7 +457,6 @@ export class NutritionDetailPage extends LitElement {
 
           <div class="important-note">
             <div class="important-note-title">
-              <span>⚠️</span>
               门静脉癌栓患者特别提示
             </div>
             <div class="important-note-content">

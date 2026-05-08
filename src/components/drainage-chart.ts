@@ -445,7 +445,7 @@ export class DrainageChart extends LitElement {
         `}
 
         <div class="tips">
-          <div class="tips-title">💡 记录提示</div>
+          <div class="tips-title">记录提示</div>
           <div>• 建议每日固定时间记录引流量（如早上8点）</div>
           <div>• 正常PTCD引流量约为200-400ml/天</div>
           <div>• 引流量突然减少或增多时请及时联系医生</div>

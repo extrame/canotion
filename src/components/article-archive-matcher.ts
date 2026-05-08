@@ -43,7 +43,9 @@ export class ArticleArchiveMatcher extends LitElement {
       margin-bottom: 16px;
     }
     .header-icon {
-      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .header-title {
       font-size: 18px;
@@ -125,8 +127,13 @@ export class ArticleArchiveMatcher extends LitElement {
       border-bottom: none;
     }
     .match-icon {
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    .match-icon.match { color: #52c41a; }
+    .match-icon.partial { color: #faad14; }
+    .match-icon.mismatch { color: #ff4d4f; }
     .match-text {
       flex: 1;
       font-size: 14px;
@@ -226,7 +233,9 @@ export class ArticleArchiveMatcher extends LitElement {
       color: #999;
     }
     .no-archive-icon {
-      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
     }
     .create-archive-btn {
@@ -550,7 +559,11 @@ export class ArticleArchiveMatcher extends LitElement {
     if (this.archives.length === 0) {
       return html`
         <div class="no-archive">
-          <div class="no-archive-icon">📋</div>
+          <div class="no-archive-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
           <div>暂无患者档案</div>
           <div style="font-size: 13px; margin-top: 8px;">创建档案后可查看本文与您的匹配度</div>
           <button class="create-archive-btn" @click="${() => this.handleAction('create-archive')}">
@@ -562,7 +575,12 @@ export class ArticleArchiveMatcher extends LitElement {
 
     return html`
       <div class="header">
-        <span class="header-icon">📊</span>
+        <span class="header-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+          </svg>
+        </span>
         <span class="header-title">本文与您的档案匹配度</span>
       </div>
 
@@ -592,10 +610,29 @@ export class ArticleArchiveMatcher extends LitElement {
         <div class="match-details">
           ${this.matchResults.map(result => html`
             <div class="match-item">
-              <span class="match-icon">
-                ${result.status === 'match' ? '✅' : 
-                  result.status === 'partial' ? '⚠️' : 
-                  result.status === 'mismatch' ? '❌' : 'ℹ️'}
+              <span class="match-icon ${result.status}">
+                ${result.status === 'match' ? html`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                ` : result.status === 'partial' ? html`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                ` : result.status === 'mismatch' ? html`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                ` : html`
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                `}
               </span>
               <span class="match-text">${result.message}</span>
             </div>
@@ -605,7 +642,7 @@ export class ArticleArchiveMatcher extends LitElement {
 
       ${this.recommendations.length > 0 ? html`
         <div class="recommendations">
-          <div class="rec-title">💡 个性化建议</div>
+          <div class="rec-title">个性化建议</div>
           ${this.recommendations.map(rec => html`
             <div class="rec-card ${rec.priority === 'gene' ? 'gene' : rec.priority}">
               <div class="rec-header">
