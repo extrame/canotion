@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/scan-articles.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -628,6 +628,274 @@ export class ArticleArchiveMatcher extends LitElement {
   }
 }
 
+@customElement('gene-match-hint')
+export class GeneMatchHint extends LitElement {
+  @property({ type: String }) gene: string = '';
+  @property({ type: Array }) archives: Archive[] = [];
+
+  @state() private showModal: boolean = false;
+  @state() private selectedResult: string = '';
+
+  static styles = css`
+    :host {
+      display: inline-block;
+    }
+    .hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .hint:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .hint.positive {
+      background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+      color: white;
+    }
+    .hint.negative {
+      background: #f5f5f5;
+      color: #666;
+      border-color: #d9d9d9;
+    }
+    .hint.no-data {
+      background: #fffbe6;
+      color: #d48806;
+      border-color: #ffe58f;
+    }
+    .hint-icon {
+      font-size: 14px;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .modal-gene {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .modal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid #e8e8e8;
+    }
+    .modal-option:hover {
+      border-color: #667eea;
+      background: #f6f8ff;
+    }
+    .modal-option.positive {
+      border-color: #52c41a;
+    }
+    .modal-option.positive.selected {
+      background: #f6ffed;
+      border-color: #52c41a;
+    }
+    .modal-option.negative {
+      border-color: #ff4d4f;
+    }
+    .modal-option.negative.selected {
+      background: #fff2f0;
+      border-color: #ff4d4f;
+    }
+    .modal-option.skip {
+      border-color: #d9d9d9;
+    }
+    .modal-option.skip.selected {
+      background: #f5f5f5;
+      border-color: #999;
+    }
+    .option-icon {
+      font-size: 24px;
+    }
+    .option-text {
+      flex: 1;
+    }
+    .option-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    .option-desc {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+    }
+    .modal-close {
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px;
+      background: #f5f5f5;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #666;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      background: #e8e8e8;
+    }
+  `;
+
+  private checkGeneMatch(): { status: 'positive' | 'negative' | 'no-data'; text: string; found: boolean } {
+    if (this.archives.length === 0) {
+      return { status: 'no-data', text: '点击设置基因状态', found: false };
+    }
+
+    const geneTestResults = this.archives[0]?.pathologyReport?.geneTestResults || [];
+    if (geneTestResults.length === 0) {
+      return { status: 'no-data', text: '点击设置基因状态', found: false };
+    }
+
+    const upperGene = this.gene.toUpperCase();
+    const found = geneTestResults.find(g =>
+      g.geneName.toUpperCase().includes(upperGene)
+    );
+
+    if (!found) {
+      return { status: 'no-data', text: '点击设置基因状态', found: false };
+    }
+
+    if (found.result === '阳性') {
+      return { status: 'positive', text: `✓ ${this.gene}阳性 - 适合靶向药`, found: true };
+    } else {
+      return { status: 'negative', text: `✗ ${this.gene}${found.result} - 不适合`, found: true };
+    }
+  }
+
+  private handleHintClick() {
+    this.selectedResult = '';
+    this.showModal = true;
+  }
+
+  private handleOptionSelect(result: string) {
+    this.selectedResult = result;
+  }
+
+  private handleConfirm() {
+    if (!this.selectedResult) return;
+
+    this.dispatchEvent(new CustomEvent('gene-status-change', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        gene: this.gene,
+        result: this.selectedResult
+      }
+    }));
+
+    this.showModal = false;
+  }
+
+  private handleSkip() {
+    this.showModal = false;
+  }
+
+  render() {
+    const { status, text } = this.checkGeneMatch();
+
+    return html`
+      <span class="hint ${status}" @click="${this.handleHintClick}">
+        <span class="hint-icon">
+          ${status === 'positive' ? '🎯' : status === 'negative' ? '✗' : '?'}
+        </span>
+        ${text}
+      </span>
+
+      ${this.showModal ? html`
+        <div class="modal-overlay" @click="${this.handleSkip}">
+          <div class="modal" @click="${(e: Event) => e.stopPropagation()}">
+            <div class="modal-title">设置您的基因状态</div>
+            <div class="modal-gene">${this.gene}</div>
+            <div class="modal-options">
+              <div
+                class="modal-option positive ${this.selectedResult === '阳性' ? 'selected' : ''}"
+                @click="${() => this.handleOptionSelect('阳性')}"
+              >
+                <span class="option-icon">🎯</span>
+                <div class="option-text">
+                  <div class="option-title">阳性</div>
+                  <div class="option-desc">适合使用 ${this.gene} 靶向药物</div>
+                </div>
+              </div>
+              <div
+                class="modal-option negative ${this.selectedResult === '阴性' ? 'selected' : ''}"
+                @click="${() => this.handleOptionSelect('阴性')}"
+              >
+                <span class="option-icon">✗</span>
+                <div class="option-text">
+                  <div class="option-title">阴性</div>
+                  <div class="option-desc">不适合使用 ${this.gene} 靶向药物</div>
+                </div>
+              </div>
+              <div
+                class="modal-option skip ${this.selectedResult === '未检测' ? 'selected' : ''}"
+                @click="${() => this.handleOptionSelect('未检测')}"
+              >
+                <span class="option-icon">—</span>
+                <div class="option-text">
+                  <div class="option-title">未检测/未知</div>
+                  <div class="option-desc">暂不设置，提醒检测</div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="modal-close"
+              @click="${this.handleConfirm}"
+              ?disabled="${!this.selectedResult}"
+              style="${!this.selectedResult ? 'opacity:0.5;cursor:not-allowed' : ''}"
+            >
+              确认
+            </button>
+          </div>
+        </div>
+      ` : ''}
+    `;
+  }
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     'article-archive-matcher': ArticleArchiveMatcher;

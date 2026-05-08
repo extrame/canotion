@@ -241,6 +241,15 @@ export class ArticleDetailPage extends LitElement {
       color: #666;
       line-height: 1.6;
     }
+    .component-embed-inline {
+      display: inline;
+      margin: 0 8px;
+    }
+    .unknown-component {
+      color: #999;
+      font-size: 13px;
+      font-style: italic;
+    }
     .component-active-overlay {
       position: fixed;
       top: 0;
@@ -311,6 +320,38 @@ export class ArticleDetailPage extends LitElement {
     if (changedProperties.has('article') && this.article) {
       this.parseArticleContent();
     }
+    if (changedProperties.has('archives') || changedProperties.has('contentParts')) {
+      this.updateGeneHighlighting();
+    }
+  }
+
+  private updateGeneHighlighting() {
+    const geneTestResults = this.archives[0]?.pathologyReport?.geneTestResults || [];
+    const positiveGenes = geneTestResults
+      .filter(g => g.result === '阳性')
+      .map(g => g.geneName.toUpperCase());
+
+    if (positiveGenes.length === 0) return;
+
+    const genePatterns = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2', 'ERBB3'];
+    const contentBlock = this.shadowRoot?.querySelector('.article-content');
+    if (!contentBlock) return;
+
+    const tables = contentBlock.querySelectorAll('table');
+    tables.forEach(table => {
+      const cells = table.querySelectorAll('td');
+      cells.forEach(cell => {
+        const cellText = cell.textContent || '';
+        const matchedGene = genePatterns.find(gene =>
+          positiveGenes.some(pg => pg.includes(gene) || gene.includes(pg)) &&
+          cellText.includes(gene)
+        );
+
+        if (matchedGene) {
+          cell.classList.add('gene-highlight');
+        }
+      });
+    });
   }
 
   private async loadArticle() {
@@ -407,40 +448,6 @@ export class ArticleDetailPage extends LitElement {
     });
   }
 
-  private highlightGenesInContent(html: string): string {
-    if (this.archives.length === 0) return html;
-    
-    const geneTestResults = this.archives[0]?.pathologyReport?.geneTestResults || [];
-    const positiveGenes = geneTestResults
-      .filter(g => g.result === '阳性')
-      .map(g => g.geneName.toUpperCase());
-    
-    if (positiveGenes.length === 0) return html;
-
-    const genePatterns = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2', 'ERBB3'];
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    
-    const tables = tempDiv.querySelectorAll('table');
-    tables.forEach(table => {
-      const cells = table.querySelectorAll('td');
-      cells.forEach(cell => {
-        const cellText = cell.textContent || '';
-        const matchedGene = genePatterns.find(gene => 
-          positiveGenes.some(pg => pg.includes(gene) || gene.includes(pg)) &&
-          cellText.includes(gene)
-        );
-        
-        if (matchedGene) {
-          cell.classList.add('gene-highlight');
-        }
-      });
-    });
-    
-    return tempDiv.innerHTML;
-  }
-
   private getComponentTitle(name: string): string {
     const titles: Record<string, string> = {
       'stage-guide': '诊疗阶段向导',
@@ -482,29 +489,33 @@ export class ArticleDetailPage extends LitElement {
   }
 
   private renderComponentEmbed(part: { type: 'component'; name: string; props: Record<string, unknown>; inner: string }) {
+    const componentHtml = this.renderComponentByName(part.name, part.props);
     return html`
-      <div class="component-embed">
-        <div class="component-embed-header">
-          <div class="component-embed-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="9" y1="9" x2="15" y2="15"></line>
-              <line x1="15" y1="9" x2="9" y2="15"></line>
-            </svg>
-            交互组件: ${this.getComponentTitle(part.name)}
-          </div>
-          <button
-            class="component-embed-btn"
-            @click="${() => this.handleComponentClick(part.name, part.props)}"
-          >
-            使用组件 →
-          </button>
-        </div>
-        ${part.inner ? html`
-          <div class="component-embed-inner">${part.inner}</div>
-        ` : ''}
+      <div class="component-embed-inline" @gene-status-change="${this.handleGeneStatusChange}">
+        ${componentHtml}
       </div>
     `;
+  }
+
+  private handleGeneStatusChange(e: CustomEvent) {
+    const { gene, result } = e.detail;
+    console.log('Gene status change:', gene, result);
+    this.dispatchEvent(new CustomEvent('archive-gene-update', {
+      bubbles: true,
+      composed: true,
+      detail: { gene, result }
+    }));
+  }
+
+  private renderComponentByName(name: string, props: Record<string, unknown>) {
+    switch (name) {
+      case 'gene-match-hint':
+        return html`<gene-match-hint .gene="${props.gene || ''}" .archives="${this.archives}"></gene-match-hint>`;
+      case 'archive-matcher':
+        return html`<article-archive-matcher .article="${this.article}" .archives="${this.archives}"></article-archive-matcher>`;
+      default:
+        return html`<span class="unknown-component">未知组件: ${name}</span>`;
+    }
   }
 
   private renderActiveComponent() {
@@ -526,6 +537,16 @@ export class ArticleDetailPage extends LitElement {
         <p>组件 "${name}" 加载中...</p>
       </div>
     `;
+  }
+
+  private sanitizeHtmlContent(htmlContent: string): string {
+    // 如果内容包含 <app-root>，说明可能是 SPA 回退导致的 HTML 页面嵌套
+    // 这种情况下不渲染任何内容，防止无限嵌套
+    if (htmlContent.includes('<app-root')) {
+      console.error('Content contains <app-root>, skipping render to prevent infinite nesting');
+      return '<p style="color: red;">文章内容加载错误：检测到页面嵌套</p>';
+    }
+    return htmlContent;
   }
 
   render() {
@@ -556,7 +577,7 @@ export class ArticleDetailPage extends LitElement {
 
       <div class="article-content">
         ${this.contentParts.map(part => part.type === 'markdown'
-          ? html`<div class="content-block" .innerHTML="${this.highlightGenesInContent(marked.parse(part.content, { async: false }) as string)}"></div>`
+          ? html`<div class="content-block" .innerHTML="${this.sanitizeHtmlContent(marked.parse(part.content, { async: false }) as string)}"></div>`
           : this.renderComponentEmbed(part)
         )}
       </div>

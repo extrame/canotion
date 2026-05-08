@@ -35,6 +35,22 @@ export const articleIndex: ArticleIndex[] = [
       }
     ],
     publishedAt: '2025-01-22'
+  },
+  {
+    id: 'recent-advantages-2026',
+    slug: 'recent-advantages-2026',
+    title: '胆道癌系统治疗最新进展文献综述 - pCCA相关内容提炼',
+    summary: '基于Hussain MM等发表的J Gastrointest Oncol (2026)文献综述，提炼与肝门部胆管癌(pCCA)相关的分子特征、靶向治疗和免疫治疗最新进展。',
+    author: 'Hussain MM, et al.',
+    tags: ['综述', '2026版', '胆道癌', 'pCCA', '肝门部胆管癌', '靶向治疗', '免疫治疗', 'HER2', 'FGFR2', 'IDH1'],
+    components: [
+      {
+        id: 'matcher-1',
+        type: 'archive-matcher',
+        title: '本文与您的档案匹配度'
+      }
+    ],
+    publishedAt: '2026-03-15'
   }
 ];
 
@@ -45,7 +61,8 @@ export async function loadArticleContent(slug: string): Promise<string> {
     if (!response.ok) {
       throw new Error(`Failed to load article: ${response.status}`);
     }
-    return await response.text();
+    const content = await response.text();
+    return content;
   } catch (error) {
     console.error('Error loading article:', error);
     return '';

@@ -13,6 +13,7 @@ import './pages/article-list-page';
 import './pages/article-detail-page';
 import './pages/article-editor-page';
 import { getArticle } from './services/article-loader';
+import { storageService } from './storage';
 
 type AppMode = 'archive' | 'article';
 type CurrentPage = 'list' | 'detail' | 'editor';
@@ -190,12 +191,14 @@ export class AppRoot extends LitElement {
   }
 
   private loadArchives(): Archive[] {
-    const saved = localStorage.getItem('canotion-archives');
-    return saved ? JSON.parse(saved) : [];
+    const data = storageService.load();
+    return data.archives || [];
   }
 
   private saveArchives(): void {
-    localStorage.setItem('canotion-archives', JSON.stringify(this.archives));
+    const data = storageService.load();
+    data.archives = this.archives;
+    storageService.save(data);
   }
 
   private setupNavigation(): void {
