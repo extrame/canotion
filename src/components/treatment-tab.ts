@@ -204,6 +204,24 @@ export class TreatmentTab extends LitElement {
     }));
   }
 
+  private handleDeleteBilirubinRecord(e: CustomEvent<{ id: string }>): void {
+    if (!this.archive) return;
+    this.dispatchEvent(new CustomEvent('delete-bilirubin', {
+      bubbles: true,
+      composed: true,
+      detail: { id: e.detail.id }
+    }));
+  }
+
+  private handleUpdateBilirubinRecord(e: CustomEvent<BilirubinRecord>): void {
+    if (!this.archive) return;
+    this.dispatchEvent(new CustomEvent('update-bilirubin', {
+      bubbles: true,
+      composed: true,
+      detail: e.detail
+    }));
+  }
+
   render() {
     if (!this.archive || !this.disease) {
       return html``;
@@ -256,6 +274,8 @@ export class TreatmentTab extends LitElement {
           <bilirubin-chart
             .records="${this.archive.bilirubinRecords || []}"
             @add-record="${this.handleAddBilirubinRecord}"
+            @delete-record="${this.handleDeleteBilirubinRecord}"
+            @update-record="${this.handleUpdateBilirubinRecord}"
           ></bilirubin-chart>
         </div>
       ` : ''}

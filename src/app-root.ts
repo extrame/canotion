@@ -337,6 +337,39 @@ export class AppRoot extends LitElement {
     }
   }
 
+  private deleteBilirubinRecord(id: string): void {
+    if (!this.currentArchive) return;
+    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
+    if (archive && archive.bilirubinRecords) {
+      archive.bilirubinRecords = archive.bilirubinRecords.filter(r => r.id !== id);
+      this.saveArchives();
+      this.currentArchive = { ...archive };
+      this.archives = [...this.archives];
+    }
+  }
+
+  private updateBilirubinRecord(record: BilirubinRecord): void {
+    if (!this.currentArchive) return;
+    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
+    if (archive && archive.bilirubinRecords) {
+      const index = archive.bilirubinRecords.findIndex(r => r.id === record.id);
+      if (index >= 0) {
+        archive.bilirubinRecords[index] = record;
+        this.saveArchives();
+        this.currentArchive = { ...archive };
+        this.archives = [...this.archives];
+      }
+    }
+  }
+
+  private handleDeleteBilirubin(e: CustomEvent<{ id: string }>): void {
+    this.deleteBilirubinRecord(e.detail.id);
+  }
+
+  private handleUpdateBilirubin(e: CustomEvent<BilirubinRecord>): void {
+    this.updateBilirubinRecord(e.detail);
+  }
+
   private deleteArchive(archiveId: string): void {
     this.archives = this.archives.filter(a => a.id !== archiveId);
     this.saveArchives();
@@ -475,6 +508,8 @@ export class AppRoot extends LitElement {
               @back="${this.handleBack}"
               @edit-stage="${this.handleEditStage}"
               @add-bilirubin="${this.handleAddBilirubin}"
+              @delete-bilirubin="${this.handleDeleteBilirubin}"
+              @update-bilirubin="${this.handleUpdateBilirubin}"
             ></archive-detail-page>
           ` : ''}
           ${this.archivePage === 'detail' && this.currentDetailPage === 'nutrition' ? html`

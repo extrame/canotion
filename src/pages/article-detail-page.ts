@@ -333,7 +333,7 @@ export class ArticleDetailPage extends LitElement {
 
     if (positiveGenes.length === 0) return;
 
-    const genePatterns = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2', 'ERBB3'];
+    const genePatterns = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2', 'ERBB3', 'NRG1'];
     const contentBlock = this.shadowRoot?.querySelector('.article-content');
     if (!contentBlock) return;
 

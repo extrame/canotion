@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>癌症诊断流程图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #e8f4f8 0%, #f0f7ff 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+</style>
+</head>
+<body>
+
+<diagnosis-flowchart></diagnosis-flowchart>
+
+<script>
+class DiagnosisFlowchart extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+
+    const style = document.createElement('style');
+    style.textContent = `
+      :host {
+        display: block;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .container {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+        padding: 32px;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .header h1 {
+        font-size: 26px;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+      }
+      .header p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      /* Flowchart Container */
+      .flowchart {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+      }
+
+      /* Step Row */
+      .step-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+      }
+      .step-row.reverse {
+        flex-direction: row-reverse;
+      }
+
+      /* Node */
+      .node {
+        flex-shrink: 0;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+      }
+      .node:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      }
+      .node.blue {
+        background: linear-gradient(135deg, #1a73e8, #4fc3f7);
+        color: #fff;
+      }
+      .node.orange {
+        background: linear-gradient(135deg, #ff8c42, #ffb74d);
+        color: #fff;
+      }
+      .node.green {
+        background: linear-gradient(135deg, #43a047, #81c784);
+        color: #fff;
+      }
+      .node.purple {
+        background: linear-gradient(135deg, #7e57c2, #b39ddb);
+        color: #fff;
+      }
+      .node.red {
+        background: linear-gradient(135deg, #e53935, #ef5350);
+        color: #fff;
+      }
+
+      .node-icon {
+        font-size: 36px;
+        margin-bottom: 4px;
+      }
+      .node-num {
+        font-size: 12px;
+        opacity: 0.9;
+        margin-bottom: 2px;
+      }
+      .node-title {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+        padding: 0 10px;
+      }
+      .node-time {
+        font-size: 11px;
+        opacity: 0.85;
+        margin-top: 4px;
+      }
+
+      /* Info Card */
+      .info-card {
+        flex: 1;
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 20px 24px;
+        border-left: 4px solid #1a73e8;
+      }
+      .step-row:nth-child(2) .info-card { border-left-color: #ff8c42; }
+      .step-row:nth-child(3) .info-card { border-left-color: #e53935; }
+      .step-row:nth-child(4) .info-card { border-left-color: #43a047; }
+      .step-row:nth-child(5) .info-card { border-left-color: #7e57c2; }
+
+      .info-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .info-desc {
+        font-size: 13px;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+
+      /* Tags */
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .tag {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-weight: 500;
+      }
+      .tag.time {
+        background: #fff3e0;
+        color: #e65100;
+      }
+      .tag.warn {
+        background: #ffebee;
+        color: #c62828;
+      }
+      .tag.tip {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+      .tag.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      /* Connector Arrow */
+      .connector {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        position: relative;
+      }
+      .connector::before {
+        content: '';
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(to bottom, #1a73e8, #4fc3f7);
+        position: absolute;
+      }
+      .connector-arrow {
+        width: 28px;
+        height: 28px;
+        background: #fff;
+        border: 3px solid #1a73e8;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #1a73e8;
+        z-index: 1;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      /* Summary Section */
+      .summary {
+        margin-top: 40px;
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        border-radius: 16px;
+        padding: 24px;
+        border: 2px solid #ffb74d;
+      }
+      .summary-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #e65100;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .summary-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 13px;
+        color: #4e342e;
+        line-height: 1.5;
+      }
+      .summary-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      /* Total Time Bar */
+      .total-bar {
+        margin-top: 24px;
+        background: linear-gradient(135deg, #1a73e8, #4fc3f7);
+        border-radius: 12px;
+        padding: 18px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+      }
+      .total-label {
+        font-size: 14px;
+      }
+      .total-value {
+        font-size: 24px;
+        font-weight: 800;
+      }
+
+      /* Legend */
+      .legend {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #666;
+      }
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      /* Responsive */
+      @media (max-width: 640px) {
+        .container { padding: 20px; }
+        .header h1 { font-size: 20px; }
+        .step-row { flex-direction: column !important; gap: 12px; }
+        .node { width: 120px; height: 120px; }
+        .node-icon { font-size: 28px; }
+        .node-title { font-size: 12px; }
+        .info-card { width: 100%; }
+        .summary-grid { grid-template-columns: 1fr; }
+        .connector::before { display: none; }
+        .connector-arrow { transform: rotate(90deg); }
+        .total-bar { flex-direction: column; gap: 8px; text-align: center; }
+      }
+    `;
+    this.shadowRoot.appendChild(style);
+
+    const container = document.createElement('div');
+    container.className = 'container';
+
+    container.innerHTML = `
+      <div class="header">
+        <h1>🏥 大医院癌症初步诊断流程图</h1>
+        <p>从基层检查到确诊的完整路径 · 患者及家属参考</p>
+      </div>
+
+      <div class="flowchart">
+        <!-- Step 1 -->
+        <div class="step-row">
+          <div class="node blue">
+            <div class="node-icon">🔍</div>
+            <div class="node-num">STEP 1</div>
+            <div class="node-title">基层CT检查</div>
+            <div class="node-time">1~3天</div>
+          </div>
+          <div class="info-card">
+            <div class="info-title">📍 基层/社区医院 CT 检查</div>
+            <div class="info-desc">常规体检或因症状就诊，医生安排胸部/腹部CT扫描。</div>
+            <div class="tags">
+              <span class="tag time">⏱ 1~3天</span>
+              <span class="tag tip">💡 发现异常→转诊上级医院</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="connector"><div class="connector-arrow">↓</div></div>
+
+        <!-- Step 2 -->
+        <div class="step-row reverse">
+          <div class="node orange">
+            <div class="node-icon">📋</div>
+            <div class="node-num">STEP 2</div>
+            <div class="node-title">大医院初诊</div>
+            <div class="node-time">1~5天</div>
+          </div>
+          <div class="info-card">
+            <div class="info-title">📍 携带资料到大医院初诊</div>
+            <div class="info-desc">挂肿瘤科或相关专科号，医生审阅CT影像后决定是否需要穿刺活检。</div>
+            <div class="tags">
+              <span class="tag time">⏱ 1~5天</span>
+              <span class="tag tip">💡 带齐CT胶片、光盘、报告</span>
+              <span class="tag warn">⚠️ 热门专家号需提前1~2周预约</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="connector"><div class="connector-arrow">↓</div></div>
+
+        <!-- Step 3 -->
+        <div class="step-row">
+          <div class="node red">
+            <div class="node-icon">🔬</div>
+            <div class="node-num">STEP 3</div>
+            <div class="node-title">穿刺活检</div>
+            <div class="node-time">3~7天</div>
+          </div>
+          <div class="info-card">
+            <div class="info-title">📍 穿刺活检（关键步骤）</div>
+            <div class="info-desc">在CT或B超引导下取出肿瘤组织样本，送病理科检验。</div>
+            <div class="tags">
+              <span class="tag time">⏱ 3~7天</span>
+              <span class="tag tip">💡 穿刺前需做凝血功能检查</span>
+              <span class="tag warn">🔴 取样失败率约5~10%，需做好再次穿刺准备</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="connector"><div class="connector-arrow">↓</div></div>
+
+        <!-- Step 4 -->
+        <div class="step-row reverse">
+          <div class="node green">
+            <div class="node-icon">🧬</div>
+            <div class="node-num">STEP 4</div>
+            <div class="node-title">免疫组化+基因检测</div>
+            <div class="node-time">7~14天</div>
+          </div>
+          <div class="info-card">
+            <div class="info-title">📍 同步预约：免疫组化 + 基因检测</div>
+            <div class="info-desc">穿刺样本送病理科后，同时申请免疫组化染色分组和基因检测。</div>
+            <div class="tags">
+              <span class="tag time">⏱ 7~14天</span>
+              <span class="tag success">✅ 同步预约可节省1~2周</span>
+              <span class="tag warn">🔴 近期输血需等15天后才能抽血检测</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="connector"><div class="connector-arrow">↓</div></div>
+
+        <!-- Step 5 -->
+        <div class="step-row">
+          <div class="node purple">
+            <div class="node-icon">👨‍⚕️</div>
+            <div class="node-num">STEP 5</div>
+            <div class="node-title">结果汇总</div>
+            <div class="node-time">1~3天</div>
+          </div>
+          <div class="info-card">
+            <div class="info-title">📍 等待结果汇总，制定治疗方案</div>
+            <div class="info-desc">主治医生组织多学科会诊（MDT），综合病理类型、分期、基因突变情况制定个性化方案。</div>
+            <div class="tags">
+              <span class="tag time">⏱ 1~3天</span>
+              <span class="tag tip">💡 可提前了解靶向药、免疫治疗等方式</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Time -->
+      <div class="total-bar">
+        <span class="total-label">📌 常规全流程总耗时</span>
+        <span class="total-value">约 3 ~ 4 周</span>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary">
+        <div class="summary-title">⚡ 全流程关键提醒速查</div>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-icon">🔴</span>
+            <span>穿刺活检有 <b>5~10%</b> 失败率，做好再次穿刺准备</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">🔴</span>
+            <span>输血后必须等 <b>15天</b> 才能做基因检测抽血</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">🟢</span>
+            <span>免疫组化与基因检测建议 <b>同步预约</b>，节省1~2周</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">⏰</span>
+            <span>常规全流程总耗时约 <b>3~4周</b>，请提前规划时间和费用</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a73e8"></div>检查阶段</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff8c42"></div>就诊阶段</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#e53935"></div>关键操作</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#43a047"></div>检验阶段</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7e57c2"></div>确诊阶段</div>
+      </div>
+    `;
+
+    this.shadowRoot.appendChild(container);
+  }
+}
+
+customElements.define('diagnosis-flowchart', DiagnosisFlowchart);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大医院癌症初步诊断流程指南</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+</style>
+</head>
+<body>
+
+<cancer-diagnosis-flow></cancer-diagnosis-flow>
+
+<script>
+class CancerDiagnosisFlow extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+
+    const steps = [
+      {
+        num: 1,
+        title: '基层/社区医院 CT 检查',
+        icon: '🏥',
+        duration: '1 ~ 3 天',
+        durationNote: '预约 + 检查 + 出报告',
+        desc: '常规体检或因症状就诊，医生安排胸部/腹部CT扫描。',
+        tips: [
+          { type: 'info', text: '若CT发现异常阴影或结节，医生会建议转诊至上级医院进一步检查。' }
+        ]
+      },
+      {
+        num: 2,
+        title: '携带资料到大医院初诊',
+        icon: '📋',
+        duration: '1 ~ 5 天',
+        durationNote: '挂号排队 + 医生看诊 + 开检查单',
+        desc: '挂肿瘤科或相关专科号，医生审阅CT影像后决定是否需要穿刺活检。',
+        tips: [
+          { type: 'info', text: '务必带齐基层医院的CT胶片、影像光盘和书面报告，避免重复检查。' },
+          { type: 'warn', text: '热门专家号可能需要提前 1~2 周预约，建议通过医院官方APP或电话预约。' }
+        ]
+      },
+      {
+        num: 3,
+        title: '穿刺活检（关键步骤）',
+        icon: '🔬',
+        duration: '3 ~ 7 天',
+        durationNote: '预约 + 穿刺手术 + 基础病理报告',
+        desc: '在CT或B超引导下，用穿刺针取出少量肿瘤组织样本，送病理科检验。',
+        tips: [
+          { type: 'info', text: '穿刺前需做凝血功能检查，部分患者需停用抗凝药物。' },
+          { type: 'danger', text: '穿刺取样可能失败（约5-10%概率），样本量不足时需要再次穿刺！请提前做好心理准备和时间规划。' }
+        ],
+        highlight: true
+      },
+      {
+        num: 4,
+        title: '同步预约：免疫组化 + 基因检测',
+        icon: '🧬',
+        duration: '7 ~ 14 天',
+        durationNote: '免疫组化约5-7个工作日，基因检测约7-10个工作日',
+        desc: '穿刺样本送病理科后，同时申请免疫组化染色分组和基因检测。基因检测通常需要额外抽取血液样本进行比对。',
+        tips: [
+          { type: 'success', text: '流程优化：两项检查同步预约申请，可节省 1~2 周等待时间！不要等免疫组化结果出来再申请基因检测。' },
+          { type: 'danger', text: '基因检测需抽血比对！若患者近期接受过输血，必须等待至少 15 天后才能抽血，否则血液中的供体DNA会严重干扰检测结果！这将导致总流程额外延后 1~2 周。' },
+          { type: 'info', text: '基因检测结果将决定后续是否适用靶向药物治疗，非常重要，切勿跳过。' }
+        ],
+        highlight: true
+      },
+      {
+        num: 5,
+        title: '等待结果汇总，制定治疗方案',
+        icon: '👨‍⚕️',
+        duration: '1 ~ 3 天',
+        durationNote: '结果汇总 + 医生沟通 + 方案制定',
+        desc: '所有检查结果齐全后，主治医生会组织多学科会诊（MDT），综合病理类型、分期、基因突变情况制定个性化治疗方案。',
+        tips: [
+          { type: 'info', text: '可提前了解靶向药、免疫治疗、化疗等治疗方式，与医生充分沟通。' }
+        ]
+      }
+    ];
+
+    const summaryItems = [
+      { icon: '🔴', text: '穿刺活检有 5~10% 失败率，做好再次穿刺准备' },
+      { icon: '🔴', text: '输血后必须等 15 天才能做基因检测抽血' },
+      { icon: '🟢', text: '免疫组化与基因检测建议同步预约，节省 1~2 周' },
+      { icon: '⏰', text: '常规全流程总耗时约 3~4 周，请提前规划时间和费用' }
+    ];
+
+    const style = document.createElement('style');
+    style.textContent = `
+      :host {
+        display: block;
+        width: 100%;
+        max-width: 720px;
+      }
+
+      .container {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        overflow: hidden;
+      }
+
+      /* ---- Header ---- */
+      .header {
+        background: linear-gradient(135deg, #1a73e8 0%, #4fc3f7 100%);
+        padding: 32px 28px 28px;
+        text-align: center;
+        color: #fff;
+      }
+      .header-icon {
+        font-size: 40px;
+        margin-bottom: 8px;
+      }
+      .header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+      .header p {
+        font-size: 13px;
+        opacity: 0.85;
+      }
+
+      /* ---- Timeline ---- */
+      .timeline {
+        position: relative;
+        padding: 8px 24px 24px;
+      }
+      .timeline::before {
+        content: '';
+        position: absolute;
+        left: 52px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(to bottom, #1a73e8, #4fc3f7, #81d4fa);
+        border-radius: 2px;
+      }
+
+      /* ---- Step Card ---- */
+      .step {
+        position: relative;
+        margin-left: 36px;
+        margin-bottom: 20px;
+        padding: 20px 20px 16px 24px;
+        background: #fff;
+        border-radius: 12px;
+        border-left: 4px solid #1a73e8;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        transition: box-shadow 0.2s;
+      }
+      .step:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      }
+      .step.highlight {
+        border-left-color: #ff8c42;
+        background: #fffbf5;
+      }
+
+      /* Connector arrow */
+      .step:not(:last-child)::after {
+        content: '↓';
+        position: absolute;
+        left: -28px;
+        bottom: -22px;
+        font-size: 16px;
+        color: #90caf9;
+      }
+
+      /* Number badge */
+      .step-num {
+        position: absolute;
+        left: -52px;
+        top: 18px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #1a73e8;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(26,115,232,0.3);
+        z-index: 1;
+      }
+      .step.highlight .step-num {
+        background: #ff8c42;
+        box-shadow: 0 2px 8px rgba(255,140,66,0.3);
+      }
+
+      .step-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .step-icon {
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .step-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1a2e;
+      }
+
+      .step-desc {
+        font-size: 13.5px;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+
+      /* Duration badge */
+      .duration-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        color: #e65100;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+      }
+      .duration-badge .clock {
+        font-size: 14px;
+      }
+      .duration-note {
+        font-size: 11.5px;
+        color: #bf360c;
+        font-weight: 400;
+        margin-left: 4px;
+      }
+
+      /* Tip boxes */
+      .tips {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .tip {
+        font-size: 12.5px;
+        line-height: 1.6;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border-left: 3px solid;
+      }
+      .tip.info {
+        background: #e3f2fd;
+        border-left-color: #1a73e8;
+        color: #0d47a1;
+      }
+      .tip.warn {
+        background: #fff8e1;
+        border-left-color: #f9a825;
+        color: #e65100;
+      }
+      .tip.danger {
+        background: #fce4ec;
+        border-left-color: #e53935;
+        color: #b71c1c;
+        font-weight: 500;
+      }
+      .tip.success {
+        background: #e8f5e9;
+        border-left-color: #43a047;
+        color: #1b5e20;
+        font-weight: 500;
+      }
+
+      /* ---- Summary ---- */
+      .summary {
+        margin: 0 24px 28px;
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        border: 2px solid #ffb74d;
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+      .summary-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #e65100;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .summary-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .summary-list li {
+        font-size: 13px;
+        color: #4e342e;
+        line-height: 1.6;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .summary-list .icon {
+        flex-shrink: 0;
+        font-size: 14px;
+        margin-top: 2px;
+      }
+
+      /* ---- Footer ---- */
+      .footer {
+        text-align: center;
+        padding: 16px;
+        font-size: 11px;
+        color: #999;
+        border-top: 1px solid #eee;
+      }
+
+      /* ---- Total time bar ---- */
+      .total-bar {
+        margin: 0 24px 20px;
+        background: linear-gradient(135deg, #1a73e8, #4fc3f7);
+        border-radius: 10px;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+      }
+      .total-bar .label {
+        font-size: 13px;
+        opacity: 0.9;
+      }
+      .total-bar .value {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+
+      /* ---- Responsive ---- */
+      @media (max-width: 480px) {
+        .header h1 { font-size: 18px; }
+        .step { margin-left: 28px; padding: 16px 14px 12px 18px; }
+        .step-num { left: -44px; width: 28px; height: 28px; font-size: 12px; }
+        .timeline::before { left: 44px; }
+        .step:not(:last-child)::after { left: -24px; }
+        .step-title { font-size: 14.5px; }
+      }
+    `;
+    this.shadowRoot.appendChild(style);
+
+    // Build DOM
+    const container = document.createElement('div');
+    container.className = 'container';
+
+    // Header
+    container.innerHTML = `
+      <div class="header">
+        <div class="header-icon">⚕️</div>
+        <h1>大医院癌症初步诊断流程指南</h1>
+        <p>从基层检查到确诊的完整路径 · 患者及家属参考</p>
+      </div>
+    `;
+
+    // Timeline
+    const timeline = document.createElement('div');
+    timeline.className = 'timeline';
+
+    steps.forEach(step => {
+      const card = document.createElement('div');
+      card.className = `step${step.highlight ? ' highlight' : ''}`;
+
+      let tipsHTML = '';
+      if (step.tips && step.tips.length) {
+        tipsHTML = '<div class="tips">' +
+          step.tips.map(t => `<div class="tip ${t.type}">${t.text}</div>`).join('') +
+          '</div>';
+      }
+
+      card.innerHTML = `
+        <div class="step-num">${step.num}</div>
+        <div class="step-header">
+          <span class="step-icon">${step.icon}</span>
+          <span class="step-title">${step.title}</span>
+        </div>
+        <div class="step-desc">${step.desc}</div>
+        <div class="duration-badge">
+          <span class="clock">⏱</span>
+          预估耗时：${step.duration}
+          <span class="duration-note">（${step.durationNote}）</span>
+        </div>
+        ${tipsHTML}
+      `;
+      timeline.appendChild(card);
+    });
+
+    container.appendChild(timeline);
+
+    // Total time bar
+    const totalBar = document.createElement('div');
+    totalBar.className = 'total-bar';
+    totalBar.innerHTML = `
+      <span class="label">📌 常规全流程总耗时</span>
+      <span class="value">约 3 ~ 4 周</span>
+    `;
+    container.appendChild(totalBar);
+
+    // Summary
+    const summary = document.createElement('div');
+    summary.className = 'summary';
+    summary.innerHTML = `
+      <div class="summary-title">📋 全流程关键提醒速查</div>
+      <ul class="summary-list">
+        ${summaryItems.map(item => `
+          <li>
+            <span class="icon">${item.icon}</span>
+            <span>${item.text}</span>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+    container.appendChild(summary);
+
+    // Footer
+    const footer = document.createElement('div');
+    footer.className = 'footer';
+    footer.textContent = '仅供参考，具体以医院实际安排为准';
+    container.appendChild(footer);
+
+    this.shadowRoot.appendChild(container);
+  }
+}
+
+customElements.define('cancer-diagnosis-flow', CancerDiagnosisFlow);
+</script>
+
+</body>
+</html>

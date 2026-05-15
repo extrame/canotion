@@ -571,6 +571,22 @@ export class ArchiveDetailPage extends LitElement {
     }));
   }
 
+  private handleDeleteBilirubin(e: CustomEvent<{ id: string }>): void {
+    this.dispatchEvent(new CustomEvent<{ id: string }>('delete-bilirubin', {
+      bubbles: true,
+      composed: true,
+      detail: e.detail
+    }));
+  }
+
+  private handleUpdateBilirubin(e: CustomEvent<BilirubinRecord>): void {
+    this.dispatchEvent(new CustomEvent<BilirubinRecord>('update-bilirubin', {
+      bubbles: true,
+      composed: true,
+      detail: e.detail
+    }));
+  }
+
   private handleAddDrainage(e: CustomEvent<DrainageRecord>): void {
     this.dispatchEvent(new CustomEvent<DrainageRecord>('add-drainage', {
       bubbles: true,
@@ -806,6 +822,8 @@ export class ArchiveDetailPage extends LitElement {
             .disease="${this.disease}"
             @edit-stage="${this.handleEditStage}"
             @add-bilirubin="${this.handleAddBilirubin}"
+            @delete-bilirubin="${this.handleDeleteBilirubin}"
+            @update-bilirubin="${this.handleUpdateBilirubin}"
             @add-drainage="${this.handleAddDrainage}"
             @update-portal-vein-thrombus="${this.handleUpdatePortalVeinThrombus}"
           ></stage-guide>

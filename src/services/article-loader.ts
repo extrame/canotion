@@ -51,6 +51,38 @@ export const articleIndex: ArticleIndex[] = [
       }
     ],
     publishedAt: '2026-03-15'
+  },
+  {
+    id: 'zenocutuzumab-nrg1-2026',
+    slug: 'zenocutuzumab-nrg1-2026',
+    title: 'FDA批准Zenocutuzumab-zbco用于NRG1融合阳性胆管癌',
+    summary: '2026年5月8日，FDA批准zenocutuzumab-zbco（Bizengri）用于治疗携带NRG1基因融合的成人晚期、不可切除或转移性胆管癌患者。临床试验显示ORR达36.8%，DOR为2.8-12.9个月。',
+    author: 'FDA',
+    tags: ['FDA批准', '2026版', '胆管癌', 'NRG1融合', '靶向治疗', 'Zenocutuzumab', 'Bizengri', '孤儿药'],
+    components: [
+      {
+        id: 'matcher-1',
+        type: 'archive-matcher',
+        title: '本文与您的档案匹配度'
+      }
+    ],
+    publishedAt: '2026-05-08'
+  },
+  {
+    id: 'klatskin-lenvatinib-pd1-2023',
+    slug: 'klatskin-lenvatinib-pd1-2023',
+    title: '胆道介入联合仑伐替尼+PD-1抑制剂治疗肝门部胆管癌合并恶性梗阻性黄疸',
+    summary: 'ASCO 2023发表的临床研究：21例Klatskin肿瘤合并恶性梗阻性黄疸患者接受金属支架+Iodine-125粒子条植入联合仑伐替尼+PD-1抑制剂治疗。成功引流率71.4%，中位总生存期6.1个月，成功引流+序贯治疗患者生存期显著延长。',
+    author: 'Xiaobo Fu, et al.',
+    tags: ['ASCO', '2023版', '肝门部胆管癌', 'Klatskin肿瘤', '胆道介入', '仑伐替尼', 'PD-1抑制剂', '恶性梗阻性黄疸'],
+    components: [
+      {
+        id: 'matcher-1',
+        type: 'archive-matcher',
+        title: '本文与您的档案匹配度'
+      }
+    ],
+    publishedAt: '2023-05-31'
   }
 ];
 

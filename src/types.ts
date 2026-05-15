@@ -6,7 +6,7 @@ export interface Archive {
   stage?: string;
   completedExamIds: string[];
   completedTreatmentIds: string[];
-  currentStage: 'examination' | 'treatment';
+  currentStage: 'examination' | 'treatment' | 'suspect';
   bilirubinRecords: BilirubinRecord[];
   pathologyReport?: PathologyReport;
 }

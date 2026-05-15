@@ -465,7 +465,7 @@ export class ArticleArchiveMatcher extends LitElement {
       };
     }
 
-    const targetGenes = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2'];
+    const targetGenes = ['HER2', 'FGFR2', 'IDH1', 'BRAF', 'NTRK', 'MSI-H', 'KRAS', 'RET', 'ERBB2', 'NRG1'];
     const positiveGenes = geneTestResults
       .filter(g => targetGenes.some(t => g.geneName.toUpperCase().includes(t.toUpperCase())) && g.result === '阳性')
       .map(g => g.geneName);

@@ -29,6 +29,9 @@ export class BilirubinChart extends LitElement {
   @state()
   private inputIndirect = '';
 
+  @state()
+  private editingId: string | null = null;
+
   @query('#bilirubin-canvas')
   private canvas!: HTMLCanvasElement;
 
@@ -225,6 +228,43 @@ export class BilirubinChart extends LitElement {
     }
     .data-table tr:hover td {
       background: #fafafa;
+    }
+    .data-table tr:hover .row-actions {
+      opacity: 1;
+    }
+    .row-actions {
+      opacity: 0;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      transition: opacity 0.2s;
+    }
+    .row-actions.show {
+      opacity: 1;
+    }
+    .action-btn {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn.edit {
+      background: #e6f7ff;
+      color: #1890ff;
+    }
+    .action-btn.edit:hover {
+      background: #1890ff;
+      color: white;
+    }
+    .action-btn.delete {
+      background: #fff1f0;
+      color: #ff4d4f;
+    }
+    .action-btn.delete:hover {
+      background: #ff4d4f;
+      color: white;
     }
     .no-data {
       text-align: center;
@@ -534,6 +574,25 @@ export class BilirubinChart extends LitElement {
     this.showTable = !this.showTable;
   }
 
+  private handleEdit(record: BilirubinRecord): void {
+    this.editingId = record.id;
+    this.inputDate = record.date;
+    this.inputTotal = record.total.toString();
+    this.inputDirect = record.direct.toString();
+    this.inputIndirect = record.indirect.toString();
+    this.showInput = true;
+  }
+
+  private handleDelete(record: BilirubinRecord): void {
+    if (confirm(`确定要删除 ${new Date(record.date).toLocaleDateString('zh-CN')} 的记录吗？`)) {
+      this.dispatchEvent(new CustomEvent('delete-record', {
+        bubbles: true,
+        composed: true,
+        detail: { id: record.id }
+      }));
+    }
+  }
+
   private handleSave(): void {
     if (!this.inputDate || !this.inputTotal) return;
 
@@ -541,20 +600,36 @@ export class BilirubinChart extends LitElement {
     const direct = parseFloat(this.inputDirect) || 0;
     const indirect = parseFloat(this.inputIndirect) || (total - direct);
 
-    this.dispatchEvent(new CustomEvent('add-record', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        id: Date.now().toString(),
-        date: this.inputDate,
-        total,
-        direct,
-        indirect,
-        unit: 'μmol/L'
-      }
-    }));
+    if (this.editingId) {
+      this.dispatchEvent(new CustomEvent('update-record', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          id: this.editingId,
+          date: this.inputDate,
+          total,
+          direct,
+          indirect,
+          unit: 'μmol/L'
+        }
+      }));
+    } else {
+      this.dispatchEvent(new CustomEvent('add-record', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          id: Date.now().toString(),
+          date: this.inputDate,
+          total,
+          direct,
+          indirect,
+          unit: 'μmol/L'
+        }
+      }));
+    }
 
     this.showInput = false;
+    this.editingId = null;
   }
 
   public connectedCallback(): void {
@@ -658,6 +733,7 @@ export class BilirubinChart extends LitElement {
                     <th>总胆红素</th>
                     <th>直接胆红素</th>
                     <th>间接胆红素</th>
+                    <th style="width: 100px;">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -667,6 +743,16 @@ export class BilirubinChart extends LitElement {
                       <td>${record.total} μmol/L</td>
                       <td>${record.direct} μmol/L</td>
                       <td>${record.indirect} μmol/L</td>
+                      <td>
+                        <div class="row-actions show">
+                          <button class="action-btn edit" @click="${() => this.handleEdit(record)}">
+                            编辑
+                          </button>
+                          <button class="action-btn delete" @click="${() => this.handleDelete(record)}">
+                            删除
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   `)}
                 </tbody>
@@ -686,7 +772,7 @@ export class BilirubinChart extends LitElement {
 
         ${this.showInput ? html`
           <div class="input-form">
-            <div class="input-title">录入胆红素指标</div>
+            <div class="input-title">${this.editingId ? '编辑胆红素指标' : '录入胆红素指标'}</div>
             <div class="input-row">
               <div class="input-group">
                 <div class="input-label">日期</div>
