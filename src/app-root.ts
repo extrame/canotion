@@ -6,6 +6,7 @@ import './components/stage-selector';
 import './components/stage-guide';
 import './components/archive-card';
 import './pages/archive-list-page';
+import './pages/archive-main-page';
 import './pages/archive-detail-page';
 import './pages/nutrition-detail-page';
 import './pages/pathology-detail-page';
@@ -26,7 +27,7 @@ export class AppRoot extends LitElement {
 
 
   @state()
-  private mode: AppMode = 'archive';
+  private mode: AppMode = 'article';
 
   @state()
   private archivePage: CurrentPage = 'list';
@@ -178,9 +179,9 @@ export class AppRoot extends LitElement {
       padding-top: 80px;
       max-width: 1200px;
       margin: 0 auto;
-      padding-left: 24px;
-      padding-right: 24px;
-      padding-bottom: 40px;
+      padding-left: 2px;
+      padding-right: 2px;
+      padding-bottom: 4 px;
     }
   `;
 
@@ -192,6 +193,11 @@ export class AppRoot extends LitElement {
 
   private loadArchives(): Archive[] {
     const data = storageService.load();
+    console.log('[loadArchives] 从存储加载的胆红素记录:', data.archives.map(a => ({
+      id: a.id,
+      bilirubinCount: a.bilirubinRecords?.length || 0,
+      records: a.bilirubinRecords
+    })));
     return data.archives || [];
   }
 
@@ -199,6 +205,11 @@ export class AppRoot extends LitElement {
     const data = storageService.load();
     data.archives = this.archives;
     storageService.save(data);
+    console.log('[saveArchives] 保存的胆红素记录:', this.archives.map(a => ({
+      id: a.id,
+      bilirubinCount: a.bilirubinRecords?.length || 0,
+      records: a.bilirubinRecords
+    })));
   }
 
   private setupNavigation(): void {
@@ -228,8 +239,11 @@ export class AppRoot extends LitElement {
 
   private showList(): void {
     if (this.mode === 'archive') {
-      this.archivePage = 'list';
-      this.currentArchive = null;
+      // 档案模式直接展示第一个档案的详情
+      if (this.archives.length > 0 && !this.currentArchive) {
+        this.currentArchive = this.archives[0];
+      }
+      this.archivePage = 'detail';
     } else {
       this.articlePage = 'list';
       this.currentArticle = null;
@@ -283,8 +297,14 @@ export class AppRoot extends LitElement {
   private switchMode(newMode: AppMode): void {
     this.mode = newMode;
     if (newMode === 'archive') {
-      this.archivePage = 'list';
-      this.currentArchive = null;
+      // 切换到档案模式时，自动展示第一个档案详情
+      if (this.archives.length > 0) {
+        this.currentArchive = this.archives[0];
+        this.archivePage = 'detail';
+      } else {
+        this.currentArchive = null;
+        this.archivePage = 'detail';
+      }
     } else {
       this.articlePage = 'list';
       this.currentArticle = null;
@@ -323,42 +343,59 @@ export class AppRoot extends LitElement {
 
   private addBilirubinRecord(record: BilirubinRecord): void {
     if (!this.currentArchive) return;
-    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
-    if (archive) {
-      if (!archive.bilirubinRecords) {
-        archive.bilirubinRecords = [];
+    const archiveIndex = this.archives.findIndex(a => a.id === this.currentArchive!.id);
+    if (archiveIndex >= 0) {
+      const archive = this.archives[archiveIndex];
+      const existingRecords = archive.bilirubinRecords || [];
+      if (existingRecords.some(r => r.id === record.id)) {
+        console.log('[addBilirubinRecord] 记录已存在，跳过:', record.id);
+        return;
       }
-      const exists = archive.bilirubinRecords.some(r => r.id === record.id);
-      if (exists) return;
-      archive.bilirubinRecords = [record, ...archive.bilirubinRecords];
+      const bilirubinRecords = [...existingRecords, record];
+      const updatedArchive = { ...archive, bilirubinRecords };
+      this.archives = [
+        ...this.archives.slice(0, archiveIndex),
+        updatedArchive,
+        ...this.archives.slice(archiveIndex + 1)
+      ];
+      this.currentArchive = updatedArchive;
       this.saveArchives();
-      this.currentArchive = { ...archive };
-      this.archives = [...this.archives];
     }
   }
 
   private deleteBilirubinRecord(id: string): void {
     if (!this.currentArchive) return;
-    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
-    if (archive && archive.bilirubinRecords) {
-      archive.bilirubinRecords = archive.bilirubinRecords.filter(r => r.id !== id);
+    const archiveIndex = this.archives.findIndex(a => a.id === this.currentArchive!.id);
+    if (archiveIndex >= 0) {
+      const archive = this.archives[archiveIndex];
+      const bilirubinRecords = (archive.bilirubinRecords || []).filter(r => r.id !== id);
+      const updatedArchive = { ...archive, bilirubinRecords };
+      this.archives = [
+        ...this.archives.slice(0, archiveIndex),
+        updatedArchive,
+        ...this.archives.slice(archiveIndex + 1)
+      ];
+      this.currentArchive = updatedArchive;
       this.saveArchives();
-      this.currentArchive = { ...archive };
-      this.archives = [...this.archives];
     }
   }
 
   private updateBilirubinRecord(record: BilirubinRecord): void {
     if (!this.currentArchive) return;
-    const archive = this.archives.find(a => a.id === this.currentArchive!.id);
-    if (archive && archive.bilirubinRecords) {
-      const index = archive.bilirubinRecords.findIndex(r => r.id === record.id);
-      if (index >= 0) {
-        archive.bilirubinRecords[index] = record;
-        this.saveArchives();
-        this.currentArchive = { ...archive };
-        this.archives = [...this.archives];
-      }
+    const archiveIndex = this.archives.findIndex(a => a.id === this.currentArchive!.id);
+    if (archiveIndex >= 0) {
+      const archive = this.archives[archiveIndex];
+      const bilirubinRecords = (archive.bilirubinRecords || []).map(r =>
+        r.id === record.id ? record : r
+      );
+      const updatedArchive = { ...archive, bilirubinRecords };
+      this.archives = [
+        ...this.archives.slice(0, archiveIndex),
+        updatedArchive,
+        ...this.archives.slice(archiveIndex + 1)
+      ];
+      this.currentArchive = updatedArchive;
+      this.saveArchives();
     }
   }
 
@@ -373,6 +410,12 @@ export class AppRoot extends LitElement {
   private deleteArchive(archiveId: string): void {
     this.archives = this.archives.filter(a => a.id !== archiveId);
     this.saveArchives();
+    // 删除后自动切换到剩余的第一个档案，或显示空状态
+    if (this.archives.length > 0) {
+      this.currentArchive = this.archives[0];
+    } else {
+      this.currentArchive = null;
+    }
     this.navigateTo('#/');
   }
 
@@ -407,7 +450,12 @@ export class AppRoot extends LitElement {
   }
 
   private handleBack(): void {
-    this.navigateTo('#/');
+    // 档案模式下返回按钮切换到文章模式
+    if (this.mode === 'archive') {
+      this.switchMode('article');
+    } else {
+      this.navigateTo('#/');
+    }
   }
 
   private handleEditStage(): void {
@@ -465,6 +513,14 @@ export class AppRoot extends LitElement {
   private handleDataImported(): void {
     // 重新加载档案数据
     this.archives = this.loadArchives();
+    // 重新设置当前档案为第一个
+    if (this.archives.length > 0) {
+      this.currentArchive = this.archives[0];
+    }
+  }
+
+  private handleArchiveSwitch(e: CustomEvent<Archive>): void {
+    this.currentArchive = e.detail;
   }
 
   private getDiseaseForArchive(): Disease | null {
@@ -493,24 +549,30 @@ export class AppRoot extends LitElement {
 
       <div class="main-content">
         ${this.mode === 'archive' ? html`
-          ${this.archivePage === 'list' ? html`
-            <archive-list-page
-              .archives="${this.archives}"
-              @create-archive="${this.handleCreateArchive}"
-              @data-imported="${this.handleDataImported}"
-            ></archive-list-page>
-          ` : ''}
           ${this.archivePage === 'detail' && this.currentArchive && disease ? html`
+            <archive-main-page
+              .archives="${this.archives}"
+              .currentArchive="${this.currentArchive}"
+              @create-archive="${this.handleCreateArchive}"
+              @archive-switch="${this.handleArchiveSwitch}"
+            ></archive-main-page>
             <archive-detail-page
               .archive="${this.currentArchive}"
               .disease="${disease}"
               @delete-archive="${this.handleDeleteArchive}"
-              @back="${this.handleBack}"
               @edit-stage="${this.handleEditStage}"
               @add-bilirubin="${this.handleAddBilirubin}"
               @delete-bilirubin="${this.handleDeleteBilirubin}"
               @update-bilirubin="${this.handleUpdateBilirubin}"
             ></archive-detail-page>
+          ` : ''}
+          ${this.archivePage === 'detail' && !this.currentArchive ? html`
+            <archive-main-page
+              .archives="${this.archives}"
+              .currentArchive="${null}"
+              @create-archive="${this.handleCreateArchive}"
+              @archive-switch="${this.handleArchiveSwitch}"
+            ></archive-main-page>
           ` : ''}
           ${this.archivePage === 'detail' && this.currentDetailPage === 'nutrition' ? html`
             <nutrition-detail-page></nutrition-detail-page>

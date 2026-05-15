@@ -1,5 +1,5 @@
 // 文章索引配置 - 由 scripts/scan-articles.mjs 自动生成
-// 生成时间: 2026-05-15T06:53:01.045Z
+// 生成时间: 2026-05-15T08:18:51.086Z
 
 export interface ArticleIndex {
   id: string;

@@ -140,6 +140,60 @@ export class DiseaseSelector extends LitElement {
       flex-direction: column;
       gap: 12px;
     }
+    .disclaimer-banner {
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .disclaimer-icon {
+      flex-shrink: 0;
+    }
+    .disclaimer-content {
+      flex: 1;
+    }
+    .disclaimer-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fa8c16;
+      margin-bottom: 4px;
+    }
+    .disclaimer-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .privacy-banner {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .privacy-icon {
+      flex-shrink: 0;
+    }
+    .privacy-content {
+      flex: 1;
+    }
+    .privacy-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #52c41a;
+      margin-bottom: 4px;
+    }
+    .privacy-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
     .disease-item {
       display: flex;
       align-items: center;
@@ -235,6 +289,35 @@ export class DiseaseSelector extends LitElement {
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
             </button>
+          </div>
+          <div class="disclaimer-banner">
+            <div class="disclaimer-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa8c16" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+            <div class="disclaimer-content">
+              <div class="disclaimer-title">免责声明</div>
+              <div class="disclaimer-text">
+                本项目是我在陪伴母亲治疗肝门胆管癌过程中开发的。所有数据来源于个人诊疗经历和公开资料，<strong>不构成专业医疗意见</strong>。请务必以主治医生的建议为准，本工具仅供参考辅助，甄别使用。
+              </div>
+            </div>
+          </div>
+          <div class="privacy-banner">
+            <div class="privacy-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <div class="privacy-content">
+              <div class="privacy-title">隐私保护说明</div>
+              <div class="privacy-text">
+                <strong>您的隐私数据仅存储在本地浏览器中</strong>，不会上传到任何服务器。请放心使用，但请注意清除浏览器数据会导致档案丢失，建议定期备份重要数据。
+              </div>
+            </div>
           </div>
           <div class="disease-list">
             ${this.diseases.map(d => html`

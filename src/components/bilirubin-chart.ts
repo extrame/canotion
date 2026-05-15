@@ -291,6 +291,28 @@ export class BilirubinChart extends LitElement {
       background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
       border-color: #52c41a;
     }
+    .estimate-card.up {
+      background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%);
+      border-color: #ff4d4f;
+    }
+    .confidence-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+    .confidence-badge.high {
+      background: #52c41a;
+      color: white;
+    }
+    .confidence-badge.medium {
+      background: #faad14;
+      color: white;
+    }
+    .confidence-badge.low {
+      background: #999;
+      color: white;
+    }
     .estimate-title {
       font-size: 13px;
       font-weight: 600;
@@ -342,49 +364,120 @@ export class BilirubinChart extends LitElement {
     );
   }
 
-  private calculateEstimate(): { daysTo50: number; trend: 'down' | 'up' | 'stable'; currentValue: number } | null {
+  private calculateEstimate(): { daysTo50: number; trend: 'down' | 'up' | 'stable'; currentValue: number; confidence: 'high' | 'medium' | 'low'; message: string } | null {
     const sortedRecords = this.getSortedRecords();
     if (sortedRecords.length < 2) return null;
 
     const n = sortedRecords.length;
-    const xValues = sortedRecords.map(r => new Date(r.date).getTime());
-    const yValues = sortedRecords.map(r => r.total);
+    const dates = sortedRecords.map(r => new Date(r.date).getTime());
+    const values = sortedRecords.map(r => r.total);
 
-    const xMin = xValues[0];
-    const xNormalized = xValues.map(x => (x - xMin) / (1000 * 60 * 60 * 24));
-    const yMean = yValues.reduce((a, b) => a + b, 0) / n;
-
-    let numerator = 0;
-    let denominator = 0;
-    for (let i = 0; i < n; i++) {
-      numerator += (xNormalized[i]) * (yValues[i] - yMean);
-      denominator += xNormalized[i] * xNormalized[i];
-    }
-
-    if (denominator === 0) return null;
-    const slope = numerator / denominator;
-
-    const lastRecord = sortedRecords[sortedRecords.length - 1];
-    const lastValue = lastRecord.total;
-    const lastDate = new Date(lastRecord.date).getTime();
-
-    let trend: 'down' | 'up' | 'stable' = 'stable';
-    if (slope < -1) trend = 'down';
-    else if (slope > 1) trend = 'up';
+    const xMin = dates[0];
+    const xDays = dates.map(d => (d - xMin) / (1000 * 60 * 60 * 24));
+    const lastValue = values[n - 1];
+    const lastDateDays = xDays[n - 1];
 
     if (lastValue <= 50) {
-      return { daysTo50: 0, trend, currentValue: lastValue };
+      return { daysTo50: 0, trend: 'down', currentValue: lastValue, confidence: 'high', message: '已达到可治疗水平' };
     }
 
-    if (trend !== 'down' || slope >= 0) {
-      return { daysTo50: -1, trend, currentValue: lastValue };
+    // 加权线性回归：近期数据权重更高
+    // 权重 = 1 + (i / n) * 2，即第一个点权重1，最后一个点权重3
+    let weightedNumerator = 0;
+    let weightedDenominator = 0;
+    let weightedXMean = 0;
+    let weightedYMean = 0;
+    let totalWeight = 0;
+
+    for (let i = 0; i < n; i++) {
+      const weight = 1 + (i / n) * 2;
+      totalWeight += weight;
+      weightedXMean += xDays[i] * weight;
+      weightedYMean += values[i] * weight;
+    }
+    weightedXMean /= totalWeight;
+    weightedYMean /= totalWeight;
+
+    for (let i = 0; i < n; i++) {
+      const weight = 1 + (i / n) * 2;
+      const dx = xDays[i] - weightedXMean;
+      const dy = values[i] - weightedYMean;
+      weightedNumerator += weight * dx * dy;
+      weightedDenominator += weight * dx * dx;
     }
 
-    const daysTo50 = Math.ceil((50 - lastValue) / slope);
-    const today = Date.now();
-    const targetDate = new Date(lastDate + daysTo50 * 24 * 60 * 60 * 1000);
+    if (weightedDenominator === 0) {
+      return { daysTo50: -1, trend: 'stable', currentValue: lastValue, confidence: 'low', message: '数据不足以预测' };
+    }
 
-    return { daysTo50, trend, currentValue: lastValue };
+    const slope = weightedNumerator / weightedDenominator; // 每天变化值
+
+    // 计算R²评估拟合质量
+    let ssRes = 0;
+    let ssTot = 0;
+    for (let i = 0; i < n; i++) {
+      const predicted = weightedYMean + slope * (xDays[i] - weightedXMean);
+      ssRes += Math.pow(values[i] - predicted, 2);
+      ssTot += Math.pow(values[i] - weightedYMean, 2);
+    }
+    const rSquared = ssTot > 0 ? 1 - (ssRes / ssTot) : 0;
+
+    // 计算近期趋势（最近3个点）
+    let recentSlope = 0;
+    if (n >= 3) {
+      const recentDates = xDays.slice(-3);
+      const recentValues = values.slice(-3);
+      const recentN = 3;
+      let recentSumX = 0, recentSumY = 0, recentSumXY = 0, recentSumXX = 0;
+      for (let i = 0; i < recentN; i++) {
+        recentSumX += recentDates[i];
+        recentSumY += recentValues[i];
+        recentSumXY += recentDates[i] * recentValues[i];
+        recentSumXX += recentDates[i] * recentDates[i];
+      }
+      const recentDenom = recentN * recentSumXX - recentSumX * recentSumX;
+      if (recentDenom !== 0) {
+        recentSlope = (recentN * recentSumXY - recentSumX * recentSumY) / recentDenom;
+      }
+    }
+
+    // 综合斜率：近期斜率权重更高
+    const combinedSlope = n >= 3 ? slope * 0.3 + recentSlope * 0.7 : slope;
+
+    // 判断趋势
+    let trend: 'down' | 'up' | 'stable' = 'stable';
+    if (combinedSlope < -2) trend = 'down';
+    else if (combinedSlope > 2) trend = 'up';
+
+    // 判断置信度
+    let confidence: 'high' | 'medium' | 'low' = 'low';
+    if (n >= 5 && rSquared > 0.7) confidence = 'high';
+    else if (n >= 3 && rSquared > 0.5) confidence = 'medium';
+
+    // 计算预测
+    let daysTo50: number;
+    let message: string;
+
+    if (trend !== 'down' || combinedSlope >= 0) {
+      daysTo50 = -1;
+      if (trend === 'up') {
+        message = `胆红素正在上升 (+${Math.abs(combinedSlope).toFixed(1)} μmol/L/天)，需要关注`;
+      } else {
+        message = '胆红素变化趋于稳定，难以预估下降时间';
+      }
+    } else {
+      daysTo50 = Math.ceil((lastValue - 50) / Math.abs(combinedSlope));
+
+      if (daysTo50 <= 7) {
+        message = `预计约${daysTo50}天可达标，趋势良好`;
+      } else if (daysTo50 <= 30) {
+        message = `预计约${daysTo50}天可达标，继续保持当前治疗`;
+      } else {
+        message = `预计需要${daysTo50}天以上，建议与医生讨论治疗方案`;
+      }
+    }
+
+    return { daysTo50, trend, currentValue: lastValue, confidence, message };
   }
 
   private initChart(): void {
@@ -691,14 +784,17 @@ export class BilirubinChart extends LitElement {
           <div class="normal-range">
             正常范围：总胆红素 5.1-19.0 μmol/L | 直接胆红素 0-6.8 μmol/L
           </div>
-          ${estimate && estimate.daysTo50 >= 0 ? html`
-            <div class="estimate-card ${estimate.currentValue <= 50 ? 'success' : estimate.daysTo50 <= 30 ? 'warning' : 'danger'}">
+          ${estimate ? html`
+            <div class="estimate-card ${estimate.currentValue <= 50 ? 'success' : estimate.trend === 'up' ? 'up' : estimate.daysTo50 > 0 && estimate.daysTo50 <= 30 ? 'warning' : 'danger'}">
               <div class="estimate-title">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 到达可治疗水平预估
+                <span class="confidence-badge ${estimate.confidence}">
+                  ${estimate.confidence === 'high' ? '高置信' : estimate.confidence === 'medium' ? '中置信' : '低置信'}
+                </span>
               </div>
               <div class="estimate-content">
                 <div class="estimate-row">
@@ -707,9 +803,9 @@ export class BilirubinChart extends LitElement {
                 </div>
                 <div class="estimate-row">
                   <span class="estimate-label">趋势状态</span>
-                  <span class="estimate-value">${estimate.trend === 'down' ? '📉 下降中' : estimate.trend === 'up' ? '📈 上升中' : '➡️ 稳定'}</span>
+                  <span class="estimate-value">${estimate.trend === 'down' ? '📉 下降中' : estimate.trend === 'up' ? '📈 上升中 ⚠️' : '➡️ 稳定'}</span>
                 </div>
-                ${estimate.currentValue > 50 ? html`
+                ${estimate.currentValue > 50 && estimate.daysTo50 > 0 ? html`
                   <div class="estimate-row">
                     <span class="estimate-label">预计到达50的时间</span>
                     <span class="estimate-value ${estimate.daysTo50 <= 30 ? 'warning' : 'danger'}">约 ${estimate.daysTo50} 天</span>
@@ -717,10 +813,7 @@ export class BilirubinChart extends LitElement {
                 ` : ''}
               </div>
               <div class="estimate-message">
-                ${estimate.currentValue <= 50 ? '已达到可治疗水平，请与医生讨论化疗方案。' :
-                  estimate.daysTo50 <= 30 ? '预计一个月内可达到治疗条件，继续保持。' :
-                  estimate.daysTo50 > 0 ? '预计需要更长时间，建议与医生讨论其他治疗方案。' :
-                  '当前趋势无法预估到达时间，建议继续监测。'}
+                ${estimate.message}
               </div>
             </div>
           ` : ''}
